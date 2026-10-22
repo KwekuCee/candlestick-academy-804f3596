@@ -50,7 +50,12 @@ export function NavLink({ to, end, className, children, ...rest }: NavLinkProps)
       ? className({ isActive })
       : [className, isActive ? "active" : ""].filter(Boolean).join(" ");
   return (
-    <Link to={to} className={cls || undefined} aria-current={isActive ? "page" : undefined} {...rest}>
+    <Link
+      to={to}
+      className={cls || undefined}
+      aria-current={isActive ? "page" : undefined}
+      {...rest}
+    >
       {typeof children === "function" ? children({ isActive }) : children}
     </Link>
   );
@@ -71,7 +76,9 @@ export function useNavigate() {
   );
 }
 
-export function useParams<T extends Record<string, string | undefined> = Record<string, string | undefined>>(): T {
+export function useParams<
+  T extends Record<string, string | undefined> = Record<string, string | undefined>,
+>(): T {
   return (useTsParams as any)({ strict: false }) as T;
 }
 

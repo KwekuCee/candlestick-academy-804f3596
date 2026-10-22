@@ -303,14 +303,17 @@ export function OnboardingFlow() {
     const result = await verifyExnessPartnerAccount(
       trimmedAccount,
       config,
-      trimmedEmail ? trimmedEmail : undefined
+      trimmedEmail ? trimmedEmail : undefined,
     );
     setVerifying(false);
 
     if (result.success) {
       if (trimmedEmail) {
         setEmail(trimmedEmail);
-      } else if (result.matchedStudent?.email && !result.matchedStudent.email.endsWith("@partner.exness.com")) {
+      } else if (
+        result.matchedStudent?.email &&
+        !result.matchedStudent.email.endsWith("@partner.exness.com")
+      ) {
         setEmail(result.matchedStudent.email);
       }
       setCurrentDeposit(0);
@@ -358,10 +361,16 @@ export function OnboardingFlow() {
     }
     const cleanUser = normalizeUsername(username);
     if (!cleanUser) {
-      setFormError("Please choose a username so you can log in with either your email or username.");
+      setFormError(
+        "Please choose a username so you can log in with either your email or username.",
+      );
       return;
     }
-    const availability = await checkUsernameAvailability(cleanUser, email.trim(), matchedDbStudent?.id);
+    const availability = await checkUsernameAvailability(
+      cleanUser,
+      email.trim(),
+      matchedDbStudent?.id,
+    );
     setUsernameStatus(availability);
     if (!availability.available) {
       setFormError(availability.reason);
@@ -408,11 +417,11 @@ export function OnboardingFlow() {
 
     const registration = await syncStudentToSupabase(updatedUser, password);
     if (!registration?.success) {
-      setFormError(registration?.message || 'Your account could not be created. Please try again.');
+      setFormError(registration?.message || "Your account could not be created. Please try again.");
       return;
     }
     if (registration.needsConfirmation) {
-      setFormError('Check your email to confirm your account, then sign in to continue.');
+      setFormError("Check your email to confirm your account, then sign in to continue.");
       return;
     }
     saveStoredCurrentUser(updatedUser);
@@ -422,7 +431,7 @@ export function OnboardingFlow() {
     const existingIdx = roster.findIndex(
       (s) =>
         s.email.toLowerCase() === updatedUser.email.toLowerCase() ||
-        (s.exnessId && s.exnessId.toLowerCase() === updatedUser.exnessId.toLowerCase())
+        (s.exnessId && s.exnessId.toLowerCase() === updatedUser.exnessId.toLowerCase()),
     );
     if (existingIdx >= 0) {
       roster[existingIdx] = updatedUser;
@@ -566,8 +575,8 @@ export function OnboardingFlow() {
                       isPassed
                         ? "bg-[#262b33] border-[#ffb600] text-[#ffb600]"
                         : isCurrent
-                        ? "bg-[#ffb600] border-[#ffb600] text-[#0b0d0f] shadow-[0_0_20px_rgba(255, 182, 0,0.45)]"
-                        : "bg-[#181c24] border-white/15 text-[#7f8897]"
+                          ? "bg-[#ffb600] border-[#ffb600] text-[#0b0d0f] shadow-[0_0_20px_rgba(255, 182, 0,0.45)]"
+                          : "bg-[#181c24] border-white/15 text-[#7f8897]"
                     }`}
                   >
                     {isPassed ? <Check size={17} strokeWidth={3} /> : <StepIcon size={16} />}
@@ -577,8 +586,8 @@ export function OnboardingFlow() {
                       isCurrent
                         ? "text-[#ffb600] font-bold"
                         : isPassed
-                        ? "text-[#c4c9d2]"
-                        : "text-[#778090]"
+                          ? "text-[#c4c9d2]"
+                          : "text-[#778090]"
                     }`}
                   >
                     {s.label}
@@ -594,7 +603,8 @@ export function OnboardingFlow() {
           <div
             className="rounded-2xl p-6 sm:p-10 shadow-2xl animate-fadeIn"
             style={{
-              background: "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
+              background:
+                "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
               border: "1px solid rgba(255,255,255,0.12)",
               backdropFilter: "blur(20px)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 25px 60px rgba(0,0,0,0.45)",
@@ -619,15 +629,19 @@ export function OnboardingFlow() {
                 lineHeight: 1.12,
               }}
             >
-              {pathname === "/register" ? "Register with Candlesticks Academy: " : "Verify your Academy referral: "}
+              {pathname === "/register"
+                ? "Register with Candlesticks Academy: "
+                : "Verify your Academy referral: "}
               <em className="not-italic text-[#ffb600]">connect your Exness account.</em>
             </h1>
             <p
               className="text-sm sm:text-base mt-2"
               style={{ color: "#b8c0cc", fontWeight: 500, lineHeight: 1.6 }}
             >
-              Create your Exness account with our official partner link first. Once created—or if you already have one—select{" "}
-              <strong className="text-white">&ldquo;I already have an Exness account&rdquo;</strong> to verify your referral and unlock Candlesticks Academy registration.
+              Create your Exness account with our official partner link first. Once created—or if
+              you already have one—select{" "}
+              <strong className="text-white">&ldquo;I already have an Exness account&rdquo;</strong>{" "}
+              to verify your referral and unlock Candlesticks Academy registration.
             </p>
 
             {/* Two Option Cards (Ash/Gray and Yellow Only) */}
@@ -649,11 +663,10 @@ export function OnboardingFlow() {
                       New to Exness
                     </span>
                   </div>
-                  <h2 className="text-lg font-bold text-white">
-                    1. Create an Exness Account
-                  </h2>
+                  <h2 className="text-lg font-bold text-white">1. Create an Exness Account</h2>
                   <p className="text-xs text-[#949fb1] mt-2 leading-relaxed">
-                    Click our official partner button below to register your Exness trading account. When you finish, return here and select option 2.
+                    Click our official partner button below to register your Exness trading account.
+                    When you finish, return here and select option 2.
                   </p>
                 </div>
 
@@ -714,12 +727,19 @@ export function OnboardingFlow() {
                     2. I already have an Exness account
                   </h2>
                   <p className="text-xs text-[#949fb1] mt-2 leading-relaxed">
-                    Select this once you have created your Exness account with our Partner Link (<strong className="text-white font-mono">{partnerCode}</strong>) to enter your <strong className="text-white">Trading Account ID</strong> and verify your referral.
+                    Select this once you have created your Exness account with our Partner Link (
+                    <strong className="text-white font-mono">{partnerCode}</strong>) to enter your{" "}
+                    <strong className="text-white">Trading Account ID</strong> and verify your
+                    referral.
                   </p>
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#ffb600]">
-                  <span>{selectedHasAccount ? "Enter Trading Account ID Below ↓" : "Select to Verify Account"}</span>
+                  <span>
+                    {selectedHasAccount
+                      ? "Enter Trading Account ID Below ↓"
+                      : "Select to Verify Account"}
+                  </span>
                   <ArrowRight size={16} />
                 </div>
               </button>
@@ -737,7 +757,13 @@ export function OnboardingFlow() {
                       Enter Your Exness Trading Account ID (Trading Account Number)
                     </h2>
                     <p className="text-xs text-[#9aa4b5] mt-1">
-                      We verify your <strong className="text-white font-mono">trading_account_id</strong> / <strong className="text-white font-mono">client_account_id</strong> against your Exness Partner referrals in Supabase. Once verified, you will create your account and be led to make the <strong className="text-[#ffb600]">$50 USD deposit</strong> to activate all platform features.
+                      We verify your{" "}
+                      <strong className="text-white font-mono">trading_account_id</strong> /{" "}
+                      <strong className="text-white font-mono">client_account_id</strong> against
+                      your Exness Partner referrals in Supabase. Once verified, you will create your
+                      account and be led to make the{" "}
+                      <strong className="text-[#ffb600]">$50 USD deposit</strong> to activate all
+                      platform features.
                     </p>
                   </div>
 
@@ -750,8 +776,15 @@ export function OnboardingFlow() {
                       className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
                       title="Syncs latest registrations directly from Exness Partner API into Supabase SQL"
                     >
-                      <RefreshCw size={13} className={refreshingPartnerData ? "animate-spin text-[#ffb600]" : "text-[#ffb600]"} />
-                      <span>{refreshingPartnerData ? "Syncing from Exness..." : "Refresh Exness Data"}</span>
+                      <RefreshCw
+                        size={13}
+                        className={
+                          refreshingPartnerData ? "animate-spin text-[#ffb600]" : "text-[#ffb600]"
+                        }
+                      />
+                      <span>
+                        {refreshingPartnerData ? "Syncing from Exness..." : "Refresh Exness Data"}
+                      </span>
                     </button>
                     {refreshFeedback && (
                       <span className="text-[10px] text-[#ffb600] font-mono flex items-center gap-1">
@@ -765,7 +798,8 @@ export function OnboardingFlow() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11.5px] font-bold uppercase tracking-wider text-[#9aa4b5] mb-2">
-                        Exness Trading Account ID (Trading Account #) <span className="text-[#ffb600]">*</span>
+                        Exness Trading Account ID (Trading Account #){" "}
+                        <span className="text-[#ffb600]">*</span>
                       </label>
                       <input
                         type="text"
@@ -779,7 +813,8 @@ export function OnboardingFlow() {
 
                     <div>
                       <label className="block text-[11.5px] font-bold uppercase tracking-wider text-[#9aa4b5] mb-2">
-                        Exness Registered Email <span className="text-[#7d8799] font-normal">(Optional)</span>
+                        Exness Registered Email{" "}
+                        <span className="text-[#7d8799] font-normal">(Optional)</span>
                       </label>
                       <input
                         type="email"
@@ -849,7 +884,9 @@ export function OnboardingFlow() {
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#ffb600] hover:underline cursor-pointer"
                     >
                       <span>
-                        {showTicketHelper ? "Hide Partner Transfer Form" : "Submit a Partner Transfer Ticket →"}
+                        {showTicketHelper
+                          ? "Hide Partner Transfer Form"
+                          : "Submit a Partner Transfer Ticket →"}
                       </span>
                     </button>
                   </div>
@@ -861,31 +898,48 @@ export function OnboardingFlow() {
                           <Mail size={14} /> EXNESS PARTNER AFFILIATION TRANSFER REQUEST
                         </span>
                         <p className="text-[11.5px] text-[#9aa4b5] mt-1 leading-relaxed">
-                          If you already had an Exness account created without our partner link (<strong className="text-white font-mono">{partnerCode}</strong>), submit your details below to generate and send a formal transfer ticket to Exness. Once Exness confirms the link and your account appears on our Exness Partner Dashboard, you will be verified immediately upon entering your Trading Account ID above.
+                          If you already had an Exness account created without our partner link (
+                          <strong className="text-white font-mono">{partnerCode}</strong>), submit
+                          your details below to generate and send a formal transfer ticket to
+                          Exness. Once Exness confirms the link and your account appears on our
+                          Exness Partner Dashboard, you will be verified immediately upon entering
+                          your Trading Account ID above.
                         </p>
                       </div>
 
                       {/* Partner Details Summary Box */}
                       <div className="p-3.5 rounded-xl bg-[#141822] border border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
                         <div>
-                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">Partner Email:</span>
+                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">
+                            Partner Email:
+                          </span>
                           <span className="text-white font-mono font-bold">{partnerEmail}</span>
                         </div>
                         <div>
-                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">Partner Link:</span>
-                          <span className="text-[#ffb600] font-mono font-bold truncate block">{partnerLink}</span>
+                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">
+                            Partner Link:
+                          </span>
+                          <span className="text-[#ffb600] font-mono font-bold truncate block">
+                            {partnerLink}
+                          </span>
                         </div>
                         <div>
-                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">Partner ID / Code:</span>
+                          <span className="text-[#7d8799] uppercase font-bold text-[10px] block">
+                            Partner ID / Code:
+                          </span>
                           <span className="text-white font-mono font-bold">{partnerCode}</span>
                         </div>
                       </div>
 
                       {/* Partner Transfer Request Form */}
-                      <form onSubmit={handleConnectExistingAccount} className="p-4 rounded-xl bg-[#141822] border border-[#ffb600]/30 space-y-3.5">
+                      <form
+                        onSubmit={handleConnectExistingAccount}
+                        className="p-4 rounded-xl bg-[#141822] border border-[#ffb600]/30 space-y-3.5"
+                      >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <CheckCircle2 size={14} className="text-[#ffb600]" /> Generate Partner Transfer Ticket
+                            <CheckCircle2 size={14} className="text-[#ffb600]" /> Generate Partner
+                            Transfer Ticket
                           </span>
                           <span className="text-[10px] font-mono text-[#ffb600] bg-[#ffb600]/10 px-2 py-0.5 rounded self-start sm:self-auto">
                             Strict Verification (No Pre-Approval)
@@ -895,7 +949,8 @@ export function OnboardingFlow() {
                         {/* Recipient Exness Support Email (Editable) */}
                         <div>
                           <label className="block text-[10.5px] uppercase font-bold text-[#8e97a6] mb-1">
-                            Send Request To (Exness Partner Support Email) <span className="text-[#ffb600]">*</span>
+                            Send Request To (Exness Partner Support Email){" "}
+                            <span className="text-[#ffb600]">*</span>
                           </label>
                           <input
                             type="email"
@@ -906,7 +961,9 @@ export function OnboardingFlow() {
                             className="w-full bg-[#0a0c10] border border-white/10 rounded-lg px-3 py-2 text-white text-xs font-mono focus:outline-none focus:border-[#ffb600]"
                           />
                           <p className="text-[10px] text-[#7d8799] mt-1">
-                            Default: <code className="text-[#cfd7e4]">partner.support@exness.com</code>. You may edit this if you have a direct Exness partner desk email.
+                            Default:{" "}
+                            <code className="text-[#cfd7e4]">partner.support@exness.com</code>. You
+                            may edit this if you have a direct Exness partner desk email.
                           </p>
                         </div>
 
@@ -926,7 +983,8 @@ export function OnboardingFlow() {
                           </div>
                           <div>
                             <label className="block text-[10.5px] uppercase font-bold text-[#8e97a6] mb-1">
-                              Your Exness Trading Account ID (Account #) <span className="text-[#ffb600]">*</span>
+                              Your Exness Trading Account ID (Account #){" "}
+                              <span className="text-[#ffb600]">*</span>
                             </label>
                             <input
                               type="text"
@@ -945,19 +1003,24 @@ export function OnboardingFlow() {
                             disabled={connectingExisting}
                             className="w-full sm:w-auto px-5 py-2.5 rounded-full font-extrabold text-xs uppercase tracking-wider transition cursor-pointer flex items-center justify-center gap-2 shadow-[0_5px_15px_rgba(255, 182, 0,0.15)] disabled:opacity-60"
                             style={{
-                              background: "linear-gradient(145deg, #ffd15c 0%, #ffb600 48%, #d99b00 100%)",
+                              background:
+                                "linear-gradient(145deg, #ffd15c 0%, #ffb600 48%, #d99b00 100%)",
                               color: "#0b0d0f",
                             }}
                           >
                             {connectingExisting ? (
                               <>
                                 <RefreshCw size={12} className="animate-spin text-black" />
-                                <span style={{ color: "#0b0d0f" }}>Preparing Transfer Ticket &amp; Email...</span>
+                                <span style={{ color: "#0b0d0f" }}>
+                                  Preparing Transfer Ticket &amp; Email...
+                                </span>
                               </>
                             ) : (
                               <>
                                 <Mail size={13} color="#0b0d0f" />
-                                <span style={{ color: "#0b0d0f" }}>Generate &amp; Submit Partner Transfer Ticket</span>
+                                <span style={{ color: "#0b0d0f" }}>
+                                  Generate &amp; Submit Partner Transfer Ticket
+                                </span>
                               </>
                             )}
                           </button>
@@ -978,10 +1041,16 @@ export function OnboardingFlow() {
 
                           <div className="text-[11px] space-y-1">
                             <p className="text-white font-semibold">
-                              To: <span className="font-mono text-[#ffb600]">{transferResult.emailDetails.destinationEmail}</span>
+                              To:{" "}
+                              <span className="font-mono text-[#ffb600]">
+                                {transferResult.emailDetails.destinationEmail}
+                              </span>
                             </p>
                             <p className="text-white font-semibold">
-                              Subject: <span className="font-mono text-[#cfd7e4]">{transferResult.emailDetails.subject}</span>
+                              Subject:{" "}
+                              <span className="font-mono text-[#cfd7e4]">
+                                {transferResult.emailDetails.subject}
+                              </span>
                             </p>
                           </div>
 
@@ -992,11 +1061,12 @@ export function OnboardingFlow() {
                           <div className="flex flex-wrap gap-2.5 pt-1">
                             <a
                               href={`mailto:${encodeURIComponent(transferResult.emailDetails.destinationEmail)}?subject=${encodeURIComponent(
-                                transferResult.emailDetails.subject
+                                transferResult.emailDetails.subject,
                               )}&body=${encodeURIComponent(transferResult.emailDetails.body)}`}
                               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-extrabold text-[11px] uppercase tracking-wider cursor-pointer"
                               style={{
-                                background: "linear-gradient(145deg, #ffd15c 0%, #ffb600 48%, #d99b00 100%)",
+                                background:
+                                  "linear-gradient(145deg, #ffd15c 0%, #ffb600 48%, #d99b00 100%)",
                                 color: "#0b0d0f",
                               }}
                             >
@@ -1008,34 +1078,50 @@ export function OnboardingFlow() {
                               type="button"
                               onClick={() => {
                                 navigator.clipboard.writeText(
-                                  `To: ${transferResult.emailDetails?.destinationEmail}\nSubject: ${transferResult.emailDetails?.subject}\n\n${transferResult.emailDetails?.body}`
+                                  `To: ${transferResult.emailDetails?.destinationEmail}\nSubject: ${transferResult.emailDetails?.subject}\n\n${transferResult.emailDetails?.body}`,
                                 );
                                 setTicketEmailCopied(true);
                                 setTimeout(() => setTicketEmailCopied(false), 2500);
                               }}
                               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-white font-bold text-[11px] cursor-pointer border border-white/10"
                             >
-                              {ticketEmailCopied ? <Check size={13} className="text-[#ffb600]" /> : <Copy size={13} />}
-                              <span>{ticketEmailCopied ? "Email Copied!" : "Copy Full Email Draft"}</span>
+                              {ticketEmailCopied ? (
+                                <Check size={13} className="text-[#ffb600]" />
+                              ) : (
+                                <Copy size={13} />
+                              )}
+                              <span>
+                                {ticketEmailCopied ? "Email Copied!" : "Copy Full Email Draft"}
+                              </span>
                             </button>
                           </div>
 
                           {/* Next Steps Notification */}
                           <div className="p-3 rounded-lg bg-[#0e1117] border border-white/10 text-[11px] text-[#9aa4b5] space-y-1.5">
                             <p className="text-white font-bold flex items-center gap-1">
-                              <ShieldCheck size={13} className="text-[#ffb600]" /> What happens next?
+                              <ShieldCheck size={13} className="text-[#ffb600]" /> What happens
+                              next?
                             </p>
                             <p className="leading-relaxed">
-                              1. Send the email above to Exness Support from your registered email address (<code className="text-white">{transferResult.emailDetails.clientEmail}</code>).
+                              1. Send the email above to Exness Support from your registered email
+                              address (
+                              <code className="text-white">
+                                {transferResult.emailDetails.clientEmail}
+                              </code>
+                              ).
                             </p>
                             <p className="leading-relaxed">
-                              2. Exness typically completes partner account affiliation within <strong>24 to 48 hours</strong>.
+                              2. Exness typically completes partner account affiliation within{" "}
+                              <strong>24 to 48 hours</strong>.
                             </p>
                             <p className="leading-relaxed">
-                              3. The moment your account is connected, it will automatically show on our <strong>Partner Dashboard</strong>.
+                              3. The moment your account is connected, it will automatically show on
+                              our <strong>Partner Dashboard</strong>.
                             </p>
                             <p className="leading-relaxed text-[#ffb600]">
-                              4. Once connected, return here and enter your Trading Account ID above to verify your account! (Accounts are verified once officially affiliated by Exness, not pre-approved beforehand).
+                              4. Once connected, return here and enter your Trading Account ID above
+                              to verify your account! (Accounts are verified once officially
+                              affiliated by Exness, not pre-approved beforehand).
                             </p>
                           </div>
                         </div>
@@ -1053,7 +1139,8 @@ export function OnboardingFlow() {
           <div
             className="rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden animate-fadeIn"
             style={{
-              background: "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
+              background:
+                "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
               border: "1px solid rgba(255,255,255,0.12)",
               backdropFilter: "blur(20px)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 25px 60px rgba(0,0,0,0.45)",
@@ -1104,13 +1191,15 @@ export function OnboardingFlow() {
                   lineHeight: 1.12,
                 }}
               >
-                Trade with skill. <em className="not-italic text-[#ffb600]">Create your Academy account.</em>
+                Trade with skill.{" "}
+                <em className="not-italic text-[#ffb600]">Create your Academy account.</em>
               </h1>
               <p
                 className="text-sm sm:text-base mt-2"
                 style={{ color: "#b8c0cc", fontWeight: 500, lineHeight: 1.6 }}
               >
-                Your Exness partner referral is confirmed. Complete your student profile below to access the Candlesticks Academy portal.
+                Your Exness partner referral is confirmed. Complete your student profile below to
+                access the Candlesticks Academy portal.
               </p>
             </div>
 
@@ -1267,7 +1356,9 @@ export function OnboardingFlow() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    aria-label={
+                      showConfirmPassword ? "Hide confirm password" : "Show confirm password"
+                    }
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7d8799] hover:text-[#ffb600] transition p-1"
                   >
                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -1319,7 +1410,8 @@ export function OnboardingFlow() {
           <div
             className="rounded-2xl p-6 sm:p-10 shadow-2xl animate-fadeIn"
             style={{
-              background: "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
+              background:
+                "linear-gradient(145deg, rgba(38,43,50,0.88) 0%, rgba(20,23,28,0.92) 100%)",
               border: "1px solid rgba(255,255,255,0.12)",
               backdropFilter: "blur(20px)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 25px 60px rgba(0,0,0,0.45)",
@@ -1341,7 +1433,10 @@ export function OnboardingFlow() {
                     letterSpacing: "-0.04em",
                   }}
                 >
-                  Welcome to the Academy, <em className="not-italic text-[#ffb600]">{fullName.split(" ")[0] || "Trader"}</em>
+                  Welcome to the Academy,{" "}
+                  <em className="not-italic text-[#ffb600]">
+                    {fullName.split(" ")[0] || "Trader"}
+                  </em>
                 </h1>
               </div>
             </div>
@@ -1350,7 +1445,8 @@ export function OnboardingFlow() {
               className="text-sm mt-2"
               style={{ color: "#b8c0cc", fontWeight: 500, lineHeight: 1.6 }}
             >
-              Your Exness account <strong className="text-white font-mono">#{exnessIdInput}</strong> is linked under Partner Code{" "}
+              Your Exness account <strong className="text-white font-mono">#{exnessIdInput}</strong>{" "}
+              is linked under Partner Code{" "}
               <strong className="text-[#ffb600] font-mono">{partnerCode}</strong>.
             </p>
 
@@ -1367,14 +1463,17 @@ export function OnboardingFlow() {
                 </div>
                 <div className="text-left sm:text-right">
                   <div className="text-xl font-mono font-bold text-white">
-                    ${currentDeposit.toFixed(2)} <small className="text-xs text-[#8f98a8]">/ $50.00 USD</small>
+                    ${currentDeposit.toFixed(2)}{" "}
+                    <small className="text-xs text-[#8f98a8]">/ $50.00 USD</small>
                   </div>
                   <span
                     className={`text-xs font-semibold ${
                       currentDeposit >= 50 ? "text-[#ffb600]" : "text-[#8e96a4]"
                     }`}
                   >
-                    {currentDeposit >= 50 ? "Capital Confirmed · All Content Unlocked" : "Awaiting Deposit Detection"}
+                    {currentDeposit >= 50
+                      ? "Capital Confirmed · All Content Unlocked"
+                      : "Awaiting Deposit Detection"}
                   </span>
                 </div>
               </div>
@@ -1396,10 +1495,15 @@ export function OnboardingFlow() {
                 </p>
                 <ul className="space-y-1.5 pl-5 list-disc text-[#8d96a7]">
                   <li>
-                    <strong className="text-white">Student Dashboard &amp; Trade Analytics:</strong> Unlocked immediately.
+                    <strong className="text-white">Student Dashboard &amp; Trade Analytics:</strong>{" "}
+                    Unlocked immediately.
                   </li>
                   <li>
-                    <strong className="text-white">Courses, Live Trading Rooms &amp; VIP Signals:</strong> Kept locked until a minimum deposit of <strong>$50 USD</strong> is detected in your Exness account.
+                    <strong className="text-white">
+                      Courses, Live Trading Rooms &amp; VIP Signals:
+                    </strong>{" "}
+                    Kept locked until a minimum deposit of <strong>$50 USD</strong> is detected in
+                    your Exness account.
                   </li>
                 </ul>
               </div>
@@ -1491,7 +1595,8 @@ export function OnboardingFlow() {
                   </div>
                   <div>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#ffb600]/15 text-[#ffb600] border border-[#ffb600]/30">
-                      FIRST 20 REGISTRANTS GIVEAWAY · {getMerchGiveawayStats().remainingCount} SPOTS LEFT
+                      FIRST 20 REGISTRANTS GIVEAWAY · {getMerchGiveawayStats().remainingCount} SPOTS
+                      LEFT
                     </span>
                     <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
                       Claim Your Candlesticks &amp; Exness Merch!
@@ -1513,7 +1618,10 @@ export function OnboardingFlow() {
                   🎁 Free Official Merch Pack for the First 20 Registrants:
                 </p>
                 <p className="text-[#9aa4b5] leading-relaxed">
-                  Congratulations on registering! As one of our first 20 verified traders, you qualify for our branded <strong>Candlesticks &amp; Exness T-Shirt, Tote Bag, and Cap</strong>—plus your <strong>1-Month Free Full Academy Trial</strong> is now active.
+                  Congratulations on registering! As one of our first 20 verified traders, you
+                  qualify for our branded{" "}
+                  <strong>Candlesticks &amp; Exness T-Shirt, Tote Bag, and Cap</strong>—plus your{" "}
+                  <strong>1-Month Free Full Academy Trial</strong> is now active.
                 </p>
               </div>
 
@@ -1539,7 +1647,7 @@ export function OnboardingFlow() {
                   <button
                     type="button"
                     aria-label="Close merchandise offer"
-                  onClick={() => setShowMerchPopup(false)}
+                    onClick={() => setShowMerchPopup(false)}
                     className="w-full py-3.5 px-5 rounded-xl bg-[#ffb600] hover:bg-[#ffc833] text-black font-extrabold text-xs uppercase tracking-wider cursor-pointer"
                   >
                     Continue to My Academy Account →
@@ -1577,7 +1685,8 @@ export function OnboardingFlow() {
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-[#9aa4b5] mb-1 flex items-center gap-1.5">
-                      <MapPin size={12} className="text-[#ffb600]" /> Delivery Location (City / Street / Landmark) *
+                      <MapPin size={12} className="text-[#ffb600]" /> Delivery Location (City /
+                      Street / Landmark) *
                     </label>
                     <input
                       type="text"
@@ -1598,9 +1707,15 @@ export function OnboardingFlow() {
                       onChange={(e) => setMerchPreferredTime(e.target.value)}
                       className="w-full bg-[#181c26] border border-white/15 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-[#ffb600]"
                     >
-                      <option value="Morning (9:00 AM - 12:00 PM)">Morning (9:00 AM - 12:00 PM)</option>
-                      <option value="Afternoon (12:00 PM - 4:00 PM)">Afternoon (12:00 PM - 4:00 PM)</option>
-                      <option value="Evening (4:00 PM - 7:00 PM)">Evening (4:00 PM - 7:00 PM)</option>
+                      <option value="Morning (9:00 AM - 12:00 PM)">
+                        Morning (9:00 AM - 12:00 PM)
+                      </option>
+                      <option value="Afternoon (12:00 PM - 4:00 PM)">
+                        Afternoon (12:00 PM - 4:00 PM)
+                      </option>
+                      <option value="Evening (4:00 PM - 7:00 PM)">
+                        Evening (4:00 PM - 7:00 PM)
+                      </option>
                       <option value="Weekend Delivery">Weekend Delivery</option>
                     </select>
                   </div>
@@ -1609,7 +1724,7 @@ export function OnboardingFlow() {
                     <button
                       type="button"
                       aria-label="Close merchandise offer"
-                  onClick={() => setShowMerchPopup(false)}
+                      onClick={() => setShowMerchPopup(false)}
                       className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-[#9aa4b5] hover:text-white cursor-pointer"
                     >
                       Skip for Now
@@ -1634,9 +1749,7 @@ export function OnboardingFlow() {
       {/* Footer */}
       <footer className="border-t border-white/10 py-6 px-4 text-center text-xs text-[#717986] bg-[#0c0e12]/80 backdrop-blur-md">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>
-            © 2026 Candlesticks Academy · Official Exness Partner Link ({partnerCode})
-          </span>
+          <span>© 2026 Candlesticks Academy · Official Exness Partner Link ({partnerCode})</span>
           <div className="flex gap-4">
             <Link to="/terms" className="hover:text-white transition">
               Terms of Service

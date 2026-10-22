@@ -64,7 +64,8 @@ import {
 export function AdminCoursesPage() {
   const [tracks, setTracks] = useState<CourseTrackItem[]>(getCachedCourses());
   const [selectedCourseId, setSelectedCourseId] = useState<string>("forex-foundations");
-  const [certificates, setCertificates] = useState<StudentCertificateItem[]>(getCachedCertificates());
+  const [certificates, setCertificates] =
+    useState<StudentCertificateItem[]>(getCachedCertificates());
 
   // New / Edit Lesson Form State
   const [lessonNumber, setLessonNumber] = useState<number>(1);
@@ -75,7 +76,7 @@ export function AdminCoursesPage() {
   const [videoMode, setVideoMode] = useState<"supabase_storage" | "url">("supabase_storage");
   const [videoUrl, setVideoUrl] = useState("");
   const [takeawaysInput, setTakeawaysInput] = useState(
-    "Confirm higher-timeframe structure before execution\nWait for candle closure at key liquidity zone\nRisk maximum 1% to 2% per trade"
+    "Confirm higher-timeframe structure before execution\nWait for candle closure at key liquidity zone\nRisk maximum 1% to 2% per trade",
   );
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [savingLesson, setSavingLesson] = useState(false);
@@ -92,7 +93,7 @@ export function AdminCoursesPage() {
 
   // Certificate Template Studio State
   const [certTemplate, setCertTemplate] = useState<CertificateTemplateConfig>(
-    getCachedCertificateTemplate()
+    getCachedCertificateTemplate(),
   );
   const [uploadingCertTemplate, setUploadingCertTemplate] = useState(false);
   const [certPreviewDataUrl, setCertPreviewDataUrl] = useState<string>("");
@@ -192,7 +193,7 @@ export function AdminCoursesPage() {
   async function handleSaveEditedQuestions() {
     await saveCourseLevelQuizQuestionsToDb(selectedCourseId, editingQuestions);
     setPdfFeedback(
-      `Saved ${editingQuestions.length} quiz questions for ${selectedTrack.level} (${selectedTrack.title})!`
+      `Saved ${editingQuestions.length} quiz questions for ${selectedTrack.level} (${selectedTrack.title})!`,
     );
     await reloadCourses();
   }
@@ -212,7 +213,7 @@ export function AdminCoursesPage() {
   async function handleSaveCertTemplate() {
     await saveCertificateTemplateToDb(certTemplate);
     setCertStudioFeedback(
-      "Certificate template & student name coordinates saved! Completed students will receive this official template."
+      "Certificate template & student name coordinates saved! Completed students will receive this official template.",
     );
     setTimeout(() => setCertStudioFeedback(null), 4000);
   }
@@ -229,7 +230,9 @@ export function AdminCoursesPage() {
             Courses, 4-Level PDF Quizzes &amp; Certificate Designer
           </h1>
           <p className="text-xs sm:text-sm text-[#9aa4b5] mt-1">
-            Name and upload your videos for Beginner, Intermediate, Essential, and Advanced tracks, upload the 4 Level PDFs to generate multi-question assessments, and customize your official completion certificate.
+            Name and upload your videos for Beginner, Intermediate, Essential, and Advanced tracks,
+            upload the 4 Level PDFs to generate multi-question assessments, and customize your
+            official completion certificate.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -275,7 +278,9 @@ export function AdminCoursesPage() {
               </div>
               <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono">
                 <span className={isSelected ? "text-[#ffb600] font-bold" : "text-[#7d8799]"}>
-                  {track.levelPdfName ? `PDF: ${track.levelPdfName.slice(0, 14)}...` : "Upload Level PDF"}
+                  {track.levelPdfName
+                    ? `PDF: ${track.levelPdfName.slice(0, 14)}...`
+                    : "Upload Level PDF"}
                 </span>
                 <span className="text-emerald-400">
                   {pdfQuizCount > 0 ? `${pdfQuizCount} PDF Qs` : "Auto-Quiz"}
@@ -513,7 +518,8 @@ export function AdminCoursesPage() {
                 )
               ) : (
                 <div className="p-4 rounded-lg bg-black/50 text-xs text-[#9aa4b5]">
-                  No video file URL set yet. Edit this lesson on the left to attach an MP4 file or stream URL.
+                  No video file URL set yet. Edit this lesson on the left to attach an MP4 file or
+                  stream URL.
                 </div>
               )}
             </div>
@@ -526,7 +532,9 @@ export function AdminCoursesPage() {
                 No videos uploaded to {selectedTrack.title} ({selectedTrack.level}) yet
               </h3>
               <p className="text-xs text-[#8c95a6] max-w-md mx-auto">
-                Use the form on the left to name and upload your first video lesson for {selectedTrack.title}. Every video you upload immediately appears in the Client Course Library.
+                Use the form on the left to name and upload your first video lesson for{" "}
+                {selectedTrack.title}. Every video you upload immediately appears in the Client
+                Course Library.
               </p>
             </div>
           ) : (
@@ -606,7 +614,9 @@ export function AdminCoursesPage() {
               Upload {selectedTrack.level} Level PDF &amp; Generate Multi-Question Quiz
             </h2>
             <p className="text-xs text-[#9aa4b5] mt-0.5">
-              Upload your PDF study guide for <strong>{selectedTrack.level}</strong> ({selectedTrack.title}). Our AI engine reads your PDF and generates a multi-question quiz specifically for this level.
+              Upload your PDF study guide for <strong>{selectedTrack.level}</strong> (
+              {selectedTrack.title}). Our AI engine reads your PDF and generates a multi-question
+              quiz specifically for this level.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -716,7 +726,8 @@ export function AdminCoursesPage() {
                   {selectedTrack.level} Level Quiz Questions ({editingQuestions.length} Questions)
                 </h3>
                 <p className="text-[11px] text-[#8c95a6]">
-                  Students taking the {selectedTrack.title} quiz will answer all {editingQuestions.length} questions below.
+                  Students taking the {selectedTrack.title} quiz will answer all{" "}
+                  {editingQuestions.length} questions below.
                 </p>
               </div>
               {editingQuestions.length > 0 && (
@@ -732,7 +743,8 @@ export function AdminCoursesPage() {
 
             {editingQuestions.length === 0 ? (
               <div className="p-8 text-center text-xs text-[#8c95a6]">
-                Upload your <strong>{selectedTrack.level} PDF</strong> on the left and click Generate to create a multi-question quiz for this level.
+                Upload your <strong>{selectedTrack.level} PDF</strong> on the left and click
+                Generate to create a multi-question quiz for this level.
               </div>
             ) : (
               <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
@@ -819,7 +831,9 @@ export function AdminCoursesPage() {
               Official Certificate Template &amp; Student Name Position
             </h2>
             <p className="text-xs text-[#9aa4b5] mt-0.5">
-              Upload your official certificate template image and set where the student&apos;s name is written. When any student completes 100% of a course, their own name is automatically rendered on this certificate for download.
+              Upload your official certificate template image and set where the student&apos;s name
+              is written. When any student completes 100% of a course, their own name is
+              automatically rendered on this certificate for download.
             </p>
           </div>
           <Award size={22} className="text-[#ffb600]" />
@@ -919,9 +933,7 @@ export function AdminCoursesPage() {
                 <input
                   type="color"
                   value={certTemplate.fontColor}
-                  onChange={(e) =>
-                    setCertTemplate({ ...certTemplate, fontColor: e.target.value })
-                  }
+                  onChange={(e) => setCertTemplate({ ...certTemplate, fontColor: e.target.value })}
                   className="w-full h-9 bg-[#181c26] border border-white/10 rounded-xl px-2 py-1 cursor-pointer"
                 />
               </div>
@@ -994,7 +1006,8 @@ export function AdminCoursesPage() {
           </h3>
           {certificates.length === 0 ? (
             <p className="text-xs text-[#8c95a6] py-4">
-              When students complete 100% of any course track, their verifiable certificate appears here.
+              When students complete 100% of any course track, their verifiable certificate appears
+              here.
             </p>
           ) : (
             <div className="table-scroll">
@@ -1044,13 +1057,13 @@ export function AdminCoursesPage() {
 export function AdminLiveStudioPage() {
   const [sessions, setSessions] = useState<LiveSessionItem[]>(getCachedLiveSessions());
   const [activeSessionId, setActiveSessionId] = useState<string>(
-    getCachedLiveSessions()[0]?.id || ""
+    getCachedLiveSessions()[0]?.id || "",
   );
 
   // Schedule / Edit Form
   const [title, setTitle] = useState("New York Session: Live Market Breakdown & Execution");
   const [description, setDescription] = useState(
-    "Live institutional chart analysis and execution on EUR/USD, GBP/USD, and XAU/USD."
+    "Live institutional chart analysis and execution on EUR/USD, GBP/USD, and XAU/USD.",
   );
   const [scheduledDateInput, setScheduledDateInput] = useState(() => {
     const dt = new Date(Date.now() + 2 * 3600 * 1000);
@@ -1059,7 +1072,7 @@ export function AdminLiveStudioPage() {
   const [durationMinutes, setDurationMinutes] = useState(90);
   const [focusPair, setFocusPair] = useState("EUR/USD · XAU/USD · GBP/USD");
   const [streamMode, setStreamMode] = useState<"screen_share" | "rtmp_hls" | "embed">(
-    "screen_share"
+    "screen_share",
   );
   const [rtmpIngestUrl, setRtmpIngestUrl] = useState("");
   const [rtmpStreamKey, setRtmpStreamKey] = useState("");
@@ -1183,9 +1196,7 @@ export function AdminLiveStudioPage() {
     const nextList = await fetchLiveSessionsFromDb();
     setSessions(nextList);
     setActiveSessionId(updated.id);
-    setStudioFeedback(
-      `Session "${updated.title}" scheduled & synced to all student dashboards!`
-    );
+    setStudioFeedback(`Session "${updated.title}" scheduled & synced to all student dashboards!`);
     setTimeout(() => setStudioFeedback(null), 4000);
   }
 
@@ -1240,7 +1251,7 @@ export function AdminLiveStudioPage() {
     ctx: CanvasRenderingContext2D,
     width: number,
     height: number,
-    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal"
+    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal",
   ) {
     ctx.fillStyle = "#080b11";
     ctx.fillRect(0, 0, width, height);
@@ -1367,7 +1378,7 @@ export function AdminLiveStudioPage() {
   async function startCompositedBroadcastLoop(
     liveSession: LiveSessionItem,
     mode: "native_screen" | "simulated_screen",
-    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal" = selectedSimulatedSource
+    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal" = selectedSimulatedSource,
   ) {
     if (frameIntervalRef.current) {
       clearInterval(frameIntervalRef.current);
@@ -1397,7 +1408,7 @@ export function AdminLiveStudioPage() {
               previewCtx,
               simulatedCanvasRef.current.width,
               simulatedCanvasRef.current.height,
-              sourceKey
+              sourceKey,
             );
           }
         }
@@ -1433,7 +1444,9 @@ export function AdminLiveStudioPage() {
 
   async function handleStartScreenShare(_forcePicker = false) {
     if (!navigator.mediaDevices?.getDisplayMedia) {
-      setStudioFeedback("This browser cannot share a screen. Use Chrome, Edge or Firefox on a computer.");
+      setStudioFeedback(
+        "This browser cannot share a screen. Use Chrome, Edge or Firefox on a computer.",
+      );
       return;
     }
     // Ask for the screen first: the browser only allows the picker straight after your click.
@@ -1450,8 +1463,8 @@ export function AdminLiveStudioPage() {
         name === "NotAllowedError" && !inFrame
           ? "Screen sharing was cancelled. Click Share Screen & Go Live again and pick a screen, window or tab."
           : inFrame
-          ? "Screen sharing is blocked inside this preview window. Open the studio in its own browser tab to choose a screen."
-          : "Screen sharing could not start. Check your browser's screen-recording permission and try again."
+            ? "Screen sharing is blocked inside this preview window. Open the studio in its own browser tab to choose a screen."
+            : "Screen sharing could not start. Check your browser's screen-recording permission and try again.",
       );
       return;
     }
@@ -1488,11 +1501,17 @@ export function AdminLiveStudioPage() {
     // Webcam picture-in-picture is optional; going live never waits on it failing.
     await startHostWebcamPiP().catch(() => undefined);
 
-    const liveSession: LiveSessionItem = { ...targetSession, status: "live", streamMode: "screen_share" };
+    const liveSession: LiveSessionItem = {
+      ...targetSession,
+      status: "live",
+      streamMode: "screen_share",
+    };
     await saveLiveSessionInDb(liveSession);
     setSessions(getCachedLiveSessions());
     setActiveSessionId(liveSession.id);
-    setStudioFeedback("You are LIVE! Students now see the screen you selected. Stop sharing from the browser bar or the End button to finish.");
+    setStudioFeedback(
+      "You are LIVE! Students now see the screen you selected. Stop sharing from the browser bar or the End button to finish.",
+    );
 
     await startCompositedBroadcastLoop(liveSession, "native_screen");
     stream.getVideoTracks()[0].onended = () => {
@@ -1501,7 +1520,7 @@ export function AdminLiveStudioPage() {
   }
 
   async function handleConfirmSimulatedScreenSource(
-    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal"
+    sourceKey: "mt5_xauusd" | "tradingview_eurusd" | "exness_terminal",
   ) {
     setSelectedSimulatedSource(sourceKey);
     setShowScreenSourcePicker(false);
@@ -1540,7 +1559,7 @@ export function AdminLiveStudioPage() {
     setSessions(getCachedLiveSessions());
     setActiveSessionId(liveSession.id);
     setStudioFeedback(
-      "You are LIVE! Your selected trading screen is broadcasting with your Webcam PiP at the bottom-left."
+      "You are LIVE! Your selected trading screen is broadcasting with your Webcam PiP at the bottom-left.",
     );
 
     await startCompositedBroadcastLoop(liveSession, "simulated_screen", sourceKey);
@@ -1558,7 +1577,7 @@ export function AdminLiveStudioPage() {
     setStudioFeedback(
       nextStatus === "live"
         ? `Session "${updated.title}" is now LIVE on all student dashboards!`
-        : `Session status updated to ${nextStatus.toUpperCase()}.`
+        : `Session status updated to ${nextStatus.toUpperCase()}.`,
     );
   }
 
@@ -1610,7 +1629,8 @@ export function AdminLiveStudioPage() {
             Live Trading Studio, Screen Share &amp; Chat
           </h1>
           <p className="text-xs sm:text-sm text-[#9aa4b5] mt-1">
-            Schedule live sessions with real-time countdowns, share your screen with bottom-left webcam PiP or stream via RTMP, and moderate student chat.
+            Schedule live sessions with real-time countdowns, share your screen with bottom-left
+            webcam PiP or stream via RTMP, and moderate student chat.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -1655,7 +1675,9 @@ export function AdminLiveStudioPage() {
             </div>
 
             <p className="text-xs text-[#9aa4b5] leading-relaxed">
-              Select which trading screen or terminal window to broadcast boldly to students. Your <strong>Webcam feed</strong> will automatically appear in a small square at the <strong>bottom-left corner</strong> of the screen.
+              Select which trading screen or terminal window to broadcast boldly to students. Your{" "}
+              <strong>Webcam feed</strong> will automatically appear in a small square at the{" "}
+              <strong>bottom-left corner</strong> of the screen.
             </p>
 
             <div className="space-y-2.5">
@@ -1760,7 +1782,8 @@ export function AdminLiveStudioPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#ffb600]">
-                  LIVE BROADCAST MONITOR · STATUS: {(activeSession?.status || "READY").toUpperCase()}
+                  LIVE BROADCAST MONITOR · STATUS:{" "}
+                  {(activeSession?.status || "READY").toUpperCase()}
                 </span>
                 <h2 className="text-lg font-bold text-white mt-0.5">
                   Screen Share + Webcam PiP &amp; RTMP Stream Deck
@@ -1879,10 +1902,13 @@ export function AdminLiveStudioPage() {
                 <div className="text-center p-6 space-y-2">
                   <MonitorUp size={36} className="mx-auto text-[#ffb600]" />
                   <p className="text-sm font-bold text-white">
-                    Click &ldquo;Share Screen &amp; Go Live&rdquo; to select your screen + activate bottom-left Webcam PiP
+                    Click &ldquo;Share Screen &amp; Go Live&rdquo; to select your screen + activate
+                    bottom-left Webcam PiP
                   </p>
                   <p className="text-xs text-[#8c95a6] max-w-md mx-auto">
-                    Your shared screen (MT4/MT5/TradingView) will display boldly while your webcam appears in a small square at the bottom-left corner, or use the RTMP Server credentials below in OBS Studio.
+                    Your shared screen (MT4/MT5/TradingView) will display boldly while your webcam
+                    appears in a small square at the bottom-left corner, or use the RTMP Server
+                    credentials below in OBS Studio.
                   </p>
                 </div>
               )}
@@ -1969,7 +1995,9 @@ export function AdminLiveStudioPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-[#9aa4b5] leading-relaxed">
-                  Stream from OBS to your provider (Cloudflare Stream, Mux or YouTube Live) using its RTMP server and key, then paste the provider&apos;s playback link (.m3u8 or YouTube/Vimeo URL) below. Students watch that link inside the live room.
+                  Stream from OBS to your provider (Cloudflare Stream, Mux or YouTube Live) using
+                  its RTMP server and key, then paste the provider&apos;s playback link (.m3u8 or
+                  YouTube/Vimeo URL) below. Students watch that link inside the live room.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -2050,7 +2078,8 @@ export function AdminLiveStudioPage() {
             <button
               type="button"
               onClick={() =>
-                activeSession && void fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages)
+                activeSession &&
+                void fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages)
               }
               className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-[#9aa4b5] hover:text-white cursor-pointer"
               title="Refresh chat"
@@ -2072,8 +2101,8 @@ export function AdminLiveStudioPage() {
                     m.isHost
                       ? "bg-[#ffb600]/10 border-[#ffb600]/40"
                       : m.isPinned
-                      ? "bg-white/10 border-[#ffb600]/30"
-                      : "bg-[#171b24] border-white/10"
+                        ? "bg-white/10 border-[#ffb600]/30"
+                        : "bg-[#171b24] border-white/10"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -2103,7 +2132,7 @@ export function AdminLiveStudioPage() {
                         onClick={() =>
                           activeSession &&
                           void togglePinSessionChatMessageInDb(activeSession.id, m.id).then(() =>
-                            fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages)
+                            fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages),
                           )
                         }
                         className="text-[#8c95a6] hover:text-[#ffb600] p-1 cursor-pointer"
@@ -2116,7 +2145,7 @@ export function AdminLiveStudioPage() {
                         onClick={() =>
                           activeSession &&
                           void deleteSessionChatMessageInDb(activeSession.id, m.id).then(() =>
-                            fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages)
+                            fetchSessionChatMessagesFromDb(activeSession.id).then(setChatMessages),
                           )
                         }
                         className="text-[#8c95a6] hover:text-red-400 p-1 cursor-pointer"
@@ -2132,7 +2161,10 @@ export function AdminLiveStudioPage() {
             )}
           </div>
 
-          <form onSubmit={handleSendHostMessage} className="mt-4 pt-3 border-t border-white/10 flex gap-2">
+          <form
+            onSubmit={handleSendHostMessage}
+            className="mt-4 pt-3 border-t border-white/10 flex gap-2"
+          >
             <input
               type="text"
               value={hostChatInput}
@@ -2185,7 +2217,7 @@ export function AdminMentorInboxPage() {
       existing.push(msg);
       map.set(msg.studentEmail, existing);
       return map;
-    }, new Map<string, MentorMessageItem[]>())
+    }, new Map<string, MentorMessageItem[]>()),
   );
 
   const activeThread = selectedEmail
@@ -2221,7 +2253,8 @@ export function AdminMentorInboxPage() {
             Student Mentor Q&amp;A &amp; Support Threads
           </h1>
           <p className="text-xs sm:text-sm text-[#9aa4b5] mt-1">
-            View questions sent by students from their Settings &amp; Dashboard and reply directly to their portal.
+            View questions sent by students from their Settings &amp; Dashboard and reply directly
+            to their portal.
           </p>
         </div>
         <button
@@ -2238,7 +2271,8 @@ export function AdminMentorInboxPage() {
           <MessageSquare size={32} className="mx-auto text-[#ffb600]" />
           <h3 className="text-base font-bold text-white">No student questions yet</h3>
           <p className="text-xs text-[#8c95a6]">
-            When students send a mentorship question from their portal, their conversation thread and profile photo appear here.
+            When students send a mentorship question from their portal, their conversation thread
+            and profile photo appear here.
           </p>
         </div>
       ) : (
@@ -2317,7 +2351,10 @@ export function AdminMentorInboxPage() {
               ))}
             </div>
 
-            <form onSubmit={handleSendReply} className="mt-4 pt-3 border-t border-white/10 flex gap-2">
+            <form
+              onSubmit={handleSendReply}
+              className="mt-4 pt-3 border-t border-white/10 flex gap-2"
+            >
               <input
                 type="text"
                 value={replyText}

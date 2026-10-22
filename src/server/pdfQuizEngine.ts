@@ -144,7 +144,8 @@ Each question must have exactly 4 clear options, a 0-based correctIndex (0 to 3)
         "Open 10 correlated positions simultaneously during CPI releases",
       ],
       correctIndex: 1,
-      explanation: "Capital preservation via 1%–2% risk per setup is a non-negotiable rule of the academy.",
+      explanation:
+        "Capital preservation via 1%–2% risk per setup is a non-negotiable rule of the academy.",
     },
     {
       id: `${params.courseId}-pdf-q3-${Date.now()}`,
@@ -156,7 +157,8 @@ Each question must have exactly 4 clear options, a 0-based correctIndex (0 to 3)
         "Ignoring London and New York session open timings",
       ],
       correctIndex: 0,
-      explanation: "Institutional entries require a liquidity raid + displacement confirmation before entry.",
+      explanation:
+        "Institutional entries require a liquidity raid + displacement confirmation before entry.",
     },
     {
       id: `${params.courseId}-pdf-q4-${Date.now()}`,
@@ -168,7 +170,8 @@ Each question must have exactly 4 clear options, a 0-based correctIndex (0 to 3)
         "Reverse the trade direction without structural confirmation",
       ],
       correctIndex: 0,
-      explanation: "Securing partial profit at TP1 and moving SL to entry protects capital while letting runners target TP2–TP5.",
+      explanation:
+        "Securing partial profit at TP1 and moving SL to entry protects capital while letting runners target TP2–TP5.",
     },
     {
       id: `${params.courseId}-pdf-q5-${Date.now()}`,
@@ -180,17 +183,13 @@ Each question must have exactly 4 clear options, a 0-based correctIndex (0 to 3)
         "Price never moves during USD high-impact releases",
       ],
       correctIndex: 0,
-      explanation: "High-impact red-folder releases inject extreme volatility; traders must protect stops 15 minutes prior.",
+      explanation:
+        "High-impact red-folder releases inject extreme volatility; traders must protect stops 15 minutes prior.",
     },
     {
       id: `${params.courseId}-pdf-q6-${Date.now()}`,
       question: `If your account equity is $500 and you risk 1% ($5.00) with a 25-pip stop-loss on EUR/USD, what is your recommended lot size?`,
-      options: [
-        "0.02 Lots",
-        "0.50 Lots",
-        "2.00 Lots",
-        "0.20 Lots",
-      ],
+      options: ["0.02 Lots", "0.50 Lots", "2.00 Lots", "0.20 Lots"],
       correctIndex: 0,
       explanation: "$5.00 risk ÷ (25 pips × $10/pip per standard lot) = 0.02 Lots.",
     },
@@ -211,8 +210,8 @@ const BASE_MARKET_PRICES: Record<string, number> = {
   "XAU/USD": 4121.5,
   "USD/JPY": 154.82,
   "GBP/JPY": 196.35,
-  "NAS100": 18420.5,
-  "US100": 18420.5,
+  NAS100: 18420.5,
+  US100: 18420.5,
   "BTC/USD": 67450.0,
   "AUD/USD": 0.6584,
   "USD/CAD": 1.3675,
@@ -252,7 +251,7 @@ export interface RealMarketChartPayload {
 }
 
 async function fetchSwissquoteBbo(
-  symbol: "EUR/USD" | "GBP/USD" | "XAU/USD"
+  symbol: "EUR/USD" | "GBP/USD" | "XAU/USD",
 ): Promise<{ bid: number; ask: number; mid: number } | null> {
   try {
     const controller = new AbortController();
@@ -262,14 +261,15 @@ async function fetchSwissquoteBbo(
       {
         signal: controller.signal,
         headers: { "User-Agent": "Mozilla/5.0" },
-      }
+      },
     );
     clearTimeout(timeout);
     if (!res.ok) return null;
     const data = (await res.json()) as any;
     const profile =
-      data?.[0]?.spreadProfilePrices?.find((p: any) => p.spreadProfile === "elite" || p.spreadProfile === "prime") ||
-      data?.[0]?.spreadProfilePrices?.[0];
+      data?.[0]?.spreadProfilePrices?.find(
+        (p: any) => p.spreadProfile === "elite" || p.spreadProfile === "prime",
+      ) || data?.[0]?.spreadProfilePrices?.[0];
     if (profile && Number.isFinite(Number(profile.bid)) && Number.isFinite(Number(profile.ask))) {
       const bid = Number(profile.bid);
       const ask = Number(profile.ask);
@@ -309,14 +309,14 @@ function formatTimeLabel(unixSec: number): string {
 
 export async function getLiveMarketCandlesServer(
   rawSymbol?: string,
-  rawInterval?: string
+  rawInterval?: string,
 ): Promise<RealMarketChartPayload> {
   const normSym =
     rawSymbol === "GBP/USD" || rawSymbol === "GBPUSD"
       ? "GBP/USD"
       : rawSymbol === "XAU/USD" || rawSymbol === "XAUUSD" || rawSymbol === "GOLD"
-      ? "XAU/USD"
-      : "EUR/USD";
+        ? "XAU/USD"
+        : "EUR/USD";
 
   const normInterval: "1m" | "5m" | "15m" =
     rawInterval === "5m" ? "5m" : rawInterval === "15m" ? "15m" : "1m";
@@ -341,10 +341,13 @@ export async function getLiveMarketCandlesServer(
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 4500);
         const [ohlcResp, tickerResp] = await Promise.all([
-          fetch(`https://api.kraken.com/0/public/OHLC?pair=${krakenPair}&interval=${krakenInterval}`, {
-            signal: controller.signal,
-            headers: { "User-Agent": "Mozilla/5.0" },
-          }),
+          fetch(
+            `https://api.kraken.com/0/public/OHLC?pair=${krakenPair}&interval=${krakenInterval}`,
+            {
+              signal: controller.signal,
+              headers: { "User-Agent": "Mozilla/5.0" },
+            },
+          ),
           fetch(`https://api.kraken.com/0/public/Ticker?pair=${krakenPair}`, {
             signal: controller.signal,
             headers: { "User-Agent": "Mozilla/5.0" },
@@ -368,7 +371,7 @@ export async function getLiveMarketCandlesServer(
           {
             signal: controller.signal,
             headers: { "User-Agent": "Mozilla/5.0" },
-          }
+          },
         );
         clearTimeout(timeout);
         if (!resp.ok) return null;
@@ -521,7 +524,7 @@ export async function getLiveMarketCandlesServer(
   const currentPrice =
     spotMid > 0
       ? Number(spotMid.toFixed(decimals))
-      : visibleCandles[visibleCandles.length - 1]?.close ?? BASE_MARKET_PRICES[normSym];
+      : (visibleCandles[visibleCandles.length - 1]?.close ?? BASE_MARKET_PRICES[normSym]);
 
   cachedLiveRates[normSym] = currentPrice;
 
@@ -531,9 +534,7 @@ export async function getLiveMarketCandlesServer(
     spotAsk = Number((currentPrice + defaultHalfSpread).toFixed(decimals));
   }
 
-  const spreadPips = Number(
-    Math.max(0.1, (spotAsk - spotBid) * pipMultiplier).toFixed(1)
-  );
+  const spreadPips = Number(Math.max(0.1, (spotAsk - spotBid) * pipMultiplier).toFixed(1));
 
   const recentSlice = rawCandles.slice(-96);
   if (!high24h && recentSlice.length > 0) {
@@ -606,8 +607,10 @@ export async function getLiveMarketPricesServer(): Promise<Record<string, number
 
       const rates = erRes?.rates;
       if (rates) {
-        if (!eurBbo && rates.EUR) cachedLiveRates["EUR/USD"] = Number((1 / Number(rates.EUR)).toFixed(5));
-        if (!gbpBbo && rates.GBP) cachedLiveRates["GBP/USD"] = Number((1 / Number(rates.GBP)).toFixed(5));
+        if (!eurBbo && rates.EUR)
+          cachedLiveRates["EUR/USD"] = Number((1 / Number(rates.EUR)).toFixed(5));
+        if (!gbpBbo && rates.GBP)
+          cachedLiveRates["GBP/USD"] = Number((1 / Number(rates.GBP)).toFixed(5));
         if (rates.JPY) cachedLiveRates["USD/JPY"] = Number(Number(rates.JPY).toFixed(3));
         if (rates.GBP && rates.JPY) {
           cachedLiveRates["GBP/JPY"] = Number((Number(rates.JPY) / Number(rates.GBP)).toFixed(3));
@@ -622,4 +625,3 @@ export async function getLiveMarketPricesServer(): Promise<Record<string, number
 
   return { ...cachedLiveRates };
 }
-

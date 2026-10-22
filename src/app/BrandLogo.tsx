@@ -64,30 +64,22 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     size === "sm"
       ? "h-7 sm:h-7.5"
       : size === "lg"
-      ? "h-9 sm:h-10 md:h-11"
-      : "h-7.5 sm:h-8.5 md:h-9";
+        ? "h-9 sm:h-10 md:h-11"
+        : "h-7.5 sm:h-8.5 md:h-9";
 
-  const markHeightClass =
-    size === "sm"
-      ? "h-7"
-      : size === "lg"
-      ? "h-9"
-      : "h-8";
+  const markHeightClass = size === "sm" ? "h-7" : size === "lg" ? "h-9" : "h-8";
 
   const handleHomeClick = (e: React.MouseEvent) => {
     if (to === "/" || href === "#top") {
       saveActiveRoute("/");
       if (typeof window !== "undefined") {
         const host = window.location.hostname.toLowerCase();
-        if (
-          host.startsWith("master.") ||
-          host.startsWith("student.") ||
-          host.startsWith("stu.")
-        ) {
+        if (host.startsWith("master.") || host.startsWith("student.") || host.startsWith("stu.")) {
           e.preventDefault();
-          const targetHome = host.includes("candlesticks.online") && !host.includes("candlesticksacademy.online")
-            ? "https://candlesticks.online/"
-            : "https://candlesticksacademy.online/";
+          const targetHome =
+            host.includes("candlesticks.online") && !host.includes("candlesticksacademy.online")
+              ? "https://candlesticks.online/"
+              : "https://candlesticksacademy.online/";
           window.location.assign(targetHome);
         }
       }

@@ -1,2 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
-export const Route = createFileRoute('/api/public/portal/login')({ server: { handlers: { POST: async ({ request }) => (await import('@/server/portal-login')).portalLogin(request) } } });
+import { createFileRoute } from "@tanstack/react-router";
+export const Route = createFileRoute("/api/public/portal/login")({
+  server: {
+    handlers: {
+      POST: async ({ request }) => (await import("@/server/portal-login")).portalLogin(request),
+    },
+  },
+});

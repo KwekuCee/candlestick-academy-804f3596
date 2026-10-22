@@ -93,8 +93,7 @@ export interface ExnessConfig {
 
 export const OFFICIAL_PARTNER_LINK =
   import.meta.env.VITE_EXNESS_PARTNER_LINK || "https://one.exnessonelink.com/a/qgcrue4rqj";
-export const OFFICIAL_PARTNER_CODE =
-  import.meta.env.VITE_EXNESS_PARTNER_CODE || "qgcrue4rqj";
+export const OFFICIAL_PARTNER_CODE = import.meta.env.VITE_EXNESS_PARTNER_CODE || "qgcrue4rqj";
 export const OFFICIAL_PARTNER_ACCOUNT_ID = "1064144938140187556";
 export const SUPABASE_PROJECT_REF = "vkedjjibvyjrixnhqwtr";
 export const SUPABASE_PROJECT_URL =
@@ -704,7 +703,10 @@ function saveLocalCredentialEntry(email: string, username?: string, accountPassw
     const prev = map[key] || {};
     map[key] = {
       username: username !== undefined ? username.trim().toLowerCase() : prev.username,
-      accountPassword: accountPassword !== undefined && accountPassword !== "" ? accountPassword : prev.accountPassword,
+      accountPassword:
+        accountPassword !== undefined && accountPassword !== ""
+          ? accountPassword
+          : prev.accountPassword,
     };
     localStorage.setItem("candlesticks_client_credentials", JSON.stringify(map));
   } catch {
@@ -757,8 +759,12 @@ function mapDbRowToStudent(row: Record<string, unknown>): ExnessStudent {
     telegramHandle: row.telegram_handle ? String(row.telegram_handle) : undefined,
     preferredSession: row.preferred_session ? String(row.preferred_session) : "New York",
     riskPerTradePct: row.risk_per_trade_pct !== undefined ? Number(row.risk_per_trade_pct) : 1.0,
-    accountBalanceUsd: row.account_balance_usd !== undefined ? Number(row.account_balance_usd) : Number(row.deposit_amount || 100),
-    targetMonthlyReturnPct: row.target_monthly_return_pct !== undefined ? Number(row.target_monthly_return_pct) : 10.0,
+    accountBalanceUsd:
+      row.account_balance_usd !== undefined
+        ? Number(row.account_balance_usd)
+        : Number(row.deposit_amount || 100),
+    targetMonthlyReturnPct:
+      row.target_monthly_return_pct !== undefined ? Number(row.target_monthly_return_pct) : 10.0,
     tradingStyle: row.trading_style ? String(row.trading_style) : "Intraday Structure",
     autoCopySignals: row.auto_copy_signals !== undefined ? Boolean(row.auto_copy_signals) : false,
     notifySignals: row.notify_signals !== undefined ? Boolean(row.notify_signals) : true,
@@ -786,7 +792,7 @@ export async function refreshRosterFromSupabase(): Promise<ExnessStudent[]> {
       const mapped: ExnessStudent[] = data.map((r) => {
         const student = mapDbRowToStudent(r as Record<string, unknown>);
         const localMatch = existingLocal.find(
-          (item) => item.email.toLowerCase() === student.email.toLowerCase()
+          (item) => item.email.toLowerCase() === student.email.toLowerCase(),
         );
         return {
           ...student,
@@ -815,12 +821,19 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
   if (!supabase) return;
   try {
     if (password && user.email) {
-      const { data, error } = await supabase.auth.signUp({ email: user.email, password, options: { data: { username: user.username, full_name: user.fullName, country: user.country } } });
+      const { data, error } = await supabase.auth.signUp({
+        email: user.email,
+        password,
+        options: {
+          data: { username: user.username, full_name: user.fullName, country: user.country },
+        },
+      });
       if (error) throw error;
       if (!data.session) return { success: true, needsConfirmation: true };
     }
     const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user || auth.user.email?.toLowerCase() !== user.email.toLowerCase()) return { success: false, message: 'Please sign in before saving your profile.' };
+    if (!auth.user || auth.user.email?.toLowerCase() !== user.email.toLowerCase())
+      return { success: false, message: "Please sign in before saving your profile." };
     const payload: Record<string, unknown> = {
       id: user.id,
       auth_user_id: auth.user.id,
@@ -852,7 +865,8 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
     if (user.preferredSession !== undefined) payload.preferred_session = user.preferredSession;
     if (user.riskPerTradePct !== undefined) payload.risk_per_trade_pct = user.riskPerTradePct;
     if (user.accountBalanceUsd !== undefined) payload.account_balance_usd = user.accountBalanceUsd;
-    if (user.targetMonthlyReturnPct !== undefined) payload.target_monthly_return_pct = user.targetMonthlyReturnPct;
+    if (user.targetMonthlyReturnPct !== undefined)
+      payload.target_monthly_return_pct = user.targetMonthlyReturnPct;
     if (user.tradingStyle !== undefined) payload.trading_style = user.tradingStyle;
     if (user.autoCopySignals !== undefined) payload.auto_copy_signals = user.autoCopySignals;
     if (user.notifySignals !== undefined) payload.notify_signals = user.notifySignals;
@@ -866,13 +880,19 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
     if (password) {
       const { data: signedIn } = await supabase.auth.getSession();
       if (signedIn.session) {
-        await fetch('/api/public/portal/welcome', { method: 'POST', headers: { Authorization: `Bearer ${signedIn.session.access_token}` } }).catch(() => undefined);
+        await fetch("/api/public/portal/welcome", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${signedIn.session.access_token}` },
+        }).catch(() => undefined);
       }
     }
     return { success: true, needsConfirmation: false };
   } catch (err) {
     console.debug("Supabase sync note:", err);
-    return { success: false, message: err instanceof Error ? err.message : 'Unable to register your account.' };
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Unable to register your account.",
+    };
   }
 }
 
@@ -898,9 +918,12 @@ export async function registerApprovedTradingAccountInSupabase(params: {
   const isFunded = params.depositAmount >= 50;
   const resolvedClientId =
     params.clientId?.trim() ||
-    (params.exnessClientUid ? params.exnessClientUid.slice(0, 8) : `cl-${cleanAccount.slice(0, 6)}`);
+    (params.exnessClientUid
+      ? params.exnessClientUid.slice(0, 8)
+      : `cl-${cleanAccount.slice(0, 6)}`);
   const resolvedClientUid =
-    params.exnessClientUid?.trim() || `${resolvedClientId}-0000-4000-8000-${cleanAccount.padStart(12, "0")}`;
+    params.exnessClientUid?.trim() ||
+    `${resolvedClientId}-0000-4000-8000-${cleanAccount.padStart(12, "0")}`;
 
   const newStudent: ExnessStudent = {
     id: `std-${Date.now()}`,
@@ -942,7 +965,7 @@ export async function registerApprovedTradingAccountInSupabase(params: {
         tier: isFunded ? "funded_student" : "free_month",
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "email" }
+      { onConflict: "email" },
     );
 
     // Also try inserting into exness_partner_clients if upgraded schema is active
@@ -978,7 +1001,7 @@ export async function registerApprovedTradingAccountInSupabase(params: {
   const existingIdx = roster.findIndex(
     (s) =>
       s.email.toLowerCase() === cleanEmail ||
-      (s.exnessId && s.exnessId.toLowerCase() === cleanAccount.toLowerCase())
+      (s.exnessId && s.exnessId.toLowerCase() === cleanAccount.toLowerCase()),
   );
   if (existingIdx >= 0) {
     roster[existingIdx] = newStudent;
@@ -1001,11 +1024,7 @@ export const ADMIN_PORTAL_DOMAIN = "master.candlesticksacademy.online";
 export function getHomePageUrl(): string {
   if (typeof window === "undefined") return "/";
   const host = window.location.hostname.toLowerCase();
-  if (
-    host.startsWith("master.") ||
-    host.startsWith("student.") ||
-    host.startsWith("stu.")
-  ) {
+  if (host.startsWith("master.") || host.startsWith("student.") || host.startsWith("stu.")) {
     if (host.includes("candlesticks.online") && !host.includes("candlesticksacademy.online")) {
       return "https://candlesticks.online/";
     }
@@ -1100,17 +1119,43 @@ export async function hydrateCrossDomainSession(): Promise<void> {
       verifiedPortalRole = result.role;
     } else {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) { verifiedPortalRole = null; return; }
-      const saved = await fetch("/api/public/portal/session", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session.access_token}` }, body: JSON.stringify({ access_token: data.session.access_token, refresh_token: data.session.refresh_token }) });
-      if (!saved.ok) { verifiedPortalRole = null; return; }
+      if (!data.session) {
+        verifiedPortalRole = null;
+        return;
+      }
+      const saved = await fetch("/api/public/portal/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+        body: JSON.stringify({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        }),
+      });
+      if (!saved.ok) {
+        verifiedPortalRole = null;
+        return;
+      }
       verifiedPortalRole = (await saved.json()).role;
     }
     const { data: auth } = await supabase.auth.getUser();
     if (auth.user) {
-      const { data: row } = await supabase.from("students").select("*").eq("auth_user_id", auth.user.id).maybeSingle();
-      if (row) localStorage.setItem("candlesticks_current_student", JSON.stringify(mapDbRowToStudent(row)));
+      const { data: row } = await supabase
+        .from("students")
+        .select("*")
+        .eq("auth_user_id", auth.user.id)
+        .maybeSingle();
+      if (row)
+        localStorage.setItem(
+          "candlesticks_current_student",
+          JSON.stringify(mapDbRowToStudent(row)),
+        );
     }
-  } catch { verifiedPortalRole = null; }
+  } catch {
+    verifiedPortalRole = null;
+  }
 }
 
 export function getStoredCurrentUser(): ExnessStudent {
@@ -1148,38 +1193,63 @@ export function saveStoredCurrentUser(user: ExnessStudent, password?: string) {
     localStorage.setItem("candlesticks_current_student", JSON.stringify(profile));
     window.dispatchEvent(new Event("candlesticks_user_updated"));
     void syncStudentToSupabase({ ...profile }, password);
-  } catch { /* local cache is not authoritative */ }
+  } catch {
+    /* local cache is not authoritative */
+  }
 }
 
-export const RESERVED_ADMIN_USERNAMES = ["master", "admin", "pastormike", "candlesticks", "support", "founder"];
+export const RESERVED_ADMIN_USERNAMES = [
+  "master",
+  "admin",
+  "pastormike",
+  "candlesticks",
+  "support",
+  "founder",
+];
 
 export function normalizeUsername(raw: string): string {
-  return raw
-    .trim()
-    .replace(/^@+/, "")
-    .toLowerCase()
-    .replace(/\s+/g, "");
+  return raw.trim().replace(/^@+/, "").toLowerCase().replace(/\s+/g, "");
 }
 
-export function isMasterAdminAuthenticated(): boolean { return verifiedPortalRole === "admin"; }
+export function isMasterAdminAuthenticated(): boolean {
+  return verifiedPortalRole === "admin";
+}
 export function setMasterAdminAuthenticated(authenticated: boolean) {
   // A caller can clear display state, but cannot grant administrator privileges.
   if (!authenticated) verifiedPortalRole = null;
 }
-export function buildRolePortalUrl(role: "student" | "admin", targetPath?: string): string { return portalDestination(role, targetPath); }
-export function redirectToRolePortal(role: "student" | "admin", targetPath?: string, fallbackNavigate?: (path: string) => void): void {
-  const path = targetPath?.startsWith("/") && !targetPath.startsWith("//") ? targetPath : role === "admin" ? "/admin" : "/dashboard";
-  if (typeof window === "undefined") { fallbackNavigate?.(path); return; }
+export function buildRolePortalUrl(role: "student" | "admin", targetPath?: string): string {
+  return portalDestination(role, targetPath);
+}
+export function redirectToRolePortal(
+  role: "student" | "admin",
+  targetPath?: string,
+  fallbackNavigate?: (path: string) => void,
+): void {
+  const path =
+    targetPath?.startsWith("/") && !targetPath.startsWith("//")
+      ? targetPath
+      : role === "admin"
+        ? "/admin"
+        : "/dashboard";
+  if (typeof window === "undefined") {
+    fallbackNavigate?.(path);
+    return;
+  }
   const destination = portalDestination(role, path);
-  if (!isAcademyHost(window.location.hostname) || new URL(destination).hostname === window.location.hostname) {
-    if (fallbackNavigate) fallbackNavigate(path); else window.location.assign(path);
+  if (
+    !isAcademyHost(window.location.hostname) ||
+    new URL(destination).hostname === window.location.hostname
+  ) {
+    if (fallbackNavigate) fallbackNavigate(path);
+    else window.location.assign(path);
   } else window.location.assign(destination);
 }
 
 export async function checkUsernameAvailability(
   rawUsername: string,
   excludeEmail?: string,
-  excludeStudentId?: string
+  excludeStudentId?: string,
 ): Promise<{
   available: boolean;
   normalized: string;
@@ -1262,7 +1332,9 @@ export async function checkUsernameAvailability(
 
       if (!error && Array.isArray(data) && data.length > 0) {
         const takenInDb = data.find((row) => {
-          const rEmail = String(row.email || "").trim().toLowerCase();
+          const rEmail = String(row.email || "")
+            .trim()
+            .toLowerCase();
           const rId = String(row.id || "").trim();
           if (cleanExcludeEmail && rEmail === cleanExcludeEmail) return false;
           if (cleanExcludeId && rId === cleanExcludeId) return false;
@@ -1288,22 +1360,52 @@ export async function checkUsernameAvailability(
   };
 }
 
-export async function authenticatePortalLogin(identifierInput: string, passwordInput: string): Promise<{ success: boolean; role?: "admin" | "student"; student?: ExnessStudent; message: string }> {
+export async function authenticatePortalLogin(
+  identifierInput: string,
+  passwordInput: string,
+): Promise<{
+  success: boolean;
+  role?: "admin" | "student";
+  student?: ExnessStudent;
+  message: string;
+}> {
   if (!supabase) return { success: false, message: "Account connection is unavailable." };
   try {
-    const response = await fetch("/api/public/portal/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ identifier: identifierInput.trim(), password: passwordInput }) });
+    const response = await fetch("/api/public/portal/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: identifierInput.trim(), password: passwordInput }),
+    });
     const result = await response.json();
-    if (!response.ok || !result.session) return { success: false, message: result.message || "Sign-in failed." };
+    if (!response.ok || !result.session)
+      return { success: false, message: result.message || "Sign-in failed." };
     const { error } = await supabase.auth.setSession(result.session);
     if (error) return { success: false, message: "Unable to save your sign-in session." };
-    const saved = await fetch("/api/public/portal/session", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${result.session.access_token}` }, body: JSON.stringify({ access_token: result.session.access_token, refresh_token: result.session.refresh_token }) });
+    const saved = await fetch("/api/public/portal/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${result.session.access_token}`,
+      },
+      body: JSON.stringify({
+        access_token: result.session.access_token,
+        refresh_token: result.session.refresh_token,
+      }),
+    });
     if (!saved.ok) return { success: false, message: "Unable to establish your portal session." };
     verifiedPortalRole = (await saved.json()).role;
     const student = result.student ? mapDbRowToStudent(result.student) : undefined;
     if (student) localStorage.setItem("candlesticks_current_student", JSON.stringify(student));
     window.dispatchEvent(new Event("candlesticks_user_updated"));
-    return { success: true, role: verifiedPortalRole || "student", student, message: "Welcome back!" };
-  } catch { return { success: false, message: "Unable to sign in. Please try again." }; }
+    return {
+      success: true,
+      role: verifiedPortalRole || "student",
+      student,
+      message: "Welcome back!",
+    };
+  } catch {
+    return { success: false, message: "Unable to sign in. Please try again." };
+  }
 }
 
 export async function logoutCurrentUser() {
@@ -1402,7 +1504,13 @@ export async function syncExnessLiveWithSupabase(query?: {
       return data;
     }
     const error = await res.json().catch(() => ({}));
-    return { success: false, message: error.message || 'Live sync failed.', count: 0, accounts: [], syncedAt: new Date().toISOString() };
+    return {
+      success: false,
+      message: error.message || "Live sync failed.",
+      count: 0,
+      accounts: [],
+      syncedAt: new Date().toISOString(),
+    };
   } catch (err) {
     console.debug("Note on live sync endpoint call:", err);
   }
@@ -1512,7 +1620,10 @@ ${cleanEmail}`;
     const session = supabase ? (await supabase.auth.getSession()).data.session : null;
     const res = await fetch("/api/exness/submit-transfer-ticket", {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+      headers: {
+        "Content-Type": "application/json",
+        ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+      },
       body: JSON.stringify({
         tradingAccountId: cleanAccount,
         email: cleanEmail,
@@ -1538,7 +1649,11 @@ ${cleanEmail}`;
       };
     }
     if (res.status === 401 || res.status === 403) {
-      return { success: false, message: 'Please sign in before submitting a transfer request.', ticketRef: '' };
+      return {
+        success: false,
+        message: "Please sign in before submitting a transfer request.",
+        ticketRef: "",
+      };
     }
   } catch (err) {
     console.debug("Note on server submit-transfer-ticket:", err);
@@ -1585,7 +1700,10 @@ function savePendingTransferTicket(ticket: {
     const raw = localStorage.getItem("candlesticks_submitted_transfer_tickets");
     const list = raw ? JSON.parse(raw) : [];
     list.unshift(ticket);
-    localStorage.setItem("candlesticks_submitted_transfer_tickets", JSON.stringify(list.slice(0, 50)));
+    localStorage.setItem(
+      "candlesticks_submitted_transfer_tickets",
+      JSON.stringify(list.slice(0, 50)),
+    );
   } catch {
     // ignore
   }
@@ -1599,7 +1717,7 @@ function savePendingTransferTicket(ticket: {
 export async function verifyExnessPartnerAccount(
   accountIdOrEmail: string,
   config: ExnessConfig = getStoredConfig(),
-  secondaryEmail?: string
+  secondaryEmail?: string,
 ): Promise<{
   success: boolean;
   partnerLinked: boolean;
@@ -1669,7 +1787,7 @@ export async function verifyExnessPartnerAccount(
         c.trading_account_id.toLowerCase() === lowerInput ||
         c.client_account_id.toLowerCase() === lowerInput ||
         c.client_id.toLowerCase() === lowerInput ||
-        c.client_uid.toLowerCase() === lowerInput
+        c.client_uid.toLowerCase() === lowerInput,
     );
 
     const matchedDb = dbPartnerClients.find((c) => {
@@ -1696,11 +1814,19 @@ export async function verifyExnessPartnerAccount(
     return { matchedStatic, matchedDb, matchedStd };
   }
 
-  let { matchedStatic: matchedStaticPartnerClient, matchedDb: matchedDbPartnerClient, matchedStd: matchedStudent } = findMatches();
+  let {
+    matchedStatic: matchedStaticPartnerClient,
+    matchedDb: matchedDbPartnerClient,
+    matchedStd: matchedStudent,
+  } = findMatches();
 
   // If not found immediately, automatically trigger a real-time sync with Exness Partner API & Supabase!
   // This automatically captures new registrations or newly transferred accounts on the fly!
-  if (!matchedStaticPartnerClient && !matchedDbPartnerClient && !matchedStdAccountOnly(matchedStudent)) {
+  if (
+    !matchedStaticPartnerClient &&
+    !matchedDbPartnerClient &&
+    !matchedStdAccountOnly(matchedStudent)
+  ) {
     try {
       await syncExnessLiveWithSupabase({ account: trimmedAccount, email: trimmedEmail });
       await fetchDbState();
@@ -1746,7 +1872,7 @@ export async function verifyExnessPartnerAccount(
           const found = parsed.find(
             (t: any) =>
               t.tradingAccountId === trimmedAccount ||
-              (trimmedEmail && t.email && t.email.toLowerCase() === trimmedEmail)
+              (trimmedEmail && t.email && t.email.toLowerCase() === trimmedEmail),
           );
           if (found) {
             pendingTicketRef = found.ticketRef;
@@ -1777,7 +1903,8 @@ export async function verifyExnessPartnerAccount(
           deposit_amount: 0,
           is_funded: false,
           raw_response: {
-            reason: "Trading account ID not registered under Partner Link qgcrue4rqj in Candlesticks database",
+            reason:
+              "Trading account ID not registered under Partner Link qgcrue4rqj in Candlesticks database",
           },
         });
       } catch {
@@ -1846,12 +1973,12 @@ export async function verifyExnessPartnerAccount(
 // Checks if the student's linked Trading Account ID has completed the $50 USD deposit.
 export async function checkExnessAccountDeposit(
   accountIdOrEmail: string,
-  simulatedDeposit?: number
+  simulatedDeposit?: number,
 ): Promise<{ success: boolean; depositAmount: number; isEligible: boolean; message: string }> {
   const cleanKey = accountIdOrEmail.trim().toLowerCase();
 
   // Browser-supplied deposit amounts are never trusted; only the server sync can verify deposits.
-  if (false as boolean && simulatedDeposit !== undefined) {
+  if ((false as boolean) && simulatedDeposit !== undefined) {
     const isEligible = simulatedDeposit >= 50;
     if (isSupabaseConfigured && supabase && cleanKey) {
       try {
@@ -1889,7 +2016,7 @@ export async function checkExnessAccountDeposit(
           (r) =>
             String(r.exness_id || "").toLowerCase() === cleanKey ||
             String(r.email || "").toLowerCase() === cleanKey ||
-            String(r.exness_email || "").toLowerCase() === cleanKey
+            String(r.exness_email || "").toLowerCase() === cleanKey,
         );
         if (matched && Number(matched.deposit_amount || 0) > 0) {
           amount = Number(matched.deposit_amount || 0);
@@ -1905,7 +2032,7 @@ export async function checkExnessAccountDeposit(
     const partnerAcc = EXNESS_PARTNER_CLIENTS.find(
       (c) =>
         c.trading_account_id.toLowerCase() === cleanKey ||
-        c.client_account_id.toLowerCase() === cleanKey
+        c.client_account_id.toLowerCase() === cleanKey,
     );
     if (partnerAcc && partnerAcc.ftd_received && partnerAcc.deposit_amount >= 4) {
       amount = 100;
@@ -1946,7 +2073,7 @@ export async function pushSchemaToSupabaseManagementApi(personalAccessToken: str
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: SUPABASE_SCHEMA_SQL }),
-      }
+      },
     );
 
     if (res.ok) {
