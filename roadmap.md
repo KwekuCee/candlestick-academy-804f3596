@@ -1,5 +1,13 @@
 # System database and settings audit
 
+## Live payments, portals and branded emails
+- [ ] Secure Moolre initiation and server verification with atomic student updates; test failures and duplicate confirmations.
+- [ ] Request live Moolre credentials and Resend connection; verify provider configuration.
+- [ ] Secure role-based portal redirects and logout to the apex domain.
+- [ ] Create branded signup/login/payment/support/blog/contact email templates and wire supported events.
+- [ ] Apply Manrope throughout the app and emails.
+- [ ] Verify end-to-end flows; report external setup blockers.
+
 - [x] Compare every app table and column against the connected Supabase schema.
 - [x] Apply non-destructive missing schema updates with protected access.
 - [x] Align the app with the connected Supabase client and verify database reads.
