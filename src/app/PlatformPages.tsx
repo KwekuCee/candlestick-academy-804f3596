@@ -958,6 +958,7 @@ const adminNav = [
   ["Mentor Q&A Inbox", "/admin/messages", "bell"],
   ["Exness Partner Sync", "/admin/verification", "shield"],
   ["Payments & tiers", "/admin/payments", "trades"],
+  ["Student reviews", "/admin/reviews", "message"],
 ] as const;
 
 const mobileStudentTabs = [
