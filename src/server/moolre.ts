@@ -70,7 +70,7 @@ export async function paymentAction(request: Request, action: 'checkout' | 'veri
     const body = { type: 1, amount: price.amount.toFixed(2), currency: price.currency, externalref: ref, accountnumber: cfg.account };
     try {
       if (input.method === 'moolre_link') {
-        const response = await moolre('/embed/link', { ...body, email: 'payments@candlesticksacademy.online', reusable: '0', expiration_time: 30, redirect: 'https://student.candlesticksacademy.online/dashboard' });
+        const response = await moolre('/embed/link', { ...body, email: 'payments@candlesticksacademy.online', reusable: '0', expiration_time: 30, callback: 'https://student.candlesticksacademy.online/api/public/payments/moolre-webhook', redirect: 'https://student.candlesticksacademy.online/dashboard' });
         url = z.string().url().parse(response.data?.authorization_url);
         const parsed = new URL(url);
         if (parsed.protocol !== 'https:' || !['pos.moolre.com', 'pay.moolre.com'].includes(parsed.hostname)) throw new Error('Unexpected Moolre checkout destination.');

@@ -815,11 +815,12 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
   if (!supabase) return;
   try {
     if (password && user.email) {
-      const { error } = await supabase.auth.signUp({ email: user.email, password, options: { data: { username: user.username, full_name: user.fullName } } });
+      const { data, error } = await supabase.auth.signUp({ email: user.email, password, options: { data: { username: user.username, full_name: user.fullName, country: user.country } } });
       if (error) throw error;
+      if (!data.session) return { success: true, needsConfirmation: true };
     }
     const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user || auth.user.email?.toLowerCase() !== user.email.toLowerCase()) return;
+    if (!auth.user || auth.user.email?.toLowerCase() !== user.email.toLowerCase()) return { success: false, message: 'Please sign in before saving your profile.' };
     const payload: Record<string, unknown> = {
       id: user.id,
       auth_user_id: auth.user.id,
@@ -862,8 +863,10 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
 
     const { error } = await supabase.from("students").upsert(payload, { onConflict: "email" });
     if (error) throw error;
+    return { success: true, needsConfirmation: false };
   } catch (err) {
     console.debug("Supabase sync note:", err);
+    return { success: false, message: err instanceof Error ? err.message : 'Unable to register your account.' };
   }
 }
 

@@ -19,6 +19,7 @@ import {
   refreshRosterFromSupabase,
   saveStoredCurrentUser,
   saveStoredRoster,
+  syncStudentToSupabase,
   syncExnessLiveWithSupabase,
   verifyExnessPartnerAccount,
 } from "./exnessStore";
@@ -385,7 +386,6 @@ export function OnboardingFlow() {
       ...user,
       id: matchedDbStudent?.id || `std-${Date.now()}`,
       username: availability.normalized,
-      accountPassword: password,
       fullName: fullName.trim(),
       country,
       email: email.trim(),
@@ -405,7 +405,16 @@ export function OnboardingFlow() {
       trialEndsAt: matchedDbStudent?.trialEndsAt || trialEndsAt,
     };
 
-    saveStoredCurrentUser(updatedUser, password);
+    const registration = await syncStudentToSupabase(updatedUser, password);
+    if (!registration?.success) {
+      setFormError(registration?.message || 'Your account could not be created. Please try again.');
+      return;
+    }
+    if (registration.needsConfirmation) {
+      setFormError('Check your email to confirm your account, then sign in to continue.');
+      return;
+    }
+    saveStoredCurrentUser(updatedUser);
 
     // Sync to Admin Student Roster
     const roster = getStoredRoster();

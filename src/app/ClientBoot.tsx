@@ -1,12 +1,11 @@
 // Client-only startup: cross-domain session, subdomain/saved-route redirects, splash screen.
 import { useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getSavedActiveRoute, saveActiveRoute } from "./BrandLogo";
+import { saveActiveRoute } from "./BrandLogo";
 import {
   ADMIN_PORTAL_DOMAIN,
   STUDENT_PORTAL_DOMAIN,
   hydrateCrossDomainSession,
-  isMasterAdminAuthenticated,
 } from "./exnessStore";
 import { MobileCandlestickSplash } from "./PWAInstallPrompt";
 
