@@ -1636,13 +1636,18 @@ export async function syncExnessLiveWithSupabase(query?: {
     if (query?.email) params.set("email", query.email);
     const queryString = params.toString() ? `?${params.toString()}` : "";
 
-    const res = await fetch(`/api/exness/refresh${queryString}`);
+    const session = supabase ? (await supabase.auth.getSession()).data.session : null;
+    const res = await fetch(`/api/exness/refresh${queryString}`, {
+      headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+    });
     if (res.ok) {
       const data = await res.json();
       await refreshRosterFromSupabase();
       window.dispatchEvent(new Event("candlesticks_roster_updated"));
       return data;
     }
+    const error = await res.json().catch(() => ({}));
+    return { success: false, message: error.message || 'Live sync failed.', count: 0, accounts: [], syncedAt: new Date().toISOString() };
   } catch (err) {
     console.debug("Note on live sync endpoint call:", err);
   }
@@ -1749,9 +1754,10 @@ ${cleanEmail}`;
 
   // Try server endpoint
   try {
+    const session = supabase ? (await supabase.auth.getSession()).data.session : null;
     const res = await fetch("/api/exness/submit-transfer-ticket", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
       body: JSON.stringify({
         tradingAccountId: cleanAccount,
         email: cleanEmail,
@@ -1775,6 +1781,9 @@ ${cleanEmail}`;
         ...data,
         emailDetails: data.emailDetails || emailDetails,
       };
+    }
+    if (res.status === 401 || res.status === 403) {
+      return { success: false, message: 'Please sign in before submitting a transfer request.', ticketRef: '' };
     }
   } catch (err) {
     console.debug("Note on server submit-transfer-ticket:", err);
