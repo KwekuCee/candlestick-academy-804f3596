@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
         { name: "twitter:image", content: `${loaderData.shareOrigin}${mentorShare.url}` },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Pastor Mike, Candlesticks Academy forex trading mentor" },
+        { property: "og:image:alt", content: "Kwekucandles, Candlesticks Academy forex trading mentor" },
       ] : []),
       { name: "twitter:card", content: "summary_large_image" },
     ],

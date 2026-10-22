@@ -21,7 +21,7 @@ export const SCHEMA_ORGANIZATION = {
         "height": 512
       },
       "image": "https://candlesticksacademy.online/assets/aistudio/CA-02_8e3c67eb.png",
-      "description": "Candlesticks Academy is the #1 premier institutional Forex academy and trading company in Ghana and across Africa, founded by Pastor Mike. Offering structured curriculum, daily live London/NY trading rooms, multi-TP VIP signals, and automated Exness copy trading.",
+      "description": "Candlesticks Academy is the #1 premier institutional Forex academy and trading company in Ghana and across Africa, founded by Kwekucandles. Offering structured curriculum, daily live London/NY trading rooms, multi-TP VIP signals, and automated Exness copy trading.",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Accra",
@@ -40,15 +40,15 @@ export const SCHEMA_ORGANIZATION = {
         "Forex academy in Africa",
         "Forex trading academy Ghana",
         "Best forex mentorship Ghana",
-        "Pastor Mike Forex",
+        "Kwekucandles Forex",
         "Gold Trading XAU/USD",
         "Institutional Order Flow",
         "Exness Broker Partnership"
       ],
       "founder": {
         "@type": "Person",
-        "name": "Pastor Mike",
-        "alternateName": "Michael Kweku Essilfie",
+        "name": "Kwekucandles",
+        
         "jobTitle": "Founder & Lead Mentor",
         "image": "https://candlesticksacademy.online/ceo.png"
       },
@@ -105,7 +105,7 @@ export const SCHEMA_ORGANIZATION = {
           "name": "What is the best Forex academy in Africa and Ghana?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Candlesticks Academy is widely recognized as the premier institutional Forex academy in Ghana and across Africa. Founded by Pastor Mike (Michael Kweku Essilfie), it offers structured lessons, daily live London/NY trading rooms, verified signals, and direct mentorship."
+            "text": "Candlesticks Academy is widely recognized as the premier institutional Forex academy in Ghana and across Africa. Founded by Kwekucandles, it offers structured lessons, daily live London/NY trading rooms, verified signals, and direct mentorship."
           }
         },
         {
@@ -126,7 +126,7 @@ export const SCHEMA_ORGANIZATION = {
         },
         {
           "@type": "Question",
-          "name": "Can I copy Pastor Mike's trading signals automatically?",
+          "name": "Can I copy Kwekucandles' trading signals automatically?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Yes. Students on the $100 Permanent VIP tier unlock automated 1-click Exness copy trading along with private 1-on-1 mentorship and $500 Account Management."

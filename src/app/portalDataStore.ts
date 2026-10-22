@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS public.trading_signals (
   mentor_quote TEXT DEFAULT 'Patience is part of the setup. Wait for price to confirm structure.',
   current_price TEXT DEFAULT '',
   floating_pnl_text TEXT DEFAULT '',
-  created_by TEXT DEFAULT 'Pastor Mike',
+  created_by TEXT DEFAULT 'Kwekucandles',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -277,7 +277,7 @@ ALTER TABLE public.trading_signals
   ADD COLUMN IF NOT EXISTS mentor_quote TEXT DEFAULT 'Patience is part of the setup. Wait for price to confirm structure.',
   ADD COLUMN IF NOT EXISTS current_price TEXT DEFAULT '',
   ADD COLUMN IF NOT EXISTS floating_pnl_text TEXT DEFAULT '',
-  ADD COLUMN IF NOT EXISTS created_by TEXT DEFAULT 'Pastor Mike',
+  ADD COLUMN IF NOT EXISTS created_by TEXT DEFAULT 'Kwekucandles',
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
@@ -2354,7 +2354,7 @@ export async function renderPersonalizedCertificateDataUrl(params: {
   if (template.showIssueDate) {
     ctx.fillStyle = "#9AA4B5";
     ctx.font = "20px Manrope";
-    const dateText = `Issued: ${new Date(params.issuedAt).toLocaleDateString()} · Credential ID: ${params.certificateCode} · Signed: Pastor Mike (Founder)`;
+    const dateText = `Issued: ${new Date(params.issuedAt).toLocaleDateString()} · Credential ID: ${params.certificateCode} · Signed: Kwekucandles (Founder)`;
     ctx.fillText(dateText, canvas.width / 2, canvas.height - 120);
   }
 
@@ -2396,7 +2396,7 @@ export async function fetchStudentCertificatesFromDb(
           certificateCode: String(r.certificate_code),
           quizAverage: Number(r.quiz_average || 100),
           approvedByAdmin: Boolean(r.approved_by_admin ?? true),
-          issuedBy: "Pastor Mike",
+          issuedBy: "Kwekucandles",
           issuedAt: String(r.issued_at || new Date().toISOString()),
         }));
         return mapped;
@@ -2429,7 +2429,7 @@ export async function issueStudentCourseCertificate(params: {
     certificateCode: `CSA-${params.courseId.slice(0, 3).toUpperCase()}-${Date.now().toString().slice(-6)}`,
     quizAverage: params.quizAverage,
     approvedByAdmin: true,
-    issuedBy: "Pastor Mike",
+    issuedBy: "Kwekucandles",
     issuedAt: new Date().toISOString(),
   };
 
@@ -2794,7 +2794,7 @@ function normalizeSignal(s: any): TradingSignalItem {
   const tp = String(s.takeProfit || s.tp || s.take_profit || "1.0940");
   const rr = String(s.riskReward || s.rr || s.risk_reward || "1 : 2.5");
   const thesis = String(s.thesis || s.commentary || "");
-  const author = String(s.createdBy || s.author || s.created_by || s.author_name || "Pastor Mike");
+  const author = String(s.createdBy || s.author || s.created_by || s.author_name || "Kwekucandles");
 
   let tpLevels: SignalTpLevel[] = [];
   if (Array.isArray(s.tpLevels) && s.tpLevels.length > 0) {
@@ -2958,7 +2958,7 @@ export async function publishTradingSignalInDb(params: {
     params.commentary ||
     "Institutional structure shift with clean liquidity sweep and defined invalidation."
   ).trim();
-  const authorVal = params.author || "Pastor Mike";
+  const authorVal = params.author || "Kwekucandles";
 
   const signal: TradingSignalItem = {
     id: slugId,
@@ -3876,7 +3876,7 @@ export async function sendMentorMessageInDb(params: {
     await createClientNotificationInDb({
       studentEmail: item.studentEmail,
       category: "ACCOUNT",
-      title: `New Reply from Pastor Mike (${item.subject})`,
+      title: `New Reply from Kwekucandles (${item.subject})`,
       message: item.message,
       linkUrl: "/settings#mentor-qa",
     });
@@ -4407,7 +4407,7 @@ export async function saveMentorship1on1SessionInDb(params: {
     studentEmail: item.studentEmail,
     category: "ACCOUNT",
     title: `1-on-1 Mentorship Scheduled: ${item.title}`,
-    message: `Pastor Mike scheduled a private 1-on-1 live trading session with you for ${new Date(
+    message: `Kwekucandles scheduled a private 1-on-1 live trading session with you for ${new Date(
       item.scheduledAt
     ).toLocaleString()} (${item.focusPair}).`,
     linkUrl: "/mentorship",
@@ -4641,7 +4641,7 @@ export async function signAccountManagementContractInDb(params: {
     studentEmail: email,
     category: "ACCOUNT",
     title: "Account Management Contract Signed & Submitted",
-    message: `Your signed agreement for Exness Account #${item.exnessAccountId} (${item.profitSplitLabel}) has been transmitted to Pastor Mike's Admin Desk.`,
+    message: `Your signed agreement for Exness Account #${item.exnessAccountId} (${item.profitSplitLabel}) has been transmitted to Kwekucandles' Admin Desk.`,
     linkUrl: "/account-management",
   });
 
@@ -4668,7 +4668,7 @@ export async function requestStudentExnessTradingPasswordInDb(
     studentEmail: updated.studentEmail,
     category: "ACCOUNT",
     title: `Action Required: Trading Password Request for Exness #${updated.exnessAccountId}`,
-    message: `Pastor Mike has reviewed your signed Account Management Contract for Exness Trading ID #${updated.exnessAccountId}. Please open your Account Management tab or reply to submit your MT4/MT5 trading password so live management and profit-splitting can begin.`,
+    message: `Kwekucandles has reviewed your signed Account Management Contract for Exness Trading ID #${updated.exnessAccountId}. Please open your Account Management tab or reply to submit your MT4/MT5 trading password so live management and profit-splitting can begin.`,
     linkUrl: "/account-management",
   });
 
@@ -4879,8 +4879,8 @@ export const DEFAULT_SEO_ANALYTICS_CONFIG: SeoAnalyticsConfig = {
   gscVerificationTag: "google-site-verification=CandlesticksAcademy-Verification-Token-2026",
   siteTitle: "Candlesticks Academy | Top Forex Academy & Trading Company in Ghana & Africa",
   metaDescription:
-    "Candlesticks Academy is the #1 premier institutional Forex academy and trading company in Ghana and across Africa, founded by Pastor Mike. Master price action, join live London/NY trading rooms, and get VIP signals with Exness broker benefits.",
-  keywords: "Trading companies in Ghana, Forex academy in africa, Forex academy in Ghana, Best forex trading academy in Ghana, Forex mentorship Ghana, Trading company Accra Ghana, Candlesticks Academy, Pastor Mike, Forex trading school Ghana, Institutional price action Africa, Gold trading signals Ghana, Exness partner Ghana Africa, West Africa Forex trading, Michael Kweku Essilfie",
+    "Candlesticks Academy is the #1 premier institutional Forex academy and trading company in Ghana and across Africa, founded by Kwekucandles. Master price action, join live London/NY trading rooms, and get VIP signals with Exness broker benefits.",
+  keywords: "Trading companies in Ghana, Forex academy in africa, Forex academy in Ghana, Best forex trading academy in Ghana, Forex mentorship Ghana, Trading company Accra Ghana, Candlesticks Academy, Kwekucandles, Forex trading school Ghana, Institutional price action Africa, Gold trading signals Ghana, Exness partner Ghana Africa, West Africa Forex trading",
   enableGa: true,
   enableAiSearchIndexing: true,
   enableAiSearchCrawlers: true,

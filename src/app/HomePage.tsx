@@ -2,6 +2,7 @@ import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@/app/routerCompat";
 import { BrandLogo } from "./BrandLogo";
 import mentorShare from "@/assets/academy-mentor-share.jpg.asset.json";
+import mentorPortrait from "@/assets/mentor-portrait.webp.asset.json";
 
 type IconName =
   | "arrow"
@@ -1089,7 +1090,7 @@ export default function App() {
             <div className="hero-copy">
               <div className="status-pill"><i /> #1 FOREX ACADEMY IN AFRICA <span>ACCRA, GHANA · 1-MONTH FREE</span></div>
               <h1>Forex trading <br /><em>education &amp; mentorship.</em></h1>
-              <p className="hero-sub">The premier institutional Forex academy and trading company in Ghana and across Africa, led by Pastor Mike. Master price action, join live London &amp; NY trading rooms, and execute high-probability institutional setups.</p>
+              <p className="hero-sub">The premier institutional Forex academy and trading company in Ghana and across Africa, led by Kwekucandles. Master price action, join live London &amp; NY trading rooms, and execute high-probability institutional setups.</p>
               <div className="hero-actions">
                 <button className="button primary large rounded-pill" onClick={openRegister}>Start free this month <Icon name="arrow" /></button>
                 <a className="watch-link" href="#learn"><span><Icon name="play" size={16} /></span> See how it works</a>
@@ -1158,8 +1159,8 @@ export default function App() {
           <div className="container mentor-grid">
             <div className="mentor-image">
               <img
-                src={mentorShare.url}
-                alt="Pastor Mike, Candlesticks Academy forex trading mentor"
+                src={mentorPortrait.url}
+                alt="Kwekucandles, Candlesticks Academy forex trading mentor"
                 width={480}
                 height={520}
                 loading="lazy"
@@ -1178,7 +1179,7 @@ export default function App() {
                 <li><Icon name="check" size={16} /> Official Exness Broker Partner across Africa (Code: 9s8109d94y)</li>
                 <li><Icon name="check" size={16} /> Daily live London &amp; New York session trading execution</li>
               </ul>
-              <span className="signature">Pastor Mike (Michael Kweku Essilfie) <small>FOUNDER &amp; HEAD TRADER, CANDLESTICKS ACADEMY GHANA</small></span>
+              <span className="signature">Kwekucandles <small>FOUNDER &amp; HEAD TRADER, CANDLESTICKS ACADEMY GHANA</small></span>
             </div>
           </div>
         </section>
@@ -1210,14 +1211,14 @@ export default function App() {
             <div className="section-heading centered">
               <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
               <h2>The Premier Forex Academy &amp; Trading Company in Ghana</h2>
-              <p>Everything you need to know about institutional Forex and Gold trading with Pastor Mike across Africa.</p>
+              <p>Everything you need to know about institutional Forex and Gold trading with Kwekucandles across Africa.</p>
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4 pt-4">
               {[
                 {
                   q: "What makes Candlesticks Academy the #1 Forex academy in Africa and Ghana?",
-                  a: "Candlesticks Academy combines institutional price action education, daily live trading rooms during the London and New York sessions, certified progression exams, and verified multi-target signals. Unlike signal channels, Pastor Mike teaches you order flow, liquidity dynamics, and capital preservation.",
+                  a: "Candlesticks Academy combines institutional price action education, daily live trading rooms during the London and New York sessions, certified progression exams, and verified multi-target signals. Unlike signal channels, Kwekucandles teaches you order flow, liquidity dynamics, and capital preservation.",
                 },
                 {
                   q: "Which trading companies in Ghana offer institutional mentorship and Exness benefits?",

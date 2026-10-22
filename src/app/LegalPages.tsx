@@ -472,7 +472,7 @@ export function TermsPage() {
             (the <strong>“Student”</strong>, <strong>“User”</strong>, or <strong>“You”</strong>) and{" "}
             <strong>Candlesticks Academy</strong> (collectively referred to as <strong>“Candlesticks Academy”</strong>,{" "}
             <strong>“we”</strong>, <strong>“us”</strong>, or <strong>“our”</strong>), founded and led by{" "}
-            <strong>Michael Kweku Essilfie</strong> (also known as Pastor Mike), with operations based in Accra, Ghana.
+            <strong>Michael Kweku Essilfie</strong> (also known as Kwekucandles), with operations based in Accra, Ghana.
           </p>
           <p>
             By accessing or using the Candlesticks Academy website (

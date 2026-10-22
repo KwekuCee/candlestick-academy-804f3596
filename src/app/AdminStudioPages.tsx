@@ -1444,7 +1444,7 @@ export function AdminLiveStudioPage() {
         id: slug,
         slug,
         title: title.trim() || "Live Market Broadcast",
-        description: description.trim() || "Live trading session with Pastor Mike.",
+        description: description.trim() || "Live trading session with Kwekucandles.",
         scheduledAt: new Date().toISOString(),
         durationMinutes: Number(durationMinutes || 90),
         status: "live",
@@ -1511,7 +1511,7 @@ export function AdminLiveStudioPage() {
         id: slug,
         slug,
         title: title.trim() || "Live Market Broadcast",
-        description: description.trim() || "Live trading session with Pastor Mike.",
+        description: description.trim() || "Live trading session with Kwekucandles.",
         scheduledAt: new Date().toISOString(),
         durationMinutes: Number(durationMinutes || 90),
         status: "live",
@@ -1587,7 +1587,7 @@ export function AdminLiveStudioPage() {
     await sendSessionChatMessageInDb({
       sessionId: activeSession.id,
       senderEmail: "mike.vinci77@gmail.com",
-      senderName: "Pastor Mike (Host)",
+      senderName: "Kwekucandles (Host)",
       senderAvatar: "/ceo.png",
       isHost: true,
       message: hostChatInput,
@@ -1859,7 +1859,7 @@ export function AdminLiveStudioPage() {
                   {!webcamStreamRef.current && (
                     <img
                       src="/ceo.png"
-                      alt="Pastor Mike Host Cam"
+                      alt="Kwekucandles Host Cam"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   )}
@@ -2130,7 +2130,7 @@ export function AdminLiveStudioPage() {
               type="text"
               value={hostChatInput}
               onChange={(e) => setHostChatInput(e.target.value)}
-              placeholder="Broadcast message to live room as Pastor Mike..."
+              placeholder="Broadcast message to live room as Kwekucandles..."
               className="flex-1 bg-[#181c26] border border-white/15 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-[#ffb600]"
             />
             <button
@@ -2301,7 +2301,7 @@ export function AdminMentorInboxPage() {
                 >
                   <div className="flex items-center justify-between gap-4 mb-1 text-[10px] font-mono text-[#9aa4b5]">
                     <strong className={m.senderRole === "admin" ? "text-[#ffb600]" : "text-white"}>
-                      {m.senderRole === "admin" ? "Pastor Mike (Founder)" : m.studentName}
+                      {m.senderRole === "admin" ? "Kwekucandles (Founder)" : m.studentName}
                     </strong>
                     <span>{new Date(m.createdAt).toLocaleString()}</span>
                   </div>

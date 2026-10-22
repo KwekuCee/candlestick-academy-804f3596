@@ -50,7 +50,7 @@ export async function generateQuizFromPdfServer(params: {
       }
 
       parts.push({
-        text: `You are Pastor Mike, Founder of Candlesticks Trading Academy.
+        text: `You are Kwekucandles, Founder of Candlesticks Trading Academy.
 Generate a rigorous ${count}-question multiple-choice assessment for the "${params.courseTitle}" (${params.level} Level) Forex & Gold trading track based on the attached PDF document${
           params.pdfName ? ` ("${params.pdfName}")` : ""
         } and curriculum notes: ${params.curriculumNotes || "Institutional Forex & XAU/USD price action, risk management, and execution"}.
