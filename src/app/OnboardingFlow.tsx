@@ -647,9 +647,9 @@ export function OnboardingFlow() {
                       New to Exness
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white">
+                  <h2 className="text-lg font-bold text-white">
                     1. Create an Exness Account
-                  </h3>
+                  </h2>
                   <p className="text-xs text-[#949fb1] mt-2 leading-relaxed">
                     Click our official partner button below to register your Exness trading account. When you finish, return here and select option 2.
                   </p>
@@ -708,9 +708,9 @@ export function OnboardingFlow() {
                       {selectedHasAccount ? "Selected" : "Select When Ready"}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white">
+                  <h2 className="text-lg font-bold text-white">
                     2. I already have an Exness account
-                  </h3>
+                  </h2>
                   <p className="text-xs text-[#949fb1] mt-2 leading-relaxed">
                     Select this once you have created your Exness account with our Partner Link (<strong className="text-white font-mono">{partnerCode}</strong>) to enter your <strong className="text-white">Trading Account ID</strong> and verify your referral.
                   </p>
@@ -731,9 +731,9 @@ export function OnboardingFlow() {
                     <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#ffb600] flex items-center gap-1.5">
                       <ShieldCheck size={15} /> VERIFY PARTNER REFERRAL (#{partnerCode})
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">
+                    <h2 className="text-base sm:text-lg font-bold text-white mt-0.5">
                       Enter Your Exness Trading Account ID (Trading Account Number)
-                    </h3>
+                    </h2>
                     <p className="text-xs text-[#9aa4b5] mt-1">
                       We verify your <strong className="text-white font-mono">trading_account_id</strong> / <strong className="text-white font-mono">client_account_id</strong> against your Exness Partner referrals in Supabase. Once verified, you will create your account and be led to make the <strong className="text-[#ffb600]">$50 USD deposit</strong> to activate all platform features.
                     </p>
@@ -1265,7 +1265,7 @@ export function OnboardingFlow() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7d8799] hover:text-[#ffb600] transition p-1"
                   >
                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -1359,9 +1359,9 @@ export function OnboardingFlow() {
                   <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#ffb600] flex items-center gap-1.5">
                     <CircleDollarSign size={14} /> EXNESS CAPITAL REQUIREMENT
                   </span>
-                  <h3 className="text-lg font-bold text-white mt-0.5">
+                  <h2 className="text-lg font-bold text-white mt-0.5">
                     $50 USD Minimum Account Deposit
-                  </h3>
+                  </h2>
                 </div>
                 <div className="text-left sm:text-right">
                   <div className="text-xl font-mono font-bold text-white">
@@ -1498,6 +1498,7 @@ export function OnboardingFlow() {
                 </div>
                 <button
                   type="button"
+                  aria-label="Close merchandise offer"
                   onClick={() => setShowMerchPopup(false)}
                   className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#9aa4b5] hover:text-white cursor-pointer"
                 >
@@ -1535,7 +1536,8 @@ export function OnboardingFlow() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => setShowMerchPopup(false)}
+                    aria-label="Close merchandise offer"
+                  onClick={() => setShowMerchPopup(false)}
                     className="w-full py-3.5 px-5 rounded-xl bg-[#ffb600] hover:bg-[#ffc833] text-black font-extrabold text-xs uppercase tracking-wider cursor-pointer"
                   >
                     Continue to My Academy Account →
@@ -1604,7 +1606,8 @@ export function OnboardingFlow() {
                   <div className="pt-2 flex items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setShowMerchPopup(false)}
+                      aria-label="Close merchandise offer"
+                  onClick={() => setShowMerchPopup(false)}
                       className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-[#9aa4b5] hover:text-white cursor-pointer"
                     >
                       Skip for Now

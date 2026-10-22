@@ -1,6 +1,17 @@
 import { createFileRoute, lazyRouteComponent } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_portal/signals/$signalId")({
-  head: () => ({ meta: [{ title: "Signal | Candlesticks Academy" }, { name: "description", content: "Signal at Candlesticks Academy: forex education, trading mentorship, and student services." }, { property: "og:title", content: "Signal | Candlesticks Academy" }, { property: "og:description", content: "Signal at Candlesticks Academy: forex education, trading mentorship, and student services." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: ({ params }) => ({
+    meta: [
+      { title: "Educational Trade Setup | Candlesticks Academy" },
+      { name: "description", content: "Review this Candlesticks Academy trading signal with entry levels, risk targets and market reasoning." },
+      { property: "og:title", content: "Educational Trade Setup | Candlesticks Academy" },
+      { property: "og:description", content: "Review this Candlesticks Academy trading signal with entry levels, risk targets and market reasoning." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: `/signals/${params.signalId}` },
+      { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: `/signals/${params.signalId}` }],
+  }),
   component: lazyRouteComponent(() => import("@/app/PlatformPages"), "SignalDetailPage"),
 });

@@ -229,7 +229,7 @@ export function LegalLayout({
                       <Icon name="book" size={20} />
                     </div>
                     <div>
-                      <h4>Strictly Educational</h4>
+                      <h2>Strictly Educational</h2>
                       <p>All lessons, trade breakdowns, and signals are educational market studies, never personal financial advice.</p>
                     </div>
                   </div>
@@ -239,7 +239,7 @@ export function LegalLayout({
                       <Icon name="alert" size={20} />
                     </div>
                     <div>
-                      <h4>High Capital Risk</h4>
+                      <h2>High Capital Risk</h2>
                       <p>Forex and CFD trading carry substantial risk of loss. Never trade with capital you cannot afford to lose.</p>
                     </div>
                   </div>
@@ -249,7 +249,7 @@ export function LegalLayout({
                       <Icon name="shield" size={20} />
                     </div>
                     <div>
-                      <h4>Exness Partner Role</h4>
+                      <h2>Exness Partner Role</h2>
                       <p>We are an independent educational affiliate. We never hold, receive, custody, or execute withdrawals of your trading funds.</p>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export function LegalLayout({
                       <Icon name="lock" size={20} />
                     </div>
                     <div>
-                      <h4>First Month Free</h4>
+                      <h2>First Month Free</h2>
                       <p>Begin learning at zero cost with no credit card required. Cancel or disconnect your account anytime.</p>
                     </div>
                   </div>
@@ -271,7 +271,7 @@ export function LegalLayout({
                       <Icon name="lock" size={20} />
                     </div>
                     <div>
-                      <h4>No Trading Credentials</h4>
+                      <h2>No Trading Credentials</h2>
                       <p>We never see, collect, or store your Exness trading passwords, investor keys, or withdrawal PINs.</p>
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export function LegalLayout({
                       <Icon name="shield" size={20} />
                     </div>
                     <div>
-                      <h4>Zero Data Selling</h4>
+                      <h2>Zero Data Selling</h2>
                       <p>We will never sell, rent, or trade your contact info or trading metrics to brokers, lead brokers, or ad networks.</p>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ export function LegalLayout({
                       <Icon name="check" size={20} />
                     </div>
                     <div>
-                      <h4>Read-Only Journaling</h4>
+                      <h2>Read-Only Journaling</h2>
                       <p>Broker account synchronization is strictly read-only to calculate educational win rates, pips, and milestones.</p>
                     </div>
                   </div>
@@ -301,7 +301,7 @@ export function LegalLayout({
                       <Icon name="mail" size={20} />
                     </div>
                     <div>
-                      <h4>Your Complete Rights</h4>
+                      <h2>Your Complete Rights</h2>
                       <p>Request full data export, revoke broker linkage, or permanently erase your profile whenever you choose.</p>
                     </div>
                   </div>
@@ -322,11 +322,12 @@ export function LegalLayout({
                 <input
                   type="text"
                   placeholder="Search legal sections..."
+                  aria-label="Search legal sections"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 {searchQuery && (
-                  <button type="button" onClick={() => setSearchQuery("")} className="clear-search">
+                  <button type="button" onClick={() => setSearchQuery("")} className="clear-search" aria-label="Clear legal search">
                     ×
                   </button>
                 )}
@@ -365,7 +366,7 @@ export function LegalLayout({
                   <Icon name="mail" size={16} />
                 </div>
                 <div>
-                  <h5>Legal & Compliance Inquiries</h5>
+                  <h2>Legal & Compliance Inquiries</h2>
                   <p>Questions regarding these terms or your privacy rights?</p>
                   <a href="mailto:hello@candlesticks.academy" className="support-link">
                     hello@candlesticks.academy
@@ -534,7 +535,7 @@ export function TermsPage() {
           <div className="legal-alert-box warning">
             <div className="alert-header">
               <Icon name="alert" size={18} />
-              <h4>High-Risk Capital Warning</h4>
+              <h3>High-Risk Capital Warning</h3>
             </div>
             <p>
               Foreign exchange (Forex) and CFD trading on margin carry a high level of risk and may not be suitable for
@@ -548,7 +549,7 @@ export function TermsPage() {
             possible to sustain a loss of some or all of your deposited capital.
           </p>
           <div className="legal-card-inset">
-            <h5>Core Risk Principles Required of Every Candlesticks Academy Student:</h5>
+            <h3>Core Risk Principles Required of Every Candlesticks Academy Student:</h3>
             <ol className="legal-number-list">
               <li>
                 <strong>Risk Capital Only:</strong> Do not speculate with capital that you cannot comfortably afford to
@@ -584,7 +585,7 @@ export function TermsPage() {
           <div className="legal-alert-box note">
             <div className="alert-header">
               <Icon name="shield" size={18} />
-              <h4>Fund Custody & Broker Disassociation Clarification</h4>
+              <h3>Fund Custody & Broker Disassociation Clarification</h3>
             </div>
             <ul className="legal-bullet-list compact">
               <li>
@@ -722,7 +723,7 @@ export function TermsPage() {
               <span>Billed monthly in advance. Cancel renewal anytime in Portal Settings.</span>
             </div>
           </div>
-          <h5 style={{ marginTop: "24px", color: "var(--p-text)", fontSize: "14px" }}>Refund Policy</h5>
+          <h3 style={{ marginTop: "24px", color: "var(--p-text)", fontSize: "14px" }}>Refund Policy</h3>
           <p>
             Because Candlesticks Academy provides immediate digital access to proprietary curriculum, streaming video
             lessons, downloadable checklists, and proprietary market strategies, all recurring mentorship fees are
@@ -866,7 +867,7 @@ export function TermsPage() {
             signifies your binding acceptance of the updated Terms.
           </p>
           <div className="legal-contact-card">
-            <h4>Official Legal Inquiries</h4>
+            <h3>Official Legal Inquiries</h3>
             <p><strong>Candlesticks Academy</strong></p>
             <p>Attention: Michael Kweku Essilfie (Founder & Compliance Lead)</p>
             <p>Accra, Greater Accra Region, Ghana</p>
@@ -969,7 +970,7 @@ export function PrivacyPage() {
           <div className="legal-alert-box note" style={{ marginTop: "24px" }}>
             <div className="alert-header">
               <Icon name="lock" size={18} />
-              <h4>What We NEVER Collect or Store:</h4>
+              <h3>What We NEVER Collect or Store:</h3>
             </div>
             <ul className="legal-bullet-list compact">
               <li>
@@ -1116,7 +1117,7 @@ export function PrivacyPage() {
               </li>
             </ul>
           </div>
-          <h5 style={{ marginTop: "20px", color: "var(--p-text)", fontSize: "14px" }}>Retention Schedule</h5>
+          <h3 style={{ marginTop: "20px", color: "var(--p-text)", fontSize: "14px" }}>Retention Schedule</h3>
           <p>
             We retain your personal data for as long as your student account remains active. If your account remains
             dormant for twenty-four (24) consecutive months without login, or upon your explicit account deletion
@@ -1242,7 +1243,7 @@ export function PrivacyPage() {
             a dashboard notice.
           </p>
           <div className="legal-contact-card">
-            <h4>Data Protection Officer & Privacy Desk</h4>
+            <h3>Data Protection Officer & Privacy Desk</h3>
             <p><strong>Candlesticks Academy</strong></p>
             <p>Attention: Privacy & Compliance Officer</p>
             <p>Accra, Ghana</p>

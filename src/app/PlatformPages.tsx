@@ -1214,7 +1214,7 @@ export function PortalLayout() {
           </div>
         </div>
       </aside>
-      {open && <button className="sidebar-scrim" onClick={() => setOpen(false)} />}
+      {open && <button aria-label="Close menu" className="sidebar-scrim" onClick={() => setOpen(false)} />}
       <div className="portal-main">
         <div className="portal-topbar">
           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -1489,7 +1489,7 @@ export function LoginPage() {
     <Auth quote="Discipline turns knowledge into a skill you can rely on.">
       <form className="auth-form login" onSubmit={handleLogin}>
         <p className="p-eyebrow">WELCOME BACK</p>
-        <h1>Continue your journey</h1>
+        <h1>Log in to Candlesticks Academy</h1>
         <p>
           Log in with your registered <strong>Email</strong> or <strong>Username</strong> and password to access your trading terminal.
         </p>
