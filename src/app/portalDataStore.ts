@@ -2318,16 +2318,16 @@ export async function renderPersonalizedCertificateDataUrl(params: {
 
     // Header
     ctx.fillStyle = "#ffb600";
-    ctx.font = "bold 24px monospace";
+    ctx.font = "bold 24px Manrope";
     ctx.textAlign = "center";
     ctx.fillText("CANDLESTICKS TRADING ACADEMY · VERIFIED CREDENTIAL", canvas.width / 2, 180);
 
     ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 56px sans-serif";
+    ctx.font = "bold 56px Manrope";
     ctx.fillText("CERTIFICATE OF COMPLETION", canvas.width / 2, 270);
 
     ctx.fillStyle = "#9AA4B5";
-    ctx.font = "26px sans-serif";
+    ctx.font = "26px Manrope";
     ctx.fillText("THIS IS PROUDLY PRESENTED TO", canvas.width / 2, 390);
   }
 
@@ -2335,7 +2335,7 @@ export async function renderPersonalizedCertificateDataUrl(params: {
   const nameX = (template.nameXPct / 100) * canvas.width;
   const nameY = (template.nameYPct / 100) * canvas.height;
   ctx.fillStyle = template.fontColor || "#ffb600";
-  ctx.font = `bold ${Math.round(template.fontSize * 1.45)}px Georgia, serif`;
+  ctx.font = `bold ${Math.round(template.fontSize * 1.45)}px Manrope`;
   ctx.textAlign = "center";
   ctx.fillText(params.studentName || "Verified Trader", nameX, nameY);
 
@@ -2343,17 +2343,17 @@ export async function renderPersonalizedCertificateDataUrl(params: {
     const courseY = (template.courseYPct / 100) * canvas.height;
     if (!drewCustomBg) {
       ctx.fillStyle = "#9AA4B5";
-      ctx.font = "24px sans-serif";
+      ctx.font = "24px Manrope";
       ctx.fillText("For successfully completing 100% of the curriculum in", canvas.width / 2, courseY - 48);
     }
     ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 36px sans-serif";
+    ctx.font = "bold 36px Manrope";
     ctx.fillText(params.courseTitle, nameX, courseY);
   }
 
   if (template.showIssueDate) {
     ctx.fillStyle = "#9AA4B5";
-    ctx.font = "20px monospace";
+    ctx.font = "20px Manrope";
     const dateText = `Issued: ${new Date(params.issuedAt).toLocaleDateString()} · Credential ID: ${params.certificateCode} · Signed: Pastor Mike (Founder)`;
     ctx.fillText(dateText, canvas.width / 2, canvas.height - 120);
   }
