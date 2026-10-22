@@ -8,7 +8,8 @@ export async function portalLogin(request: Request) {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
     if (!email.includes('@')) {
       const username = email.replace(/^@+/, '');
-      const { data } = await supabaseAdmin.from('students').select('email').eq('username', username).maybeSingle();
+      if (!/^[a-z0-9_]{3,40}$/.test(username)) return Response.json({ message: 'Incorrect email, username or password.' }, { status: 401 });
+      const { data } = await supabaseAdmin.from('students').select('email').ilike('username', username).maybeSingle();
       if (!data) return Response.json({ message: 'Incorrect email, username or password.' }, { status: 401 });
       email = data.email;
     }
@@ -22,7 +23,18 @@ export async function portalLogin(request: Request) {
       const { error: linkError } = await supabaseAdmin.from('students').update({ auth_user_id: data.user.id }).ilike('email', data.user.email).is('auth_user_id', null);
       if (linkError) throw new Error('Unable to link your student account.');
     }
-    const { data: student } = await authed.from('students').select('*').eq('auth_user_id', data.user.id).maybeSingle();
+    let { data: student } = await authed.from('students').select('*').eq('auth_user_id', data.user.id).maybeSingle();
+    if (!student && role === 'student' && data.user.email_confirmed_at && data.user.email) {
+      const metadata = data.user.user_metadata;
+      const { data: created, error: createError } = await supabaseAdmin.from('students').insert({
+        id: `std-${data.user.id}`, auth_user_id: data.user.id, email: data.user.email,
+        full_name: String(metadata.full_name || 'Student').slice(0, 200), country: String(metadata.country || '').slice(0, 100),
+        username: typeof metadata.username === 'string' ? metadata.username.slice(0, 40) : null,
+      }).select('*').single();
+      if (createError || !created) throw new Error('Unable to create your student profile.');
+      student = created;
+    }
+    if (!student && role === 'student') return Response.json({ message: 'Please confirm your email before opening your student account.' }, { status: 403 });
     return Response.json({ success: true, role, session: data.session, student }, { headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
   } catch {
     return Response.json({ message: 'Sign-in could not be completed. Please try again.' }, { status: 400 });

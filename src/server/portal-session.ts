@@ -28,6 +28,7 @@ function cookie(request: Request, value: string, clear = false) {
   return `${COOKIE}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${clear ? 0 : 2592000}${url.protocol === 'https:' ? '; Secure' : ''}${isAcademyHost(url.hostname) ? '; Domain=candlesticksacademy.online' : ''}`;
 }
 export async function portalSession(request: Request) {
+  if (!['GET', 'POST', 'DELETE'].includes(request.method)) return new Response(null, { status: 405 });
   if (request.method !== 'GET' && !sameOrigin(request)) return Response.json({ message: 'Request origin not allowed.' }, { status: 403 });
   const headers = { 'Cache-Control': 'no-store', 'Vary': 'Cookie', 'Referrer-Policy': 'no-referrer' };
   if (request.method === 'DELETE') return Response.json({ success: true }, { headers: { ...headers, 'Set-Cookie': cookie(request, '', true) } });
@@ -39,7 +40,7 @@ export async function portalSession(request: Request) {
       const { data: checked, error } = await check.auth.setSession(data);
       if (error || checked.user?.id !== user.id || !checked.session) throw new Error('Invalid session');
       const role = await trustedRole(client, user.id);
-      return Response.json({ role }, { headers: { ...headers, 'Set-Cookie': cookie(request, await seal(checked.session)) } });
+      return Response.json({ role }, { headers: { ...headers, 'Set-Cookie': cookie(request, await seal(sessionSchema.parse(checked.session))) } });
     }
     const encoded = request.headers.get('Cookie')?.split(';').map(v => v.trim()).find(v => v.startsWith(`${COOKIE}=`))?.slice(COOKIE.length + 1);
     if (!encoded) return Response.json({ session: null }, { headers });
@@ -47,7 +48,7 @@ export async function portalSession(request: Request) {
     const { data, error } = await client.auth.setSession(await unseal(decodeURIComponent(encoded)));
     if (error || !data.user || !data.session) throw new Error('Invalid session');
     const role = await trustedRole(client, data.user.id);
-    return Response.json({ session: data.session, role }, { headers: { ...headers, 'Set-Cookie': cookie(request, await seal(data.session)) } });
+    return Response.json({ session: data.session, role }, { headers: { ...headers, 'Set-Cookie': cookie(request, await seal(sessionSchema.parse(data.session))) } });
   } catch {
     return Response.json({ message: 'Please sign in again.', session: null }, { status: 401, headers: { ...headers, 'Set-Cookie': cookie(request, '', true) } });
   }
