@@ -1,17 +1,8 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL || "https://vkedjjibvyjrixnhqwtr.supabase.co";
-const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_WqR4VXK7IjeU6i5sjYtK8g_Kmvt5XR2";
+import { supabase as connectedSupabase } from '@/integrations/supabase/client';
 
 export const isSupabaseConfigured = Boolean(
-  supabaseUrl &&
-    supabaseAnonKey &&
-    !supabaseUrl.includes("your-project-id") &&
-    !supabaseAnonKey.includes("your-supabase")
+  import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 );
 
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+// Share the integration's session, opaque-key handling, and preview storage.
+export const supabase = isSupabaseConfigured ? connectedSupabase : null;

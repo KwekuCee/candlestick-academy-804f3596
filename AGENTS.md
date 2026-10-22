@@ -12,3 +12,6 @@
 - Imported Candlesticks Academy pages live in `src/app/` and use `src/app/routerCompat.tsx` for links/navigation; keep it instead of adding react-router (TanStack Router is fixed).
 - SSR is off app-wide (`defaultSsr: false` in `src/start.ts`) because the imported pages read browser storage while rendering.
 - Former Vite dev-middleware endpoints are TanStack server routes under `src/routes/api/` with the same URLs the pages already call.
+- Imported pages use the generated Supabase client through their compatibility export so sessions and opaque publishable-key handling stay consistent.
+- Trusted privileges live in `public.user_roles`; Exness server operations validate bearer sessions and require a trusted admin role for partner-wide syncs, never browser admin flags.
+- Environment uploads are never copied into source; private credentials use encrypted runtime secrets and server code reads `SUPABASE_URL`, not browser configuration.

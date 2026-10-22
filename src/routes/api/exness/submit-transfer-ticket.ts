@@ -4,6 +4,9 @@ export const Route = createFileRoute("/api/exness/submit-transfer-ticket")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { authorizeExnessRequest } = await import('@/server/exnessAccess');
+        const denied = await authorizeExnessRequest(request, false);
+        if (denied) return denied;
         try {
           const body = await request.json().catch(() => ({}));
           const { connectExistingExnessClientInDb } = await import("@/server/exnessSync");

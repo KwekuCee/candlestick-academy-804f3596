@@ -31,13 +31,15 @@ export interface ExnessSyncClientItem {
   ftd_amount: number;
 }
 
-export const PARTNER_CODE = process.env.VITE_EXNESS_PARTNER_CODE || "qgcrue4rqj";
+export const PARTNER_CODE = "qgcrue4rqj";
 export const PARTNER_ACCOUNT_ID = "1064144938140187556";
 
 export async function fetchLiveExnessPartnerData(jwtToken?: string): Promise<{
   clients: ExnessSyncClientItem[];
   totals: { count: number; volume_lots: number; reward_usd: string };
 }> {
+  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
+  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
   const jwt = jwtToken || process.env.EXNESS_API_JWT_TOKEN;
   if (!jwt) {
     return {
@@ -99,7 +101,8 @@ export async function fetchLiveExnessPartnerData(jwtToken?: string): Promise<{
       const clientId = clientUid ? clientUid.slice(0, 8) : `cl-${acctId.slice(0, 6)}`;
 
       if (accountsMap.has(acctId)) {
-        const existing = accountsMap.get(acctId)!;
+        const existing = accountsMap.get(acctId);
+        if (!existing) continue;
         existing.volume_lots += Number(r.volume_lots || 0);
         existing.volume_mln_usd += Number(r.volume_mln_usd || 0);
         existing.reward_usd = (Number(existing.reward_usd) + Number(r.reward_usd || 0)).toFixed(2);
@@ -214,7 +217,9 @@ export async function syncLiveExnessWithSupabase(query?: {
   accounts: string[];
   syncedAt: string;
 }> {
-  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
+  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
+  const supabaseUrl = process.env['SUPABASE_URL'];
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const jwt = process.env.EXNESS_API_JWT_TOKEN;
 
@@ -404,7 +409,9 @@ export async function connectExistingExnessClientInDb(params: {
     body: string;
   };
 }> {
-  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
+  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
+  const supabaseUrl = process.env['SUPABASE_URL'];
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   const cleanAccount = params.tradingAccountId.trim();
