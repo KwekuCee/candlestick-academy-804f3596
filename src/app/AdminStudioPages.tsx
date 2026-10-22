@@ -1061,8 +1061,8 @@ export function AdminLiveStudioPage() {
   const [streamMode, setStreamMode] = useState<"screen_share" | "rtmp_hls" | "embed">(
     "screen_share"
   );
-  const [rtmpIngestUrl, setRtmpIngestUrl] = useState("rtmp://live.candlesticks.academy/live");
-  const [rtmpStreamKey, setRtmpStreamKey] = useState("csa_live_ny_qgcrue4rqj");
+  const [rtmpIngestUrl, setRtmpIngestUrl] = useState("");
+  const [rtmpStreamKey, setRtmpStreamKey] = useState("");
   const [streamPlaybackUrl, setStreamPlaybackUrl] = useState("");
   const [copiedKey, setCopiedKey] = useState(false);
   const [studioFeedback, setStudioFeedback] = useState<string | null>(null);
@@ -1201,8 +1201,8 @@ export function AdminLiveStudioPage() {
       durationMinutes: 90,
       status: "scheduled",
       streamMode: "screen_share",
-      rtmpIngestUrl: "rtmp://live.candlesticks.academy/live",
-      rtmpStreamKey: `csa_${slug}_qgcrue4rqj`,
+      rtmpIngestUrl: "",
+      rtmpStreamKey: "",
       streamPlaybackUrl: "",
       focusPair: "EUR/USD · XAU/USD",
       viewersCount: 1,
@@ -1428,12 +1428,31 @@ export function AdminLiveStudioPage() {
     await renderAndBroadcastFrame();
     frameIntervalRef.current = setInterval(() => {
       void renderAndBroadcastFrame();
-    }, 1500);
+    }, 1000);
   }
 
-  async function handleStartScreenShare(forcePicker = false) {
-    if (forcePicker) {
-      setShowScreenSourcePicker(true);
+  async function handleStartScreenShare(_forcePicker = false) {
+    if (!navigator.mediaDevices?.getDisplayMedia) {
+      setStudioFeedback("This browser cannot share a screen. Use Chrome, Edge or Firefox on a computer.");
+      return;
+    }
+    // Ask for the screen first: the browser only allows the picker straight after your click.
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 30, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        audio: true,
+      });
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      const inFrame = window.self !== window.top;
+      setStudioFeedback(
+        name === "NotAllowedError" && !inFrame
+          ? "Screen sharing was cancelled. Click Share Screen & Go Live again and pick a screen, window or tab."
+          : inFrame
+          ? "Screen sharing is blocked inside this preview window. Open the studio in its own browser tab to choose a screen."
+          : "Screen sharing could not start. Check your browser's screen-recording permission and try again."
+      );
       return;
     }
 
@@ -1458,44 +1477,27 @@ export function AdminLiveStudioPage() {
       };
     }
 
-    // Start host webcam for the bottom-left square PiP overlay
-    await startHostWebcamPiP();
-
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { frameRate: 15 },
-        audio: true,
-      });
-      mediaStreamRef.current = stream;
-      setUsingSimulatedScreen(false);
-      setIsSharingScreen(true);
-
-      if (videoPreviewRef.current) {
-        videoPreviewRef.current.srcObject = stream;
-        void videoPreviewRef.current.play();
-      }
-
-      const liveSession: LiveSessionItem = {
-        ...targetSession,
-        status: "live",
-        streamMode: "screen_share",
-      };
-      await saveLiveSessionInDb(liveSession);
-      setSessions(getCachedLiveSessions());
-      setActiveSessionId(liveSession.id);
-      setStudioFeedback(
-        "You are LIVE! Your selected screen is broadcasting boldly with your Webcam in the bottom-left square."
-      );
-
-      await startCompositedBroadcastLoop(liveSession, "native_screen");
-
-      stream.getVideoTracks()[0].onended = () => {
-        void handleStopLiveBroadcast();
-      };
-    } catch {
-      // If browser/iframe blocks native display-capture, open the interactive Screen Source Selector so the host can pick which trading screen to share
-      setShowScreenSourcePicker(true);
+    mediaStreamRef.current = stream;
+    setUsingSimulatedScreen(false);
+    setIsSharingScreen(true);
+    if (videoPreviewRef.current) {
+      videoPreviewRef.current.srcObject = stream;
+      void videoPreviewRef.current.play();
     }
+
+    // Webcam picture-in-picture is optional; going live never waits on it failing.
+    await startHostWebcamPiP().catch(() => undefined);
+
+    const liveSession: LiveSessionItem = { ...targetSession, status: "live", streamMode: "screen_share" };
+    await saveLiveSessionInDb(liveSession);
+    setSessions(getCachedLiveSessions());
+    setActiveSessionId(liveSession.id);
+    setStudioFeedback("You are LIVE! Students now see the screen you selected. Stop sharing from the browser bar or the End button to finish.");
+
+    await startCompositedBroadcastLoop(liveSession, "native_screen");
+    stream.getVideoTracks()[0].onended = () => {
+      void handleStopLiveBroadcast();
+    };
   }
 
   async function handleConfirmSimulatedScreenSource(
@@ -1788,7 +1790,7 @@ export function AdminLiveStudioPage() {
                   <>
                     <button
                       type="button"
-                      onClick={() => setShowScreenSourcePicker(true)}
+                      onClick={() => void handleStartScreenShare()}
                       className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                     >
                       <MonitorUp size={14} className="text-[#ffb600]" /> Switch Screen
