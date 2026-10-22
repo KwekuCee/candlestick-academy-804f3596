@@ -18,3 +18,6 @@
 - [x] Save third-party credentials through secure secret storage; never copy the uploaded environment file into source.
 - [x] Report existing security issues and remaining connection limitations: broad legacy access and imported login need repair; Moolre settings are stored but its existing browser payment flow is not migrated or verified.
 - [ ] Verify live Exness sync as an administrator — blocked on identifying and approving a real Supabase administrator account; no privileges inferred from legacy student roles.
+## SEO findings
+- [ ] Correct and verify page headings and accessible content names.
+- [ ] Correct page-specific social metadata; share image requires a verified public image URL.
