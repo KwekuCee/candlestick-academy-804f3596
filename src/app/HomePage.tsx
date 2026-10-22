@@ -1262,7 +1262,7 @@ export default function App() {
         <div className="container footer-top">
           <Logo />
           <p>Practical Forex education for traders who are ready to learn with purpose.</p>
-          <div className="footer-links"><a href="#learn">How it works</a><a href="#benefits">Academy</a><a href="#mentor">Mentor</a><a href="mailto:hello@candlesticks.academy">Contact</a></div>
+          <div className="footer-links"><a href="#learn">How it works</a><a href="#benefits">Academy</a><a href="#mentor">Mentor</a><a href="mailto:contact@candlesticksacademy.online">Contact</a></div>
         </div>
         <div className="container footer-bottom">
           <span>© 2026 Candlesticks Academy. All rights reserved.</span>
