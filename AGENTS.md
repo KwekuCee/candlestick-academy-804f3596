@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Imported Candlesticks Academy pages live in `src/app/` and use `src/app/routerCompat.tsx` for links/navigation; keep it instead of adding react-router (TanStack Router is fixed).
+- SSR is off app-wide (`defaultSsr: false` in `src/start.ts`) because the imported pages read browser storage while rendering.
+- Former Vite dev-middleware endpoints are TanStack server routes under `src/routes/api/` with the same URLs the pages already call.
