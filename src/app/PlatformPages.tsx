@@ -1185,14 +1185,14 @@ export function PortalLayout() {
             {admin ? (
               <img
                 src="/ceo.png"
-                alt="Pastor Mike"
+                alt="Kwekucandles"
                 className="w-9 h-9 rounded-full object-cover border border-[#ffb600]/50 shrink-0"
               />
             ) : (
               <StudentAvatarBadge avatarUrl={student.avatarUrl} name={student.fullName} />
             )}
             <b>
-              {admin ? "Pastor Mike (@master)" : student.fullName || "Registered Trader"}
+              {admin ? "Kwekucandles (@master)" : student.fullName || "Registered Trader"}
               <small>
                 {admin
                   ? "Founder & Lead Mentor"
@@ -1367,7 +1367,7 @@ export function PortalLayout() {
               {admin ? (
                 <img
                   src="/ceo.png"
-                  alt="Pastor Mike"
+                  alt="Kwekucandles"
                   className="w-9 h-9 rounded-full object-cover border border-[#ffb600]/50"
                 />
               ) : (
@@ -1967,7 +1967,7 @@ export function DashboardPage() {
               <div className="py-3 space-y-2">
                 <h2 className="text-base font-bold text-white">No Live Broadcast Scheduled Yet</h2>
                 <p className="text-xs text-[#9aa4b5]">
-                  When Pastor Mike schedules a London or New York live session or goes live in the Admin Broadcast Studio, the real-time countdown and stream link will appear right here.
+                  When Kwekucandles schedules a London or New York live session or goes live in the Admin Broadcast Studio, the real-time countdown and stream link will appear right here.
                 </p>
                 <Link
                   to="/sessions"
@@ -2056,7 +2056,7 @@ export function DashboardPage() {
               <div className="py-3 space-y-2">
                 <h2 className="text-base font-bold text-white">No Admin Signals Posted Yet</h2>
                 <p className="text-xs text-[#9aa4b5]">
-                  Only real setups published by Pastor Mike in the Admin Console appear here, complete with live market TP1–TP5 tracking.
+                  Only real setups published by Kwekucandles in the Admin Console appear here, complete with live market TP1–TP5 tracking.
                 </p>
                 <Link
                   to="/signals"
@@ -2152,7 +2152,7 @@ export function DashboardPage() {
 // 2. REAL CLIENT SETTINGS PAGE (/settings)
 //    - Avatar Upload to Supabase Storage (visible in Admin Roster)
 //    - Trading Risk Profile & Session Alert Preferences
-//    - Direct 1-on-1 Mentor Q&A with Pastor Mike
+//    - Direct 1-on-1 Mentor Q&A with Kwekucandles
 //    - Supabase SQL Upgrade Schema Copy Generator
 // ============================================================================
 
@@ -2720,7 +2720,7 @@ export function SettingsPage() {
 
           {/* 4. Direct 1-on-1 Mentor Q&A Support Messaging */}
           <Card className="settings-card" id="mentor-qa">
-            <h2>Direct 1-on-1 Mentor Q&amp;A with Pastor Mike</h2>
+            <h2>Direct 1-on-1 Mentor Q&amp;A with Kwekucandles</h2>
             <p>
               Ask a question about a course lesson, market structure setup, or your trading plan. Replies appear directly below.
             </p>
@@ -2740,7 +2740,7 @@ export function SettingsPage() {
                 </label>
               </div>
               <label className="block">
-                Your Question for Pastor Mike
+                Your Question for Kwekucandles
                 <textarea
                   rows={3}
                   value={questionBody}
@@ -2750,7 +2750,7 @@ export function SettingsPage() {
                 />
               </label>
               <Button type="submit" disabled={sendingQuestion}>
-                {sendingQuestion ? "Sending to Mentor Inbox..." : "Send Question to Pastor Mike"}
+                {sendingQuestion ? "Sending to Mentor Inbox..." : "Send Question to Kwekucandles"}
               </Button>
             </form>
 
@@ -2770,7 +2770,7 @@ export function SettingsPage() {
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono text-[#8c95a6] mb-1">
                       <strong className={m.senderRole === "admin" ? "text-[#ffb600]" : "text-white"}>
-                        {m.senderRole === "admin" ? "Pastor Mike (Founder)" : "You"} · {m.subject}
+                        {m.senderRole === "admin" ? "Kwekucandles (Founder)" : "You"} · {m.subject}
                       </strong>
                       <span>{new Date(m.createdAt).toLocaleString()}</span>
                     </div>
@@ -2788,7 +2788,7 @@ export function SettingsPage() {
               [
                 "signals",
                 "VIP Signal & Multi-TP (TP1–TP5) Hit Alerts",
-                "Notify me immediately in the topbar alert bell when Pastor Mike posts a signal or when live market prices hit TP1, TP2, TP3, TP4, TP5, or SL.",
+                "Notify me immediately in the topbar alert bell when Kwekucandles posts a signal or when live market prices hit TP1, TP2, TP3, TP4, TP5, or SL.",
                 notifySignals,
                 setNotifySignals,
               ],
@@ -3200,7 +3200,7 @@ export function CourseDetailPage() {
               No Videos Uploaded for {c.title} ({c.level}) Yet
             </h3>
             <p className="text-xs text-[#9aa4b5] max-w-lg mx-auto">
-              Pastor Mike names and uploads the individual course videos for each of the 4 levels directly from the Admin Course Studio. You can already take the {c.level} Level PDF Assessment below!
+              Kwekucandles names and uploads the individual course videos for each of the 4 levels directly from the Admin Course Studio. You can already take the {c.level} Level PDF Assessment below!
             </p>
           </Card>
         ) : (
@@ -3356,7 +3356,7 @@ export function LessonPage() {
         <VideoIcon size={32} className="mx-auto text-[#ffb600]" />
         <h2 className="text-lg font-bold text-white">No Video Lessons Uploaded Yet</h2>
         <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-          Pastor Mike will upload and name the video lessons for this track in the Admin Course Studio.
+          Kwekucandles will upload and name the video lessons for this track in the Admin Course Studio.
         </p>
         <div className="pt-2">
           <Link className="p-button primary rounded-full" to="/courses">
@@ -3997,7 +3997,7 @@ export function ProgressPage() {
               Complete a course track &amp; pass its level quiz (70%+) to unlock your verified certificate
             </p>
             <p className="text-xs text-[#8c95a6]">
-              Once Pastor Mike issues or approves your certificate from the Admin Console, your personalized certificate with your full name on the official template appears right here for instant download.
+              Once Kwekucandles issues or approves your certificate from the Admin Console, your personalized certificate with your full name on the official template appears right here for instant download.
             </p>
           </div>
         ) : (
@@ -4156,7 +4156,7 @@ export function SessionSchedulePage() {
       <Header
         eyebrow="LIVE TRADING ROOMS · SCREEN SHARE & RTMP STREAMING"
         title="Live Sessions & Broadcast Schedule"
-        copy="Watch Pastor Mike share his live screen and charts, trade the London and New York opens together, and chat in real time."
+        copy="Watch Kwekucandles share his live screen and charts, trade the London and New York opens together, and chat in real time."
         action={
           <Badge tone={isLiveNow ? "green" : featured ? "yellow" : "gray"}>
             {isLiveNow
@@ -4241,7 +4241,7 @@ export function SessionSchedulePage() {
           <Radio size={32} className="mx-auto text-[#ffb600]" />
           <h2 className="text-lg font-bold text-white">No Live Sessions Scheduled Yet</h2>
           <p className="text-xs text-[#9aa4b5] max-w-lg mx-auto">
-            Only real live sessions scheduled or broadcast by Pastor Mike in the Admin Broadcast Studio appear here. As soon as a session is scheduled or goes live, the countdown and stream room will unlock automatically.
+            Only real live sessions scheduled or broadcast by Kwekucandles in the Admin Broadcast Studio appear here. As soon as a session is scheduled or goes live, the countdown and stream room will unlock automatically.
           </p>
         </Card>
       )}
@@ -4391,7 +4391,7 @@ export function LiveRoomPage() {
       <div className="py-8">
         <SubscriptionGateNotice
           featureTitle="Live Broadcast Room Locked · Free Trial Expired"
-          featureDescription="Your 1-month free trial has ended. Upgrade to the $20/Month plan or $100 Permanent VIP Access via Moolre to watch live screen-share broadcasts and trade live with Pastor Mike."
+          featureDescription="Your 1-month free trial has ended. Upgrade to the $20/Month plan or $100 Permanent VIP Access via Moolre to watch live screen-share broadcasts and trade live with Kwekucandles."
         />
       </div>
     );
@@ -4474,11 +4474,11 @@ export function LiveRoomPage() {
                 <div className="text-center space-y-1">
                   <div className="text-sm font-bold text-white">
                     {isLive
-                      ? "Pastor Mike is Live in the Trading Room"
+                      ? "Kwekucandles is Live in the Trading Room"
                       : `Waiting Room Countdown: ${countdownText}`}
                   </div>
                   <p className="text-xs text-[#9aa4b5]">
-                    As soon as Pastor Mike clicks &ldquo;Share Screen &amp; Go Live&rdquo; or starts the RTMP stream in the Admin Studio, the live video feed appears right here automatically.
+                    As soon as Kwekucandles clicks &ldquo;Share Screen &amp; Go Live&rdquo; or starts the RTMP stream in the Admin Studio, the live video feed appears right here automatically.
                   </p>
                 </div>
               </div>
@@ -4552,7 +4552,7 @@ export function LiveRoomPage() {
                 "🔥 Clean setup!",
                 "📈 Watching EUR/USD",
                 "🎯 Entered with 1% risk",
-                "🙏 Thank you Pastor Mike",
+                "🙏 Thank you Kwekucandles",
               ].map((preset) => (
                 <button
                   key={preset}
@@ -5452,7 +5452,7 @@ export function SignalFeedPage() {
           </h3>
           <p>
             {subAccess.canCopyTradeSignals
-              ? `New signals posted by Pastor Mike ${
+              ? `New signals posted by Kwekucandles ${
                   copy ? "are" : "are not"
                 } queued for your linked Exness account (${
                   student.exnessId ? `••••${student.exnessId.slice(-4)}` : "Unlinked"
@@ -5596,7 +5596,7 @@ export function SignalFeedPage() {
           <Target size={30} className="mx-auto text-[#ffb600]" />
           <h3 className="text-base font-bold text-white">No Signals Posted by Admin Yet</h3>
           <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-            Only real signals posted by Pastor Mike in the Admin Console appear here. When a signal is posted, its live market price and TP1–TP5 targets will track automatically.
+            Only real signals posted by Kwekucandles in the Admin Console appear here. When a signal is posted, its live market price and TP1–TP5 targets will track automatically.
           </p>
         </Card>
       ) : (
@@ -5889,11 +5889,11 @@ export function SignalDetailPage() {
             <div className="profile">
               <img
                 src="/ceo.png"
-                alt="Pastor Mike"
+                alt="Kwekucandles"
                 className="w-10 h-10 rounded-full object-cover border border-[#ffb600]/50"
               />
               <b>
-                {s.author || "Pastor Mike"}
+                {s.author || "Kwekucandles"}
                 <small>FOUNDER&apos;S ANALYSIS</small>
               </b>
             </div>
@@ -5945,7 +5945,7 @@ export function Mentorship1on1Page() {
       <Header
         eyebrow="PRIVATE COACHING · $100 PERMANENT VIP ACCESS"
         title="1-on-1 Live Mentorship & Trading Sessions"
-        copy="Private 1-on-1 live trading sessions scheduled by Pastor Mike exclusively for $100 Permanent Access members."
+        copy="Private 1-on-1 live trading sessions scheduled by Kwekucandles exclusively for $100 Permanent Access members."
         action={
           <Badge tone={subAccess.canAccess1on1Mentorship ? "green" : "yellow"}>
             {subAccess.canAccess1on1Mentorship ? "● VIP 1-ON-1 UNLOCKED" : "REQUIRES $100 VIP"}
@@ -5964,7 +5964,7 @@ export function Mentorship1on1Page() {
       {!subAccess.canAccess1on1Mentorship ? (
         <SubscriptionGateNotice
           featureTitle="1-on-1 Live Mentorship Locked · $100 Permanent VIP Access Required"
-          featureDescription="Upgrade to the $100 One-Time Permanent VIP Access plan via Moolre to unlock private 1-on-1 live trading & chart review sessions with Pastor Mike, automatic signal copy trading, and $500 Account Management."
+          featureDescription="Upgrade to the $100 One-Time Permanent VIP Access plan via Moolre to unlock private 1-on-1 live trading & chart review sessions with Kwekucandles, automatic signal copy trading, and $500 Account Management."
           defaultPlan="permanent_100"
         />
       ) : (
@@ -5979,7 +5979,7 @@ export function Mentorship1on1Page() {
                   Welcome to 1-on-1 VIP Mentorship, {student.fullName.split(" ")[0] || "Trader"}
                 </h2>
                 <p className="text-xs text-[#9aa4b5] max-w-2xl">
-                  Pastor Mike schedules your private 1-on-1 live trading and strategy sessions from the Admin Console. As soon as a session is scheduled for you, it appears below with your direct meeting room link and trading focus.
+                  Kwekucandles schedules your private 1-on-1 live trading and strategy sessions from the Admin Console. As soon as a session is scheduled for you, it appears below with your direct meeting room link and trading focus.
                 </p>
               </div>
               <Badge tone="green">{sessions.length} SCHEDULED SESSIONS</Badge>
@@ -5993,7 +5993,7 @@ export function Mentorship1on1Page() {
                 No 1-on-1 Mentorship Sessions Scheduled Yet
               </h3>
               <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-                Your $100 Permanent VIP status is active! Pastor Mike will schedule your upcoming 1-on-1 live trading session from the Admin Console, and you will receive an instant notification bell alert when your slot is posted.
+                Your $100 Permanent VIP status is active! Kwekucandles will schedule your upcoming 1-on-1 live trading session from the Admin Console, and you will receive an instant notification bell alert when your slot is posted.
               </p>
             </Card>
           ) : (
@@ -6140,7 +6140,7 @@ export function AccountManagementPage() {
     setExistingSig(updated);
     setSubmittingPass(false);
     setTradingPasswordInput("");
-    setFeedback("Trading password securely transmitted to Pastor Mike for Account Management.");
+    setFeedback("Trading password securely transmitted to Kwekucandles for Account Management.");
   }
 
   return (
@@ -6163,7 +6163,7 @@ export function AccountManagementPage() {
       {!subAccess.canAccessAccountManagement ? (
         <SubscriptionGateNotice
           featureTitle="Account Management Locked · $100 Permanent VIP Access Required"
-          featureDescription="Account Management by Pastor Mike is exclusively available to $100 One-Time Permanent VIP members who deposit at least $500 USD into their linked Exness trading account."
+          featureDescription="Account Management by Kwekucandles is exclusively available to $100 One-Time Permanent VIP members who deposit at least $500 USD into their linked Exness trading account."
           defaultPlan="permanent_100"
         />
       ) : (
@@ -6251,7 +6251,7 @@ export function AccountManagementPage() {
                   <strong className="text-[#ffb600] font-mono">
                     {existingSig.exnessTradingAccountId}
                   </strong>
-                  ) are now visible to Pastor Mike in the Admin Console.
+                  ) are now visible to Kwekucandles in the Admin Console.
                 </p>
 
                 {/* If Admin requested Trading Password or Student wants to provide it */}
@@ -6342,7 +6342,7 @@ export function AccountManagementPage() {
                   />
                   <span>
                     I have read and agree to the fixed, non-negotiable{" "}
-                    <strong>{contractTemplate.title}</strong> ({contractTemplate.profitSplitLabel}), confirm that my Exness account holds at least $500 USD, and authorize Pastor Mike to request my trading password to manage the account and split profits.
+                    <strong>{contractTemplate.title}</strong> ({contractTemplate.profitSplitLabel}), confirm that my Exness account holds at least $500 USD, and authorize Kwekucandles to request my trading password to manage the account and split profits.
                   </span>
                 </label>
 
@@ -7404,7 +7404,7 @@ export function SignalFormPage() {
       rr: rr.trim() || "1 : 2.8",
       timeframe: timeframe.trim() || "H1 / M15",
       commentary: commentary.trim(),
-      author: "Pastor Mike",
+      author: "Kwekucandles",
     });
     const updated = await fetchSignalsFromDb();
     setSignals(updated);
@@ -8913,7 +8913,7 @@ export function PaymentsPage() {
                   rows={2}
                   value={seoConfig.metaDescription}
                   onChange={(e) => setSeoConfig({ ...seoConfig, metaDescription: e.target.value })}
-                  placeholder="Official institutional Forex academy led by Pastor Mike. Master order flow, liquidity, London & NY sessions, and receive real-time institutional signals with Exness broker integration."
+                  placeholder="Official institutional Forex academy led by Kwekucandles. Master order flow, liquidity, London & NY sessions, and receive real-time institutional signals with Exness broker integration."
                   className="w-full bg-[#11141d] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-[#ffb600] focus:outline-none"
                 />
                 <p className="text-[11px] text-[#7f8a9d] mt-1">

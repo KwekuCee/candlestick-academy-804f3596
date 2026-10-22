@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS public.signals (
   take_profit TEXT NOT NULL,
   risk_reward TEXT NOT NULL DEFAULT '1 : 2.4',
   commentary TEXT,
-  author_name TEXT NOT NULL DEFAULT 'Pastor Mike',
+  author_name TEXT NOT NULL DEFAULT 'Kwekucandles',
   min_deposit_required NUMERIC(12, 2) NOT NULL DEFAULT 50.00,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS public.live_sessions (
   scheduled_at TEXT NOT NULL,
   duration_minutes INTEGER NOT NULL DEFAULT 90,
   registered_count INTEGER NOT NULL DEFAULT 124,
-  host_name TEXT NOT NULL DEFAULT 'Pastor Mike',
+  host_name TEXT NOT NULL DEFAULT 'Kwekucandles',
   min_deposit_required NUMERIC(12, 2) NOT NULL DEFAULT 50.00,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -455,7 +455,7 @@ CREATE TABLE IF NOT EXISTS public.trading_signals (
   mentor_quote TEXT DEFAULT 'Patience is part of the setup. Wait for price to confirm structure.',
   current_price TEXT DEFAULT '',
   floating_pnl_text TEXT DEFAULT '',
-  created_by TEXT DEFAULT 'Pastor Mike',
+  created_by TEXT DEFAULT 'Kwekucandles',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
