@@ -21,3 +21,10 @@
 ## SEO findings
 - [x] Correct public headings and accessible content names; all six public routes verified in the browser.
 - [x] Correct social text and page addresses on all 29 content routes; homepage uses a verified 1200×630 mentor sharing image (77 KB).
+## Homepage, admin and live studio updates
+- [x] Mentor photo cropped to face and shoulders, served as WebP (56 KB); mentor renamed Kwekucandles.
+- [x] Admin-managed student reviews shown on the homepage; collapsible themed FAQ.
+- [x] Master admin account (username master) created; sign-in verified.
+- [x] Screen share asks for a real screen first, then goes live; fake demo screens removed; RTMP fields cleared with provider guidance.
+- [x] Admin can switch to client view and back; client overview redesigned.
+- [ ] Hosted RTMP ingest — needs a streaming provider account (Cloudflare Stream, Mux or YouTube Live); our hosting cannot run an RTMP server.
