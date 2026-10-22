@@ -1968,6 +1968,9 @@ export function AdminLiveStudioPage() {
                     RTMP Server &amp; HLS Stream Configuration (OBS / External Stream)
                   </span>
                 </div>
+                <p className="text-[11px] text-[#9aa4b5] leading-relaxed">
+                  Stream from OBS to your provider (Cloudflare Stream, Mux or YouTube Live) using its RTMP server and key, then paste the provider&apos;s playback link (.m3u8 or YouTube/Vimeo URL) below. Students watch that link inside the live room.
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[10px] font-mono uppercase text-[#9aa4b5] mb-1">
@@ -1977,6 +1980,7 @@ export function AdminLiveStudioPage() {
                       type="text"
                       value={rtmpIngestUrl}
                       onChange={(e) => setRtmpIngestUrl(e.target.value)}
+                      placeholder="e.g. rtmps://live.cloudflare.com:443/live/ or rtmp://a.rtmp.youtube.com/live2"
                       className="w-full bg-[#0e1118] border border-white/10 rounded-lg px-3 py-2 text-white text-xs font-mono"
                     />
                   </div>
@@ -1989,6 +1993,7 @@ export function AdminLiveStudioPage() {
                         type="text"
                         value={rtmpStreamKey}
                         onChange={(e) => setRtmpStreamKey(e.target.value)}
+                        placeholder="Paste the stream key from your streaming provider"
                         className="w-full bg-[#0e1118] border border-white/10 rounded-lg px-3 py-2 text-[#ffb600] text-xs font-mono"
                       />
                       <button
