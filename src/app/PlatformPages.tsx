@@ -1,4 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { Button as PaymentStatusButton } from '@/components/ui/button';
+import { verifyMoolrePayment } from './portalDataStore';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "@/app/routerCompat";
 import {
   ADMIN_PORTAL_DOMAIN,
@@ -535,6 +537,8 @@ export function MoolreCheckoutModal({
   const [network, setNetwork] = useState<"MTN" | "Telecel" | "AT">("MTN");
   const [payerPhone, setPayerPhone] = useState(student.phone || "");
   const [processing, setProcessing] = useState(false);
+  const [pendingReference, setPendingReference] = useState<string | null>(null);
+  const checkoutRequestId = useRef(crypto.randomUUID());
   const [feedback, setFeedback] = useState<{
     success: boolean;
     message: string;
@@ -555,6 +559,7 @@ export function MoolreCheckoutModal({
       paymentMethod,
       payerPhone,
       network,
+      requestId: checkoutRequestId.current,
     });
     setProcessing(false);
     setFeedback({
@@ -562,11 +567,18 @@ export function MoolreCheckoutModal({
       message: res.message,
       paymentUrl: res.paymentUrl,
     });
-    if (res.success && onSuccess) {
-      setTimeout(() => {
-        onSuccess();
-      }, 1500);
-    }
+    if (res.transaction) setPendingReference(res.transaction.externalRef);
+  }
+
+  async function checkPayment() {
+    if (!pendingReference) return;
+    setProcessing(true);
+    try {
+      const result = await verifyMoolrePayment(pendingReference);
+      setFeedback({ success: result.success, message: result.message });
+      if (result.status === 'PAID') onSuccess?.();
+    } catch (error) { setFeedback({ success: false, message: error instanceof Error ? error.message : 'Unable to verify payment. Try again.' }); }
+    finally { setProcessing(false); }
   }
 
   return (
@@ -735,6 +747,7 @@ export function MoolreCheckoutModal({
               )}
             </div>
           )}
+          {pendingReference && <PaymentStatusButton type="button" variant="outline" disabled={processing} onClick={() => void checkPayment()}><CreditCard size={16} /> Check payment status</PaymentStatusButton>}
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
             <button
@@ -1091,21 +1104,10 @@ export function PortalLayout() {
     }
   }
 
-  function handleLogout() {
-    logoutCurrentUser();
-    if (typeof window !== "undefined") {
-      const host = window.location.hostname.toLowerCase();
-      if (
-        host === ADMIN_PORTAL_DOMAIN ||
-        host === STUDENT_PORTAL_DOMAIN ||
-        host.includes("candlesticksacademy.online") ||
-        host.includes("candlesticks.online")
-      ) {
-        window.location.href = "/login";
-        return;
-      }
-    }
-    nav("/login");
+  async function handleLogout() {
+    const destination = await logoutCurrentUser();
+    if (destination.startsWith('https://')) window.location.replace(destination);
+    else nav('/', { replace: true });
   }
 
   function handleSearchSubmit(e: FormEvent) {
@@ -3784,7 +3786,7 @@ export function ProgressPage() {
         ctx.strokeRect(58, 58, canvas.width - 116, canvas.height - 116);
 
         ctx.fillStyle = "#ffb600";
-        ctx.font = "bold 22px monospace";
+        ctx.font = "bold 22px Manrope";
         ctx.textAlign = "center";
         ctx.fillText(
           "CANDLESTICKS TRADING ACADEMY · OFFICIAL CREDENTIAL",
@@ -3793,11 +3795,11 @@ export function ProgressPage() {
         );
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 56px Georgia, serif";
+        ctx.font = "bold 56px Manrope";
         ctx.fillText("CERTIFICATE OF MASTERY", canvas.width / 2, 260);
 
         ctx.fillStyle = "#9aa4b5";
-        ctx.font = "24px sans-serif";
+        ctx.font = "24px Manrope";
         ctx.fillText("This officially certifies that", canvas.width / 2, 340);
       }
 
@@ -3805,19 +3807,13 @@ export function ProgressPage() {
       const nameY = ((certTemplate.nameYPercent ?? 50) / 100) * canvas.height;
       const scaledFontSize = Math.round((certTemplate.fontSizePx ?? 38) * 1.65);
       ctx.fillStyle = certTemplate.fontColor || "#ffb600";
-      ctx.font = `bold ${scaledFontSize}px ${
-        certTemplate.fontFamily === "serif"
-          ? "Georgia, serif"
-          : certTemplate.fontFamily === "mono"
-          ? "monospace"
-          : "sans-serif"
-      }`;
+      ctx.font = `bold ${scaledFontSize}px Manrope`;
       ctx.textAlign = "center";
       ctx.fillText(cert.studentName, canvas.width / 2, nameY);
 
       if (certTemplate.showCourseTitle) {
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 28px sans-serif";
+        ctx.font = "bold 28px Manrope";
         ctx.fillText(
           `Successfully completed ${cert.courseTitle}`,
           canvas.width / 2,
@@ -3827,7 +3823,7 @@ export function ProgressPage() {
 
       // Footer metadata
       const footerY = canvas.height - 110;
-      ctx.font = "bold 20px monospace";
+      ctx.font = "bold 20px Manrope";
       ctx.fillStyle = "#e2e8f0";
       ctx.fillText(`${cert.issuedBy} · Academy Founder`, canvas.width * 0.25, footerY);
 
@@ -4077,12 +4073,7 @@ export function ProgressPage() {
                   style={{
                     fontSize: `${Math.max(18, Math.round((certTemplate.fontSizePx ?? 38) * 0.78))}px`,
                     color: certTemplate.fontColor || "#ffb600",
-                    fontFamily:
-                      certTemplate.fontFamily === "serif"
-                        ? "Georgia, Cambria, 'Times New Roman', serif"
-                        : certTemplate.fontFamily === "mono"
-                        ? "monospace"
-                        : "sans-serif",
+                    fontFamily: "Manrope",
                   }}
                   className="font-extrabold tracking-wide drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]"
                 >

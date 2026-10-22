@@ -1265,7 +1265,7 @@ export function AdminLiveStudioPage() {
     ctx.fillStyle = "#111622";
     ctx.fillRect(0, 0, width, 44);
     ctx.fillStyle = "#ffb600";
-    ctx.font = "bold 14px monospace";
+    ctx.font = "bold 14px Manrope";
     const labelMap = {
       mt5_xauusd: "MT5 INSTITUTIONAL DESK · XAU/USD (M15) · LIVE ORDERFLOW",
       tradingview_eurusd: "TRADINGVIEW PRO · EUR/USD (H1) · LONDON/NY LIQUIDITY SWEEP",
@@ -1274,7 +1274,7 @@ export function AdminLiveStudioPage() {
     ctx.fillText(labelMap[sourceKey], 18, 27);
 
     ctx.fillStyle = "#10b981";
-    ctx.font = "bold 12px monospace";
+    ctx.font = "bold 12px Manrope";
     const tick = ((Date.now() % 10000) / 1000).toFixed(2);
     ctx.fillText(`BID: 2,942.${tick.replace(".", "")}  ·  SPREAD: 0.1 PIP`, width - 290, 27);
 
@@ -1318,7 +1318,7 @@ export function AdminLiveStudioPage() {
     ctx.strokeRect(startX + 6 * step, height * 0.42, usableW - 8 * step, 38);
     ctx.setLineDash([]);
     ctx.fillStyle = "#ffb600";
-    ctx.font = "bold 11px monospace";
+    ctx.font = "bold 11px Manrope";
     ctx.fillText("INSTITUTIONAL POI / BUY ZONE", startX + 6 * step + 10, height * 0.42 + 23);
   }
 
@@ -1350,7 +1350,7 @@ export function AdminLiveStudioPage() {
     ctx.fillStyle = "rgba(0,0,0,0.72)";
     ctx.fillRect(pipX, pipY + pipSize - 26, pipSize, 26);
     ctx.fillStyle = "#ffb600";
-    ctx.font = "bold 10px monospace";
+    ctx.font = "bold 10px Manrope";
     ctx.fillText("● HOST CAM (LIVE)", pipX + 12, pipY + pipSize - 9);
     ctx.restore();
 

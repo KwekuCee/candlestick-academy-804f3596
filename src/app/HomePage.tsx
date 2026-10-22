@@ -904,7 +904,7 @@ function MarketCard() {
                     textAnchor="middle"
                     fill={isLast ? "#ffb600" : "#717985"}
                     fontSize="8.5"
-                    fontFamily="'DM Mono', monospace"
+                    fontFamily="Manrope"
                     fontWeight={isLast ? "600" : "400"}
                   >
                     {isLast ? `NOW (${timeframe})` : c.time}

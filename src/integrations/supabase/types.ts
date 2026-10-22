@@ -548,11 +548,74 @@ export type Database = {
         }
         Relationships: []
       }
+      moolre_payment_attempts: {
+        Row: {
+          account_number: string
+          amount: number
+          amount_usd: number
+          authorization_url: string | null
+          created_at: string
+          currency: string
+          external_ref: string
+          id: string
+          plan: string
+          provider_transaction_id: string | null
+          status: string
+          student_id: string
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          account_number: string
+          amount: number
+          amount_usd: number
+          authorization_url?: string | null
+          created_at?: string
+          currency: string
+          external_ref: string
+          id?: string
+          plan: string
+          provider_transaction_id?: string | null
+          status?: string
+          student_id: string
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          account_number?: string
+          amount?: number
+          amount_usd?: number
+          authorization_url?: string | null
+          created_at?: string
+          currency?: string
+          external_ref?: string
+          id?: string
+          plan?: string
+          provider_transaction_id?: string | null
+          status?: string
+          student_id?: string
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moolre_payment_attempts_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount_usd: number
           created_at: string
           id: string
+          moolre_attempt_id: string | null
           next_billing_date: string | null
           status: string
           student_id: string | null
@@ -562,6 +625,7 @@ export type Database = {
           amount_usd?: number
           created_at?: string
           id?: string
+          moolre_attempt_id?: string | null
           next_billing_date?: string | null
           status?: string
           student_id?: string | null
@@ -571,12 +635,20 @@ export type Database = {
           amount_usd?: number
           created_at?: string
           id?: string
+          moolre_attempt_id?: string | null
           next_billing_date?: string | null
           status?: string
           student_id?: string | null
           tier?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "payments_moolre_attempt_id_fkey"
+            columns: ["moolre_attempt_id"]
+            isOneToOne: true
+            referencedRelation: "moolre_payment_attempts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "payments_student_id_fkey"
             columns: ["student_id"]
@@ -928,12 +1000,15 @@ export type Database = {
           risk_per_trade_pct: number | null
           role: string
           streak_days: number | null
+          subscription_ends_at: string | null
+          subscription_tier: string
           target_monthly_return_pct: number | null
           telegram_handle: string | null
           ticket_details: Json | null
           ticket_status: string
           tier: string
           trading_style: string | null
+          trial_ends_at: string | null
           updated_at: string
           username: string | null
           volume_lots: number | null
@@ -973,12 +1048,15 @@ export type Database = {
           risk_per_trade_pct?: number | null
           role?: string
           streak_days?: number | null
+          subscription_ends_at?: string | null
+          subscription_tier?: string
           target_monthly_return_pct?: number | null
           telegram_handle?: string | null
           ticket_details?: Json | null
           ticket_status?: string
           tier?: string
           trading_style?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           username?: string | null
           volume_lots?: number | null
@@ -1018,12 +1096,15 @@ export type Database = {
           risk_per_trade_pct?: number | null
           role?: string
           streak_days?: number | null
+          subscription_ends_at?: string | null
+          subscription_tier?: string
           target_monthly_return_pct?: number | null
           telegram_handle?: string | null
           ticket_details?: Json | null
           ticket_status?: string
           tier?: string
           trading_style?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           username?: string | null
           volume_lots?: number | null
@@ -1163,6 +1244,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      confirm_moolre_payment: {
+        Args: {
+          p_account: string
+          p_amount: number
+          p_ref: string
+          p_transaction_id: string
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

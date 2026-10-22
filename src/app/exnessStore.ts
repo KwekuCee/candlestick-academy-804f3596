@@ -1,5 +1,6 @@
 import { isSupabaseConfigured, supabase } from "./supabaseClient";
 import schemaSqlRaw from "./schema.sql?raw";
+import { isAcademyHost, portalDestination, logoutDestination } from "@/lib/portal-domains";
 
 export interface ExnessStudent {
   id: string;
@@ -722,7 +723,10 @@ function mapDbRowToStudent(row: Record<string, unknown>): ExnessStudent {
   return {
     id: String(row.id || `std-${Date.now()}`),
     username: rowUsername || localCreds?.username,
-    accountPassword: rowPassword || localCreds?.accountPassword,
+    accountPassword: undefined,
+    subscriptionTier: row.subscription_tier as ExnessStudent["subscriptionTier"],
+    subscriptionEndsAt: row.subscription_ends_at ? String(row.subscription_ends_at) : undefined,
+    trialEndsAt: row.trial_ends_at ? String(row.trial_ends_at) : undefined,
     fullName: String(row.full_name || "Student"),
     country: String(row.country || "Ghana"),
     email: emailStr,
@@ -787,7 +791,7 @@ export async function refreshRosterFromSupabase(): Promise<ExnessStudent[]> {
         return {
           ...student,
           username: student.username || localMatch?.username,
-          accountPassword: student.accountPassword || localMatch?.accountPassword,
+          accountPassword: undefined,
         };
       });
       // Also preserve any newly created local students that haven't synced to Supabase yet
@@ -808,36 +812,17 @@ export async function refreshRosterFromSupabase(): Promise<ExnessStudent[]> {
 
 // Sync student record to Supabase (`public.students` table + Auth signUp)
 export async function syncStudentToSupabase(user: ExnessStudent, password?: string) {
-  const effectivePassword = password || user.accountPassword;
-  if (user.email && (user.username || effectivePassword)) {
-    saveLocalCredentialEntry(user.email, user.username, effectivePassword);
-  }
-
-  if (!isSupabaseConfigured || !supabase) return;
-
+  if (!supabase) return;
   try {
-    if (effectivePassword && user.email) {
-      await supabase.auth.signUp({
-        email: user.email,
-        password: effectivePassword,
-        options: {
-          data: {
-            username: user.username || "",
-            full_name: user.fullName,
-            country: user.country,
-            exness_id: user.exnessId,
-            exness_email: user.exnessEmail,
-            partner_code: OFFICIAL_PARTNER_CODE,
-            partner_linked: user.partnerLinked,
-            deposit_amount: user.depositAmount,
-            deposit_verified: user.depositVerified,
-          },
-        },
-      });
+    if (password && user.email) {
+      const { error } = await supabase.auth.signUp({ email: user.email, password, options: { data: { username: user.username, full_name: user.fullName } } });
+      if (error) throw error;
     }
-
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth.user || auth.user.email?.toLowerCase() !== user.email.toLowerCase()) return;
     const payload: Record<string, unknown> = {
       id: user.id,
+      auth_user_id: auth.user.id,
       full_name: user.fullName,
       country: user.country,
       email: user.email,
@@ -859,10 +844,6 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
     if (user.username !== undefined && user.username.trim() !== "") {
       payload.username = user.username.trim().toLowerCase();
     }
-    if (effectivePassword !== undefined && effectivePassword !== "") {
-      payload.account_password = effectivePassword;
-    }
-
     // Include extended profile fields if present
     if (user.avatarUrl !== undefined) payload.avatar_url = user.avatarUrl;
     if (user.phone !== undefined) payload.phone = user.phone;
@@ -880,31 +861,7 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
     if (user.lastActiveDate !== undefined) payload.last_active_date = user.lastActiveDate;
 
     const { error } = await supabase.from("students").upsert(payload, { onConflict: "email" });
-    if (error) {
-      // Fallback upsert without extended columns if SQL upgrade hasn't been executed yet
-      await supabase.from("students").upsert(
-        {
-          id: user.id,
-          full_name: user.fullName,
-          country: user.country,
-          email: user.email,
-          has_exness_account: user.hasExnessAccount,
-          exness_id: user.exnessId,
-          exness_email: user.exnessEmail,
-          exness_client_uid: user.exnessClientUid || null,
-          partner_code: OFFICIAL_PARTNER_CODE,
-          partner_linked: user.partnerLinked,
-          partner_linked_at: user.partnerLinkedAt || null,
-          deposit_amount: user.depositAmount,
-          deposit_verified: user.depositVerified,
-          deposit_verified_at: user.depositVerifiedAt || null,
-          ticket_status: user.ticketStatus,
-          ticket_details: user.ticketDetails || null,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "email" }
-      );
-    }
+    if (error) throw error;
   } catch (err) {
     console.debug("Supabase sync note:", err);
   }
@@ -1114,69 +1071,37 @@ function clearCrossSubdomainCookie(name: string) {
   }
 }
 
-// Hydrate session on subdomain arrival via ?ca_sso=... URL handoff or shared .candlesticksacademy.online cookie
-export function hydrateCrossDomainSession(): void {
-  if (typeof window === "undefined") return;
-  try {
-    const url = new URL(window.location.href);
-    const ssoToken = url.searchParams.get("ca_sso");
-    if (ssoToken) {
-      const rawJson = decodeBase64Utf8(ssoToken);
-      if (rawJson) {
-        const parsed = JSON.parse(rawJson) as {
-          role?: "admin" | "student";
-          student?: ExnessStudent;
-        };
-        if (parsed.role === "admin") {
-          localStorage.setItem("candlesticks_admin_authenticated", "true");
-          setCrossSubdomainCookie(ADMIN_COOKIE_NAME, "true");
-        } else if (parsed.role === "student" && parsed.student) {
-          localStorage.setItem("candlesticks_current_student", JSON.stringify(parsed.student));
-          localStorage.removeItem("candlesticks_admin_authenticated");
-          if (parsed.student.email && (parsed.student.username || parsed.student.accountPassword)) {
-            saveLocalCredentialEntry(
-              parsed.student.email,
-              parsed.student.username,
-              parsed.student.accountPassword
-            );
-          }
-          setCrossSubdomainCookie(
-            STUDENT_COOKIE_NAME,
-            encodeBase64Utf8(JSON.stringify(parsed.student))
-          );
-        }
-      }
-      url.searchParams.delete("ca_sso");
-      const cleanPath =
-        url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : "") + url.hash;
-      window.history.replaceState(null, "", cleanPath);
-    }
-
-    // Also hydrate from shared .candlesticksacademy.online cookie if localStorage on this subdomain is empty
-    if (localStorage.getItem("candlesticks_admin_authenticated") !== "true") {
-      if (getCrossSubdomainCookie(ADMIN_COOKIE_NAME) === "true") {
-        localStorage.setItem("candlesticks_admin_authenticated", "true");
-      }
-    }
-    if (!localStorage.getItem("candlesticks_current_student")) {
-      const cookieStudentEncoded = getCrossSubdomainCookie(STUDENT_COOKIE_NAME);
-      if (cookieStudentEncoded) {
-        const decoded = decodeBase64Utf8(cookieStudentEncoded);
-        if (decoded) {
-          const parsedStudent = JSON.parse(decoded) as ExnessStudent;
-          if (parsedStudent && parsedStudent.email) {
-            localStorage.setItem("candlesticks_current_student", JSON.stringify(parsedStudent));
-          }
-        }
-      }
-    }
-  } catch {
-    // ignore hydration errors
+// Shared session cookie is encrypted and HttpOnly. URL payloads and browser flags never authenticate.
+let verifiedPortalRole: "admin" | "student" | null = null;
+export async function hydrateCrossDomainSession(): Promise<void> {
+  if (!supabase || typeof window === "undefined") return;
+  localStorage.removeItem("candlesticks_admin_authenticated");
+  clearCrossSubdomainCookie(ADMIN_COOKIE_NAME);
+  clearCrossSubdomainCookie(STUDENT_COOKIE_NAME);
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("ca_sso")) {
+    url.searchParams.delete("ca_sso");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
   }
-}
-
-if (typeof window !== "undefined") {
-  hydrateCrossDomainSession();
+  try {
+    const response = await fetch("/api/public/portal/session", { credentials: "same-origin" });
+    const result = await response.json();
+    if (response.ok && result.session) {
+      await supabase.auth.setSession(result.session);
+      verifiedPortalRole = result.role;
+    } else {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) { verifiedPortalRole = null; return; }
+      const saved = await fetch("/api/public/portal/session", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session.access_token}` }, body: JSON.stringify({ access_token: data.session.access_token, refresh_token: data.session.refresh_token }) });
+      if (!saved.ok) { verifiedPortalRole = null; return; }
+      verifiedPortalRole = (await saved.json()).role;
+    }
+    const { data: auth } = await supabase.auth.getUser();
+    if (auth.user) {
+      const { data: row } = await supabase.from("students").select("*").eq("auth_user_id", auth.user.id).maybeSingle();
+      if (row) localStorage.setItem("candlesticks_current_student", JSON.stringify(mapDbRowToStudent(row)));
+    }
+  } catch { verifiedPortalRole = null; }
 }
 
 export function getStoredCurrentUser(): ExnessStudent {
@@ -1210,25 +1135,13 @@ export function getStoredCurrentUser(): ExnessStudent {
 
 export function saveStoredCurrentUser(user: ExnessStudent, password?: string) {
   try {
-    const updatedUser: ExnessStudent = {
-      ...user,
-      username: user.username ? normalizeUsername(user.username) : user.username,
-      accountPassword: password || user.accountPassword,
-    };
-    if (updatedUser.email && (updatedUser.username || updatedUser.accountPassword)) {
-      saveLocalCredentialEntry(updatedUser.email, updatedUser.username, updatedUser.accountPassword);
-    }
-    localStorage.setItem("candlesticks_current_student", JSON.stringify(updatedUser));
-    setCrossSubdomainCookie(STUDENT_COOKIE_NAME, encodeBase64Utf8(JSON.stringify(updatedUser)));
+    const { accountPassword: _discard, ...profile } = user;
+    localStorage.setItem("candlesticks_current_student", JSON.stringify(profile));
     window.dispatchEvent(new Event("candlesticks_user_updated"));
-    void syncStudentToSupabase(updatedUser, password || updatedUser.accountPassword);
-  } catch (e) {
-    console.error("Failed to save student", e);
-  }
+    void syncStudentToSupabase({ ...profile }, password);
+  } catch { /* local cache is not authoritative */ }
 }
 
-export const MASTER_ADMIN_USERNAME = "master";
-export const MASTER_ADMIN_PASSWORD = "12Reason000@";
 export const RESERVED_ADMIN_USERNAMES = ["master", "admin", "pastormike", "candlesticks", "support", "founder"];
 
 export function normalizeUsername(raw: string): string {
@@ -1239,88 +1152,19 @@ export function normalizeUsername(raw: string): string {
     .replace(/\s+/g, "");
 }
 
-export function isMasterAdminAuthenticated(): boolean {
-  try {
-    if (localStorage.getItem("candlesticks_admin_authenticated") === "true") {
-      return true;
-    }
-    if (getCrossSubdomainCookie(ADMIN_COOKIE_NAME) === "true") {
-      localStorage.setItem("candlesticks_admin_authenticated", "true");
-      return true;
-    }
-    return false;
-  } catch {
-    return false;
-  }
-}
-
+export function isMasterAdminAuthenticated(): boolean { return verifiedPortalRole === "admin"; }
 export function setMasterAdminAuthenticated(authenticated: boolean) {
-  try {
-    if (authenticated) {
-      localStorage.setItem("candlesticks_admin_authenticated", "true");
-      setCrossSubdomainCookie(ADMIN_COOKIE_NAME, "true");
-    } else {
-      localStorage.removeItem("candlesticks_admin_authenticated");
-      clearCrossSubdomainCookie(ADMIN_COOKIE_NAME);
-    }
-    window.dispatchEvent(new Event("candlesticks_user_updated"));
-  } catch {
-    // ignore
-  }
+  // A caller can clear display state, but cannot grant administrator privileges.
+  if (!authenticated) verifiedPortalRole = null;
 }
-
-export function buildRolePortalUrl(role: "student" | "admin", targetPath?: string): string {
-  const currentHost = typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
-  const isAltCandlesticksDomain =
-    currentHost.includes("candlesticks.online") && !currentHost.includes("candlesticksacademy.online");
-  const baseDomain = isAltCandlesticksDomain ? "candlesticks.online" : "candlesticksacademy.online";
-  const targetDomain = role === "admin" ? `master.${baseDomain}` : `student.${baseDomain}`;
-  const defaultPath = role === "admin" ? "/admin" : "/dashboard";
-  const cleanPath = (targetPath || defaultPath).startsWith("/")
-    ? targetPath || defaultPath
-    : `/${targetPath || defaultPath}`;
-
-  // Completely clean URL with zero query string tokens
-  return `https://${targetDomain}${cleanPath}`;
-}
-
-export function redirectToRolePortal(
-  role: "student" | "admin",
-  targetPath?: string,
-  fallbackNavigate?: (path: string) => void
-): void {
-  const defaultPath = role === "admin" ? "/admin" : "/dashboard";
-  const cleanPath = (targetPath || defaultPath).startsWith("/")
-    ? targetPath || defaultPath
-    : `/${targetPath || defaultPath}`;
-
-  if (typeof window === "undefined") {
-    fallbackNavigate?.(cleanPath);
-    return;
-  }
-
-  const currentHost = window.location.hostname.toLowerCase();
-  const isAltCandlesticksDomain =
-    currentHost.includes("candlesticks.online") && !currentHost.includes("candlesticksacademy.online");
-  const baseDomain = isAltCandlesticksDomain ? "candlesticks.online" : "candlesticksacademy.online";
-  const targetDomain = role === "admin" ? `master.${baseDomain}` : `student.${baseDomain}`;
-
-  // If already on the exact target domain (student.candlesticksacademy.online or master.candlesticksacademy.online), navigate cleanly in-app
-  if (
-    currentHost === targetDomain ||
-    (role === "student" && currentHost === `stu.${baseDomain}`)
-  ) {
-    if (fallbackNavigate) {
-      fallbackNavigate(cleanPath);
-    } else {
-      window.location.assign(cleanPath);
-    }
-    return;
-  }
-
-  // Direct student to student.candlesticksacademy.online and admin to master.candlesticksacademy.online (clean URL)
-  const destinationUrl = buildRolePortalUrl(role, cleanPath);
-  window.location.assign(destinationUrl);
+export function buildRolePortalUrl(role: "student" | "admin", targetPath?: string): string { return portalDestination(role, targetPath); }
+export function redirectToRolePortal(role: "student" | "admin", targetPath?: string, fallbackNavigate?: (path: string) => void): void {
+  const path = targetPath?.startsWith("/") && !targetPath.startsWith("//") ? targetPath : role === "admin" ? "/admin" : "/dashboard";
+  if (typeof window === "undefined") { fallbackNavigate?.(path); return; }
+  const destination = portalDestination(role, path);
+  if (!isAcademyHost(window.location.hostname) || new URL(destination).hostname === window.location.hostname) {
+    if (fallbackNavigate) fallbackNavigate(path); else window.location.assign(path);
+  } else window.location.assign(destination);
 }
 
 export async function checkUsernameAvailability(
@@ -1435,136 +1279,38 @@ export async function checkUsernameAvailability(
   };
 }
 
-export async function authenticatePortalLogin(
-  identifierInput: string,
-  passwordInput: string
-): Promise<{
-  success: boolean;
-  role?: "admin" | "student";
-  student?: ExnessStudent;
-  message: string;
-}> {
-  const rawId = identifierInput.trim();
-  const cleanedId = rawId.toLowerCase();
-  const normalizedUser = normalizeUsername(rawId);
-
-  if (!rawId) {
-    return {
-      success: false,
-      message: "Please enter your Email or Username.",
-    };
-  }
-  if (!passwordInput) {
-    return {
-      success: false,
-      message: "Please enter your password.",
-    };
-  }
-
-  // 1. Check Master Admin credentials (username `master` or founder email)
-  if (
-    normalizedUser === MASTER_ADMIN_USERNAME ||
-    cleanedId === "mike.vinci77@gmail.com" ||
-    cleanedId === "admin@candlesticks.ac"
-  ) {
-    if (passwordInput === MASTER_ADMIN_PASSWORD) {
-      setMasterAdminAuthenticated(true);
-      return {
-        success: true,
-        role: "admin",
-        message: "Master Admin authenticated.",
-      };
-    } else {
-      return {
-        success: false,
-        message: "Invalid password for the master admin account.",
-      };
-    }
-  }
-
-  // 2. Client authentication via Email or Username (or Exness Account ID fallback)
-  const roster = await refreshRosterFromSupabase();
-  const current = getStoredCurrentUser();
-  const allCandidates = [...roster];
-  if (
-    current &&
-    current.email &&
-    !allCandidates.some((s) => s.email.toLowerCase() === current.email.toLowerCase())
-  ) {
-    allCandidates.unshift(current);
-  }
-
-  const matchedStudent = allCandidates.find((s) => {
-    const emailMatches = s.email && s.email.trim().toLowerCase() === cleanedId;
-    const usernameMatches = s.username && normalizeUsername(s.username) === normalizedUser;
-    const exnessIdMatches = s.exnessId && s.exnessId.trim().toLowerCase() === cleanedId;
-    return emailMatches || usernameMatches || exnessIdMatches;
-  });
-
-  if (!matchedStudent) {
-    return {
-      success: false,
-      message:
-        "No client account found matching that Email or Username. Please check your credentials or create an account.",
-    };
-  }
-
-  const storedCreds = getLocalCredentialsMap()[matchedStudent.email.toLowerCase()];
-  const expectedPassword = matchedStudent.accountPassword || storedCreds?.accountPassword;
-
-  if (expectedPassword) {
-    if (passwordInput !== expectedPassword) {
-      // Also allow Supabase Auth sign-in check in case password was updated via Supabase Auth
-      if (isSupabaseConfigured && supabase && matchedStudent.email) {
-        try {
-          const { data: authData, error: authErr } = await supabase.auth.signInWithPassword({
-            email: matchedStudent.email,
-            password: passwordInput,
-          });
-          if (!authErr && authData?.user) {
-            setMasterAdminAuthenticated(false);
-            saveStoredCurrentUser(matchedStudent, passwordInput);
-            return {
-              success: true,
-              role: "student",
-              student: matchedStudent,
-              message: "Logged in successfully.",
-            };
-          }
-        } catch {
-          // ignore
-        }
-      }
-      return {
-        success: false,
-        message: "Incorrect password for this account. Please try again.",
-      };
-    }
-  }
-
-  setMasterAdminAuthenticated(false);
-  saveStoredCurrentUser(matchedStudent, expectedPassword || passwordInput);
-  return {
-    success: true,
-    role: "student",
-    student: matchedStudent,
-    message: "Welcome back!",
-  };
+export async function authenticatePortalLogin(identifierInput: string, passwordInput: string): Promise<{ success: boolean; role?: "admin" | "student"; student?: ExnessStudent; message: string }> {
+  if (!supabase) return { success: false, message: "Account connection is unavailable." };
+  try {
+    const response = await fetch("/api/public/portal/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ identifier: identifierInput.trim(), password: passwordInput }) });
+    const result = await response.json();
+    if (!response.ok || !result.session) return { success: false, message: result.message || "Sign-in failed." };
+    const { error } = await supabase.auth.setSession(result.session);
+    if (error) return { success: false, message: "Unable to save your sign-in session." };
+    const saved = await fetch("/api/public/portal/session", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${result.session.access_token}` }, body: JSON.stringify({ access_token: result.session.access_token, refresh_token: result.session.refresh_token }) });
+    if (!saved.ok) return { success: false, message: "Unable to establish your portal session." };
+    verifiedPortalRole = (await saved.json()).role;
+    const student = result.student ? mapDbRowToStudent(result.student) : undefined;
+    if (student) localStorage.setItem("candlesticks_current_student", JSON.stringify(student));
+    window.dispatchEvent(new Event("candlesticks_user_updated"));
+    return { success: true, role: verifiedPortalRole || "student", student, message: "Welcome back!" };
+  } catch { return { success: false, message: "Unable to sign in. Please try again." }; }
 }
 
-export function logoutCurrentUser() {
-  try {
-    localStorage.removeItem("candlesticks_current_student");
-    localStorage.removeItem("candlesticks_admin_authenticated");
-    clearCrossSubdomainCookie(STUDENT_COOKIE_NAME);
-    clearCrossSubdomainCookie(ADMIN_COOKIE_NAME);
-    if (isSupabaseConfigured && supabase) {
-      void supabase.auth.signOut();
-    }
-    window.dispatchEvent(new Event("candlesticks_user_updated"));
-  } catch (e) {
-    console.error("Failed to logout student", e);
-  }
+export async function logoutCurrentUser() {
+  verifiedPortalRole = null;
+  localStorage.removeItem("candlesticks_current_student");
+  localStorage.removeItem("candlesticks_admin_authenticated");
+  localStorage.removeItem("candlesticks_client_credentials");
+  localStorage.removeItem("candlesticks_students_roster");
+  localStorage.removeItem("candlesticks_moolre_transactions_v1");
+  localStorage.removeItem("candlesticks_moolre_config_v1");
+  clearCrossSubdomainCookie(STUDENT_COOKIE_NAME);
+  clearCrossSubdomainCookie(ADMIN_COOKIE_NAME);
+  await fetch("/api/public/portal/session", { method: "DELETE" });
+  if (supabase) await supabase.auth.signOut();
+  window.dispatchEvent(new Event("candlesticks_user_updated"));
+  return logoutDestination(window.location.hostname);
 }
 
 export function getStoredConfig(): ExnessConfig {
