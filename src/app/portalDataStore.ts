@@ -3936,7 +3936,10 @@ export async function uploadStudentProfileAvatar(
   if (isSupabaseConfigured && supabase) {
     try {
       const ext = file.name.split(".").pop() || "jpg";
-      const filePath = `${student.id || "student"}-${Date.now()}.${ext}`;
+      const ownerId = (await supabase.auth.getUser()).data.user?.id;
+      if (!ownerId) throw new Error("Please sign in again to upload a photo.");
+      // Avatars live in the uploader's own folder so storage rules can bind files to their owner.
+      const filePath = `${ownerId}/${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("student-avatars")
         .upload(filePath, file, {
