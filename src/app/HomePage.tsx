@@ -2,6 +2,7 @@ import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@/app/routerCompat";
 import { BrandLogo } from "./BrandLogo";
 import mentorShare from "@/assets/academy-mentor-share.jpg.asset.json";
+import mentorPortrait from "@/assets/mentor-portrait.webp.asset.json";
 
 type IconName =
   | "arrow"
@@ -1158,7 +1159,7 @@ export default function App() {
           <div className="container mentor-grid">
             <div className="mentor-image">
               <img
-                src={mentorShare.url}
+                src={mentorPortrait.url}
                 alt="Kwekucandles, Candlesticks Academy forex trading mentor"
                 width={480}
                 height={520}
