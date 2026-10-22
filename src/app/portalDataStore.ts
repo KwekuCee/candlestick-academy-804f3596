@@ -684,7 +684,7 @@ export function generateAutoQuizQuestions(
   courseId: string,
   lessonTitle: string,
   lessonDescription: string,
-  keyTakeaways: string[]
+  keyTakeaways: string[],
 ): QuizQuestionItem[] {
   const cleanTitle = lessonTitle.trim() || "Market Execution";
   const cleanDesc = lessonDescription.trim() || "Understanding structure and risk discipline.";
@@ -728,11 +728,13 @@ export function generateAutoQuizQuestions(
       options: [
         "Risking 25% of account equity on a single high-conviction setup",
         "Moving the stop-loss further away when price approaches invalidation",
-        takeaways[2] || "Defining the exact stop-loss invalidation point and sizing lots to 1%–2% max risk",
+        takeaways[2] ||
+          "Defining the exact stop-loss invalidation point and sizing lots to 1%–2% max risk",
         "Opening multiple correlated positions simultaneously without calculating margin",
       ],
       correctIndex: 2,
-      explanation: "Capital preservation requires pre-defining invalidation and keeping per-trade risk controlled.",
+      explanation:
+        "Capital preservation requires pre-defining invalidation and keeping per-trade risk controlled.",
     },
   ];
 
@@ -740,7 +742,8 @@ export function generateAutoQuizQuestions(
     generated.push(
       {
         id: `${courseId}-q4`,
-        question: "Which trading session overlap provides the deepest institutional liquidity for EUR/USD and XAU/USD?",
+        question:
+          "Which trading session overlap provides the deepest institutional liquidity for EUR/USD and XAU/USD?",
         options: [
           "Sydney and Tokyo overlap",
           "London and New York session overlap (1:00 PM – 5:00 PM GMT)",
@@ -752,11 +755,12 @@ export function generateAutoQuizQuestions(
       },
       {
         id: `${courseId}-q5`,
-        question: "If your account balance is $100 and you risk 1% with a 10-pip stop-loss on EUR/USD, what is your maximum dollar risk?",
+        question:
+          "If your account balance is $100 and you risk 1% with a 10-pip stop-loss on EUR/USD, what is your maximum dollar risk?",
         options: ["$10.00", "$1.00", "$5.00", "$0.10"],
         correctIndex: 1,
         explanation: "1% of $100 is $1.00 maximum risk.",
-      }
+      },
     );
   } else if (courseId === "technical-analysis") {
     generated.push(
@@ -770,11 +774,13 @@ export function generateAutoQuizQuestions(
           "A 1-minute doji inside a 4-hour consolidation",
         ],
         correctIndex: 1,
-        explanation: "Institutional BOS requires a full candle body closure beyond the structural high.",
+        explanation:
+          "Institutional BOS requires a full candle body closure beyond the structural high.",
       },
       {
         id: `${courseId}-q5`,
-        question: "Why do institutional traders watch liquidity pools above equal highs and below equal lows?",
+        question:
+          "Why do institutional traders watch liquidity pools above equal highs and below equal lows?",
         options: [
           "Retail stop-orders cluster there, providing liquidity for institutional order fills",
           "Price never revisits equal highs or lows",
@@ -782,14 +788,16 @@ export function generateAutoQuizQuestions(
           "Indicators automatically turn off at those levels",
         ],
         correctIndex: 0,
-        explanation: "Equal highs/lows hold resting buy-stops and sell-stops targeted during liquidity sweeps.",
-      }
+        explanation:
+          "Equal highs/lows hold resting buy-stops and sell-stops targeted during liquidity sweeps.",
+      },
     );
   } else if (courseId === "risk-psychology") {
     generated.push(
       {
         id: `${courseId}-q4`,
-        question: "After hitting your maximum daily drawdown limit (e.g., 2 consecutive losses), what is the correct protocol?",
+        question:
+          "After hitting your maximum daily drawdown limit (e.g., 2 consecutive losses), what is the correct protocol?",
         options: [
           "Switch to a lower timeframe to win the money back immediately",
           "Close the charts for the session and review your trade journal objectively",
@@ -797,21 +805,24 @@ export function generateAutoQuizQuestions(
           "Copy random setups outside your trading plan",
         ],
         correctIndex: 1,
-        explanation: "Stepping away after hitting your daily loss circuit breaker prevents revenge trading.",
+        explanation:
+          "Stepping away after hitting your daily loss circuit breaker prevents revenge trading.",
       },
       {
         id: `${courseId}-q5`,
-        question: "With a 1 : 2.5 Risk-to-Reward ratio, what minimum win rate is needed to remain profitable over 20 trades?",
+        question:
+          "With a 1 : 2.5 Risk-to-Reward ratio, what minimum win rate is needed to remain profitable over 20 trades?",
         options: ["90% win rate", "At least 30%–35% win rate", "75% win rate", "100% win rate"],
         correctIndex: 1,
         explanation: "At 1:2.5 R:R, winning just 30%–35% of setups yields positive net expectancy.",
-      }
+      },
     );
   } else {
     generated.push(
       {
         id: `${courseId}-q4`,
-        question: "What characterizes a high-probability institutional displacement candle after a session liquidity sweep?",
+        question:
+          "What characterizes a high-probability institutional displacement candle after a session liquidity sweep?",
         options: [
           "Small overlapping indecision candles with long wicks on both sides",
           "Large-bodied impulse expansion that leaves a Fair Value Gap (imbalance) and breaks structure",
@@ -819,11 +830,13 @@ export function generateAutoQuizQuestions(
           "Trading directly into high-impact NFP release 10 seconds before announcement",
         ],
         correctIndex: 1,
-        explanation: "Displacement leaves a clear Fair Value Gap and confirms institutional sponsorship.",
+        explanation:
+          "Displacement leaves a clear Fair Value Gap and confirms institutional sponsorship.",
       },
       {
         id: `${courseId}-q5`,
-        question: "When price sweeps the London session low at New York open and reclaims structure, what is the primary bias?",
+        question:
+          "When price sweeps the London session low at New York open and reclaims structure, what is the primary bias?",
         options: [
           "Bullish reversal targeting internal and external range liquidity highs",
           "Immediate short entry at the very bottom of the sweep wick",
@@ -831,8 +844,9 @@ export function generateAutoQuizQuestions(
           "Ignore structure and trade counter-trend without confirmation",
         ],
         correctIndex: 0,
-        explanation: "A sweep of sell-side liquidity followed by a bullish MSS targets buy-side liquidity.",
-      }
+        explanation:
+          "A sweep of sell-side liquidity followed by a bullish MSS targets buy-side liquidity.",
+      },
     );
   }
 
@@ -964,7 +978,7 @@ export function getCachedClientNotifications(studentEmail: string): ClientNotifi
 }
 
 export async function fetchClientNotificationsFromDb(
-  studentEmail: string
+  studentEmail: string,
 ): Promise<ClientNotificationItem[]> {
   const cleanEmail = (studentEmail || "").trim().toLowerCase();
   const local = getCachedClientNotifications(cleanEmail);
@@ -1007,7 +1021,7 @@ export async function fetchClientNotificationsFromDb(
       local.forEach((item) => byId.set(item.id, item));
       mapped.forEach((item) => byId.set(item.id, item));
       const merged = Array.from(byId.values()).sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
       return merged;
     }
@@ -1075,7 +1089,7 @@ export async function createClientNotificationInDb(params: {
 
 export async function markNotificationReadInDb(
   notificationId: string,
-  studentEmail: string
+  studentEmail: string,
 ): Promise<void> {
   const cleanEmail = (studentEmail || "").trim().toLowerCase();
   const readBroadcastIdsKey = `candlesticks_read_broadcasts_${cleanEmail}`;
@@ -1094,7 +1108,7 @@ export async function markNotificationReadInDb(
     const raw = localStorage.getItem(LS_NOTIFICATIONS_KEY);
     if (raw) {
       const list = (JSON.parse(raw) as ClientNotificationItem[]).map((n) =>
-        n.id === notificationId ? { ...n, isRead: true } : n
+        n.id === notificationId ? { ...n, isRead: true } : n,
       );
       localStorage.setItem(LS_NOTIFICATIONS_KEY, JSON.stringify(list));
     }
@@ -1219,8 +1233,7 @@ export async function fetchCoursesWithLessons(): Promise<CourseTrackItem[]> {
           summary: String(r.description || ""),
           durationMinutes: Number(r.duration_minutes || 12),
           videoUrl: String(r.video_url || ""),
-          videoSourceType:
-            r.video_source_type === "supabase_storage" ? "supabase_storage" : "url",
+          videoSourceType: r.video_source_type === "supabase_storage" ? "supabase_storage" : "url",
           pairTag: String(r.pair_tag || "EUR/USD · 15M"),
           keyTakeaways: Array.isArray(r.key_takeaways) ? r.key_takeaways : [],
           autoQuizQuestions:
@@ -1230,7 +1243,7 @@ export async function fetchCoursesWithLessons(): Promise<CourseTrackItem[]> {
                   String(r.course_id),
                   String(r.title || "Lesson"),
                   String(r.description || ""),
-                  Array.isArray(r.key_takeaways) ? r.key_takeaways : []
+                  Array.isArray(r.key_takeaways) ? r.key_takeaways : [],
                 ),
           isPublished: r.is_published !== false,
           createdAt: String(r.created_at || new Date().toISOString()),
@@ -1255,8 +1268,7 @@ export async function fetchCoursesWithLessons(): Promise<CourseTrackItem[]> {
         levelPdfUrl: dbCourse?.level_pdf_url || track.levelPdfUrl || "",
         levelPdfName: dbCourse?.level_pdf_name || track.levelPdfName || "",
         levelQuizQuestions:
-          Array.isArray(dbCourse?.level_quiz_questions) &&
-          dbCourse.level_quiz_questions.length > 0
+          Array.isArray(dbCourse?.level_quiz_questions) && dbCourse.level_quiz_questions.length > 0
             ? dbCourse.level_quiz_questions
             : track.levelQuizQuestions || [],
         lessons: combinedLessons,
@@ -1306,7 +1318,7 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
       try {
         const safePath = `${track.id}/${Date.now()}-${params.file.name.replace(
           /[^a-zA-Z0-9._-]/g,
-          "_"
+          "_",
         )}`;
         const { error } = await supabase.storage.from("course-pdfs").upload(safePath, params.file, {
           cacheControl: "3600",
@@ -1334,7 +1346,10 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
     const quizSession = supabase ? (await supabase.auth.getSession()).data.session : null;
     const res = await fetch("/api/quiz/generate-from-pdf", {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...(quizSession ? { Authorization: `Bearer ${quizSession.access_token}` } : {}) },
+      headers: {
+        "Content-Type": "application/json",
+        ...(quizSession ? { Authorization: `Bearer ${quizSession.access_token}` } : {}),
+      },
       body: JSON.stringify({
         courseId: track.id,
         courseTitle: track.title,
@@ -1359,7 +1374,7 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
       track.id,
       `${track.title} (${track.level} PDF)`,
       params.curriculumNotes || track.description,
-      []
+      [],
     );
   }
 
@@ -1372,7 +1387,7 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
           levelPdfName: pdfName,
           levelQuizQuestions: generatedQuestions,
         }
-      : t
+      : t,
   );
   localStorage.setItem(LS_COURSES_KEY, JSON.stringify(updatedTracks));
 
@@ -1406,10 +1421,10 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
 
 export async function saveCourseLevelQuizQuestionsToDb(
   courseId: string,
-  questions: QuizQuestionItem[]
+  questions: QuizQuestionItem[],
 ): Promise<void> {
   const tracks = getCachedCourses().map((t) =>
-    t.id === courseId ? { ...t, levelQuizQuestions: questions } : t
+    t.id === courseId ? { ...t, levelQuizQuestions: questions } : t,
   );
   localStorage.setItem(LS_COURSES_KEY, JSON.stringify(tracks));
 
@@ -1431,7 +1446,7 @@ export async function saveCourseLevelQuizQuestionsToDb(
 
 export async function uploadCourseVideoFile(
   courseId: string,
-  file: File
+  file: File,
 ): Promise<{ success: boolean; url: string; message: string }> {
   const safeName = `${courseId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 
@@ -1481,7 +1496,7 @@ export async function saveCourseLessonToDb(params: {
     params.courseId,
     params.title,
     params.description,
-    params.keyTakeaways
+    params.keyTakeaways,
   );
 
   const newLesson: CourseLessonItem = {
@@ -1506,7 +1521,7 @@ export async function saveCourseLessonToDb(params: {
   const updatedTracks = tracks.map((t) => {
     if (t.id !== params.courseId) return t;
     const filtered = t.lessons.filter(
-      (l) => l.id !== newLesson.id && l.lessonNumber !== newLesson.lessonNumber
+      (l) => l.id !== newLesson.id && l.lessonNumber !== newLesson.lessonNumber,
     );
     const nextLessons = [...filtered, newLesson].sort((a, b) => a.lessonNumber - b.lessonNumber);
     return { ...t, lessons: nextLessons };
@@ -1639,7 +1654,7 @@ export async function syncStudentLearningDataFromSupabase(studentEmail: string):
       const rawAll = localStorage.getItem(LS_PROGRESS_KEY);
       const others = rawAll
         ? (JSON.parse(rawAll) as StudentLessonProgressItem[]).filter(
-            (p) => p.studentEmail.toLowerCase() !== cleanEmail
+            (p) => p.studentEmail.toLowerCase() !== cleanEmail,
           )
         : [];
       localStorage.setItem(LS_PROGRESS_KEY, JSON.stringify([...others, ...mappedProg]));
@@ -1663,7 +1678,7 @@ export async function syncStudentLearningDataFromSupabase(studentEmail: string):
       const rawAll = localStorage.getItem(LS_QUIZ_ATTEMPTS_KEY);
       const others = rawAll
         ? (JSON.parse(rawAll) as StudentQuizAttemptItem[]).filter(
-            (q) => q.studentEmail.toLowerCase() !== cleanEmail
+            (q) => q.studentEmail.toLowerCase() !== cleanEmail,
           )
         : [];
       localStorage.setItem(LS_QUIZ_ATTEMPTS_KEY, JSON.stringify([...others, ...mappedQuiz]));
@@ -1679,14 +1694,14 @@ export async function syncStudentLearningDataFromSupabase(studentEmail: string):
 }
 
 export async function fetchStudentLessonsCompletedFromDb(
-  studentEmail: string
+  studentEmail: string,
 ): Promise<StudentLessonProgressItem[]> {
   const res = await syncStudentLearningDataFromSupabase(studentEmail);
   return res.progress;
 }
 
 export async function fetchStudentQuizAttemptsFromDb(
-  studentEmail: string
+  studentEmail: string,
 ): Promise<StudentQuizAttemptItem[]> {
   const res = await syncStudentLearningDataFromSupabase(studentEmail);
   return res.quizAttempts;
@@ -1701,7 +1716,7 @@ export async function toggleLessonCompletedInDb(
       }
     | string,
   lessonIdArg?: string,
-  courseSlugArg?: string
+  courseSlugArg?: string,
 ): Promise<{ completed: boolean; courseProgressPct: number }> {
   const currentUser = getStoredCurrentUser();
   let studentObj: ExnessStudent = currentUser;
@@ -1734,7 +1749,7 @@ export async function toggleLessonCompletedInDb(
   const allList: StudentLessonProgressItem[] = rawAll ? JSON.parse(rawAll) : [];
 
   const existingIdx = allList.findIndex(
-    (p) => p.studentEmail.toLowerCase() === cleanEmail && p.lessonId === lessonObj!.id
+    (p) => p.studentEmail.toLowerCase() === cleanEmail && p.lessonId === lessonObj!.id,
   );
 
   let isNowCompleted = true;
@@ -1774,7 +1789,7 @@ export async function toggleLessonCompletedInDb(
             watch_minutes: lessonObj.durationMinutes,
             completed_at: new Date().toISOString(),
           },
-          { onConflict: "student_email,lesson_id" }
+          { onConflict: "student_email,lesson_id" },
         );
       } else {
         await supabase
@@ -1823,7 +1838,7 @@ export async function recordQuizAttemptInDb(
   courseSlugArg?: string,
   quizTitleArg?: string,
   correctAnswersArg?: number,
-  totalQuestionsArg?: number
+  totalQuestionsArg?: number,
 ): Promise<StudentQuizAttemptItem> {
   const currentUser = getStoredCurrentUser();
   const params =
@@ -1922,7 +1937,9 @@ export interface StudentRealDashboardMetrics {
   recentQuizAttempts: StudentQuizAttemptItem[];
 }
 
-export function computeStudentRealDashboardMetrics(studentEmail: string): StudentRealDashboardMetrics {
+export function computeStudentRealDashboardMetrics(
+  studentEmail: string,
+): StudentRealDashboardMetrics {
   const tracks = getCachedCourses();
   const progress = getCachedLessonProgress(studentEmail);
   const quizAttempts = getCachedQuizAttempts(studentEmail);
@@ -2102,7 +2119,12 @@ export function generateQuizForCourse(courseSlug: string): QuizQuestionItem[] {
   }
 
   // 3. Multi-question fallback for the course level
-  return generateAutoQuizQuestions(track.id, `${track.title} (${track.level})`, track.description, []);
+  return generateAutoQuizQuestions(
+    track.id,
+    `${track.title} (${track.level})`,
+    track.description,
+    [],
+  );
 }
 
 export function formatCountdown(scheduledAtIso: string): {
@@ -2128,7 +2150,7 @@ export function formatCountdown(scheduledAtIso: string): {
 export function calculateLotSize(
   balanceUsd: number,
   riskPct: number,
-  stopLossPips: number
+  stopLossPips: number,
 ): {
   riskUsd: number;
   recommendedLots: number;
@@ -2205,7 +2227,7 @@ export async function fetchCertificateTemplateFromDb(): Promise<CertificateTempl
 }
 
 export async function uploadCertificateTemplateImage(
-  file: File
+  file: File,
 ): Promise<{ success: boolean; url: string; message: string }> {
   const dataUrl = await compressImageToDataUrl(file, 1600);
   let finalUrl = dataUrl;
@@ -2237,7 +2259,7 @@ export async function uploadCertificateTemplateImage(
 }
 
 export async function saveCertificateTemplateToDb(
-  config: CertificateTemplateConfig
+  config: CertificateTemplateConfig,
 ): Promise<CertificateTemplateConfig> {
   const next = { ...config, updatedAt: new Date().toISOString() };
   localStorage.setItem(LS_CERT_TEMPLATE_KEY, JSON.stringify(next));
@@ -2257,7 +2279,7 @@ export async function saveCertificateTemplateToDb(
           show_issue_date: next.showIssueDate,
           updated_at: next.updatedAt,
         },
-        { onConflict: "id" }
+        { onConflict: "id" },
       );
     } catch {
       // ignore
@@ -2345,7 +2367,11 @@ export async function renderPersonalizedCertificateDataUrl(params: {
     if (!drewCustomBg) {
       ctx.fillStyle = "#9AA4B5";
       ctx.font = "24px Manrope";
-      ctx.fillText("For successfully completing 100% of the curriculum in", canvas.width / 2, courseY - 48);
+      ctx.fillText(
+        "For successfully completing 100% of the curriculum in",
+        canvas.width / 2,
+        courseY - 48,
+      );
     }
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "bold 36px Manrope";
@@ -2377,11 +2403,14 @@ export function getCachedCertificates(studentEmail?: string): StudentCertificate
 }
 
 export async function fetchStudentCertificatesFromDb(
-  studentEmail?: string
+  studentEmail?: string,
 ): Promise<StudentCertificateItem[]> {
   if (isSupabaseConfigured && supabase) {
     try {
-      let query = supabase.from("student_certificates").select("*").order("issued_at", { ascending: false });
+      let query = supabase
+        .from("student_certificates")
+        .select("*")
+        .order("issued_at", { ascending: false });
       if (studentEmail) {
         query = query.ilike("student_email", studentEmail.trim().toLowerCase());
       }
@@ -2451,7 +2480,7 @@ export async function issueStudentCourseCertificate(params: {
           approved_by_admin: true,
           issued_at: cert.issuedAt,
         },
-        { onConflict: "student_email,course_id" }
+        { onConflict: "student_email,course_id" },
       );
     } catch {
       // ignore
@@ -2474,7 +2503,7 @@ export async function issueStudentCertificateInDb(
   studentEmail: string,
   studentName: string,
   courseSlug: string,
-  courseTitle: string
+  courseTitle: string,
 ): Promise<StudentCertificateItem> {
   return issueStudentCourseCertificate({
     studentEmail,
@@ -2543,8 +2572,8 @@ export async function fetchLiveSessionsFromDb(): Promise<LiveSessionItem[]> {
             r.status === "live" || r.session_type === "live"
               ? "live"
               : r.status === "ended"
-              ? "ended"
-              : "scheduled",
+                ? "ended"
+                : "scheduled",
           streamMode:
             r.stream_mode === "rtmp_hls" || r.stream_mode === "embed"
               ? r.stream_mode
@@ -2598,7 +2627,7 @@ export async function saveLiveSessionInDb(session: LiveSessionItem): Promise<Liv
           viewers_count: session.viewersCount,
           pinned_resources: session.pinnedResources,
         },
-        { onConflict: "id" }
+        { onConflict: "id" },
       );
     } catch (err) {
       console.debug("Supabase saveLiveSessionInDb note:", err);
@@ -2645,7 +2674,7 @@ export function getCachedSessionChatMessages(sessionId: string): LiveChatMessage
 }
 
 export async function fetchSessionChatMessagesFromDb(
-  sessionId: string
+  sessionId: string,
 ): Promise<LiveChatMessageItem[]> {
   if (!isSupabaseConfigured || !supabase || !sessionId) {
     return getCachedSessionChatMessages(sessionId);
@@ -2739,11 +2768,13 @@ export async function sendSessionChatMessageInDb(params: {
 
 export async function togglePinSessionChatMessageInDb(
   sessionId: string,
-  messageId: string
+  messageId: string,
 ): Promise<void> {
   try {
     const raw = localStorage.getItem(LS_LIVE_CHAT_KEY);
-    const list: LiveChatMessageItem[] = raw ? JSON.parse(raw) : getCachedSessionChatMessages(sessionId);
+    const list: LiveChatMessageItem[] = raw
+      ? JSON.parse(raw)
+      : getCachedSessionChatMessages(sessionId);
     let nextPinned = false;
     const updated = list.map((m) => {
       if (m.id === messageId) {
@@ -2768,11 +2799,13 @@ export async function togglePinSessionChatMessageInDb(
 
 export async function deleteSessionChatMessageInDb(
   sessionId: string,
-  messageId: string
+  messageId: string,
 ): Promise<void> {
   try {
     const raw = localStorage.getItem(LS_LIVE_CHAT_KEY);
-    const list: LiveChatMessageItem[] = raw ? JSON.parse(raw) : getCachedSessionChatMessages(sessionId);
+    const list: LiveChatMessageItem[] = raw
+      ? JSON.parse(raw)
+      : getCachedSessionChatMessages(sessionId);
     const updated = list.filter((m) => m.id !== messageId);
     localStorage.setItem(LS_LIVE_CHAT_KEY, JSON.stringify(updated));
 
@@ -2845,14 +2878,14 @@ function normalizeSignal(s: any): TradingSignalItem {
     mentorQuote: String(
       s.mentorQuote ||
         s.mentor_quote ||
-        "Patience is part of the setup. Wait for price to confirm structure."
+        "Patience is part of the setup. Wait for price to confirm structure.",
     ),
     currentPrice: String(s.currentPrice || s.current_price || entry),
     lastMarketPrice: s.lastMarketPrice
       ? Number(s.lastMarketPrice)
       : s.currentPrice
-      ? Number(String(s.currentPrice).replace(/[^0-9.-]/g, "")) || undefined
-      : undefined,
+        ? Number(String(s.currentPrice).replace(/[^0-9.-]/g, "")) || undefined
+        : undefined,
     floatingPnlText: String(s.floatingPnlText || s.floating_pnl_text || "Active setup"),
     createdBy: author,
     author,
@@ -2889,8 +2922,8 @@ export async function fetchTradingSignalsFromDb(): Promise<TradingSignalItem[]> 
       Array.isArray(newTableRes.data) && newTableRes.data.length > 0
         ? newTableRes.data
         : Array.isArray(legacyTableRes.data) && legacyTableRes.data.length > 0
-        ? legacyTableRes.data
-        : null;
+          ? legacyTableRes.data
+          : null;
 
     if (rows) {
       const mapped: TradingSignalItem[] = rows.map(normalizeSignal);
@@ -2933,7 +2966,10 @@ export async function publishTradingSignalInDb(params: {
   const slVal = (params.stopLoss || params.sl || "1.0810").trim();
   const rawTpList =
     Array.isArray(params.tpLevelsInput) && params.tpLevelsInput.filter((x) => x.trim()).length > 0
-      ? params.tpLevelsInput.map((x) => x.trim()).filter(Boolean).slice(0, 5)
+      ? params.tpLevelsInput
+          .map((x) => x.trim())
+          .filter(Boolean)
+          .slice(0, 5)
       : [(params.takeProfit || params.tp || "1.0940").trim()];
 
   const tpLevels: SignalTpLevel[] =
@@ -3054,7 +3090,7 @@ function parseNumPrice(val: string | undefined): number {
 // Evaluate a signal's TP1-TP5 and SL against a live market price
 export async function updateSignalLiveMarketPriceInDb(
   signalId: string,
-  newMarketPriceStr: string
+  newMarketPriceStr: string,
 ): Promise<TradingSignalItem | null> {
   const list = getCachedTradingSignals();
   const idx = list.findIndex((s) => s.id === signalId);
@@ -3132,7 +3168,8 @@ export async function updateSignalLiveMarketPriceInDb(
       // Send client notifications for each newly hit TP level
       for (const lvl of newlyHitLevels) {
         const hitTpObj = sig.tpLevels.find((t) => t.level === lvl);
-        const allDone = hitCount === totalTps && totalTps > 1 && lvl === sig.tpLevels[totalTps - 1].level;
+        const allDone =
+          hitCount === totalTps && totalTps > 1 && lvl === sig.tpLevels[totalTps - 1].level;
         await createClientNotificationInDb({
           studentEmail: "ALL",
           category: "SIGNAL_TP",
@@ -3196,8 +3233,8 @@ function updateOpenStudentTradesForSignal(sig: TradingSignalItem, livePrice: num
       const pipMultiplier = normPairA.includes("XAU")
         ? 100
         : normPairA.includes("JPY")
-        ? 1000
-        : 100000;
+          ? 1000
+          : 100000;
       const estPnlUsd = Number((diff * pipMultiplier * (tr.lots || 0.1)).toFixed(2));
       const estReturnPct = Number(((estPnlUsd / 500) * 100).toFixed(2));
 
@@ -3261,7 +3298,7 @@ export async function fetchLiveMarketPrices(): Promise<Record<string, number>> {
 }
 
 export async function evaluateSignalsAgainstMarketPrices(
-  pricesInput?: Record<string, number>
+  pricesInput?: Record<string, number>,
 ): Promise<void> {
   const prices = pricesInput || (await fetchLiveMarketPrices());
   const signals = getCachedTradingSignals();
@@ -3277,7 +3314,7 @@ export async function evaluateSignalsAgainstMarketPrices(
     }
     const normKey = sig.pair.replace(/\s+/g, "").toUpperCase();
     const matchedEntry = Object.entries(prices).find(
-      ([k]) => k.replace(/\s+/g, "").toUpperCase() === normKey
+      ([k]) => k.replace(/\s+/g, "").toUpperCase() === normKey,
     );
     if (matchedEntry) {
       await updateSignalLiveMarketPriceInDb(sig.id, String(matchedEntry[1]));
@@ -3298,7 +3335,7 @@ export async function syncLiveMarketPricesAndEvaluateSignals(): Promise<Record<s
 export async function triggerSignalTpLevelHitInDb(
   signalId: string,
   tpLevelNumber: number,
-  hitState?: boolean
+  hitState?: boolean,
 ): Promise<void> {
   const list = getCachedTradingSignals();
   const sig = list.find((s) => s.id === signalId);
@@ -3322,7 +3359,7 @@ export const triggerSignalTpLevelInDb = triggerSignalTpLevelHitInDb;
 
 export async function updateTradingSignalStatusInDb(
   signalId: string,
-  status: SignalStatusType
+  status: SignalStatusType,
 ): Promise<void> {
   const list = getCachedTradingSignals().map((s) => {
     if (s.id !== signalId) return s;
@@ -3330,8 +3367,8 @@ export async function updateTradingSignalStatusInDb(
       status === "ALL TPS HIT" || status === "HIT TP"
         ? s.tpLevels.map((t) => ({ ...t, hit: true, hitAt: t.hitAt || new Date().toISOString() }))
         : status === "ACTIVE"
-        ? s.tpLevels.map((t) => ({ ...t, hit: false, hitAt: undefined }))
-        : s.tpLevels;
+          ? s.tpLevels.map((t) => ({ ...t, hit: false, hitAt: undefined }))
+          : s.tpLevels;
     return {
       ...s,
       status,
@@ -3340,8 +3377,8 @@ export async function updateTradingSignalStatusInDb(
         status === "ALL TPS HIT" || status === "HIT TP"
           ? "All Targets Hit"
           : status === "HIT SL"
-          ? "Stop-Loss Hit"
-          : s.floatingPnlText,
+            ? "Stop-Loss Hit"
+            : s.floatingPnlText,
     };
   });
   localStorage.setItem(LS_SIGNALS_KEY, JSON.stringify(list));
@@ -3407,21 +3444,22 @@ function normalizeTrade(r: any, fallbackEmail = "", fallbackAcct = ""): StudentT
     rawStatus === "OPEN"
       ? "OPEN"
       : rawStatus === "WIN"
-      ? "WIN"
-      : rawStatus === "LOSS"
-      ? "LOSS"
-      : pnlUsd >= 0
-      ? "WIN"
-      : "LOSS";
+        ? "WIN"
+        : rawStatus === "LOSS"
+          ? "LOSS"
+          : pnlUsd >= 0
+            ? "WIN"
+            : "LOSS";
   const rawSource = String(r.source || "EXNESS_SYNC").toUpperCase();
-  const sourceVal: "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL" =
-    rawSource.includes("SIGNAL")
-      ? "SIGNAL_COPY"
-      : rawSource.includes("MANUAL")
+  const sourceVal: "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL" = rawSource.includes("SIGNAL")
+    ? "SIGNAL_COPY"
+    : rawSource.includes("MANUAL")
       ? "MANUAL"
       : "EXNESS_SYNC";
 
-  const acct = String(r.tradingAccountId || r.exnessAccountId || r.trading_account_id || fallbackAcct);
+  const acct = String(
+    r.tradingAccountId || r.exnessAccountId || r.trading_account_id || fallbackAcct,
+  );
   return {
     id: String(r.id || `trd-${Date.now()}`),
     studentEmail: String(r.studentEmail || r.student_email || fallbackEmail).toLowerCase(),
@@ -3467,7 +3505,7 @@ function normalizeTrade(r: any, fallbackEmail = "", fallbackAcct = ""): StudentT
 
 export function getCachedStudentTrades(
   studentOrEmail: ExnessStudent | string,
-  exnessIdArg?: string
+  exnessIdArg?: string,
 ): StudentTradeItem[] {
   const cleanEmail = (
     typeof studentOrEmail === "string" ? studentOrEmail : studentOrEmail.email || ""
@@ -3485,7 +3523,7 @@ export function getCachedStudentTrades(
       return all.filter(
         (t) =>
           (cleanEmail && t.studentEmail.toLowerCase() === cleanEmail) ||
-          (cleanAcct && t.tradingAccountId === cleanAcct)
+          (cleanAcct && t.tradingAccountId === cleanAcct),
       );
     }
   } catch {
@@ -3496,7 +3534,7 @@ export function getCachedStudentTrades(
 
 export async function fetchStudentTradesFromDb(
   studentOrEmail: ExnessStudent | string,
-  exnessIdArg?: string
+  exnessIdArg?: string,
 ): Promise<StudentTradeItem[]> {
   const cleanEmail = (
     typeof studentOrEmail === "string" ? studentOrEmail : studentOrEmail.email || ""
@@ -3587,7 +3625,7 @@ export async function addStudentTradeInDb(params: {
       executedAt: new Date().toISOString(),
     },
     params.studentEmail,
-    params.exnessAccountId
+    params.exnessAccountId,
   );
 
   const rawAll = localStorage.getItem(LS_TRADES_KEY);
@@ -3637,7 +3675,7 @@ export async function addStudentTradeInDb(params: {
 }
 
 export async function syncExnessPartnerSummaryToTradesInDb(
-  student: ExnessStudent
+  student: ExnessStudent,
 ): Promise<{ synced: number }> {
   const summary = await getStudentExnessPartnerFeedSummary(student);
   if (!summary.foundInPartnerFeed || summary.volumeLots <= 0) {
@@ -3671,10 +3709,7 @@ export async function deleteStudentTradeFromDb(tradeId: string): Promise<void> {
   const rawAll = localStorage.getItem(LS_TRADES_KEY);
   if (rawAll) {
     const allList: StudentTradeItem[] = JSON.parse(rawAll);
-    localStorage.setItem(
-      LS_TRADES_KEY,
-      JSON.stringify(allList.filter((t) => t.id !== tradeId))
-    );
+    localStorage.setItem(LS_TRADES_KEY, JSON.stringify(allList.filter((t) => t.id !== tradeId)));
   }
   if (isSupabaseConfigured && supabase) {
     try {
@@ -3743,7 +3778,7 @@ export async function getStudentExnessPartnerFeedSummary(student: ExnessStudent)
     (c) =>
       c.trading_account_id.toLowerCase() === acct ||
       c.client_account_id.toLowerCase() === acct ||
-      c.client_id.toLowerCase() === acct
+      c.client_id.toLowerCase() === acct,
   );
 
   if (staticMatch) {
@@ -3783,9 +3818,7 @@ export function getCachedMentorMessages(studentEmail?: string): MentorMessageIte
     if (raw) {
       const list = JSON.parse(raw) as MentorMessageItem[];
       if (!studentEmail) return list;
-      return list.filter(
-        (m) => m.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase()
-      );
+      return list.filter((m) => m.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase());
     }
   } catch {
     // ignore
@@ -3794,7 +3827,7 @@ export function getCachedMentorMessages(studentEmail?: string): MentorMessageIte
 }
 
 export async function fetchMentorMessagesFromDb(
-  studentEmail?: string
+  studentEmail?: string,
 ): Promise<MentorMessageItem[]> {
   if (isSupabaseConfigured && supabase) {
     try {
@@ -3927,7 +3960,7 @@ async function compressImageToDataUrl(file: File, maxDim = 320): Promise<string>
 
 export async function uploadStudentProfileAvatar(
   student: ExnessStudent,
-  file: File
+  file: File,
 ): Promise<{ success: boolean; avatarUrl: string; message: string }> {
   const compressedDataUrl = await compressImageToDataUrl(file, 320);
   let finalAvatarUrl = compressedDataUrl;
@@ -3969,7 +4002,7 @@ export async function uploadStudentProfileAvatar(
   const idx = roster.findIndex(
     (s) =>
       s.id === student.id ||
-      (student.email && s.email.toLowerCase() === student.email.toLowerCase())
+      (student.email && s.email.toLowerCase() === student.email.toLowerCase()),
   );
   if (idx >= 0) {
     roster[idx] = updatedStudent;
@@ -3990,7 +4023,7 @@ export async function uploadStudentProfileAvatar(
 
 export async function uploadStudentAvatarToStorage(
   file: File,
-  student: ExnessStudent
+  student: ExnessStudent,
 ): Promise<{ success: boolean; avatarUrl: string; message: string }> {
   return uploadStudentProfileAvatar(student, file);
 }
@@ -4091,7 +4124,8 @@ export interface MoolreTransactionItem {
   amountCharged: number;
   amountLocal?: number;
   currency: string;
-  paymentMethod: "momo_mtn" | "momo_telecel" | "momo_at" | "hosted_link" | "moolre_link" | "mobile_money";
+  paymentMethod:
+    "momo_mtn" | "momo_telecel" | "momo_at" | "hosted_link" | "moolre_link" | "mobile_money";
   payerPhone?: string;
   phone?: string;
   network?: string;
@@ -4136,7 +4170,15 @@ export const MAX_MERCH_GIVEAWAY_SPOTS = 20;
 
 export function getMoolreConfig(): MoolreGatewayConfig {
   // Browser-visible presentation only; credentials and prices are server-owned.
-  return { apiUser: "", publicKey: "", accountNumber: "", businessEmail: "payments@candlesticksacademy.online", currency: "GHS", usdToGhsRate: 15.5, updatedAt: "" };
+  return {
+    apiUser: "",
+    publicKey: "",
+    accountNumber: "",
+    businessEmail: "payments@candlesticksacademy.online",
+    currency: "GHS",
+    usdToGhsRate: 15.5,
+    updatedAt: "",
+  };
 }
 export function saveMoolreConfig(_cfg: Partial<MoolreGatewayConfig>): MoolreGatewayConfig {
   localStorage.removeItem(LS_MOOLRE_CONFIG_KEY);
@@ -4163,7 +4205,10 @@ export function getStudentSubscriptionAccess(student: ExnessStudent): StudentSub
   }
 
   const isPermanent100 = tier === "permanent_100";
-  const isMonthly20Active = tier === "monthly_20" && Boolean(student.subscriptionEndsAt) && new Date(student.subscriptionEndsAt || 0).getTime() > Date.now();
+  const isMonthly20Active =
+    tier === "monthly_20" &&
+    Boolean(student.subscriptionEndsAt) &&
+    new Date(student.subscriptionEndsAt || 0).getTime() > Date.now();
   if (tier === "monthly_20" && !isMonthly20Active) tier = "expired_free";
   const isFreeTrialActive = tier === "free_trial" && msRemaining > 0;
   const hasFullStandardAccess = isFreeTrialActive || isMonthly20Active || isPermanent100;
@@ -4220,7 +4265,7 @@ export function getCachedMoolreTransactions(studentEmail?: string): MoolreTransa
       const list = JSON.parse(raw) as MoolreTransactionItem[];
       if (!studentEmail) return list;
       return list.filter(
-        (tx) => tx.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase()
+        (tx) => tx.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase(),
       );
     }
   } catch {
@@ -4231,7 +4276,8 @@ export function getCachedMoolreTransactions(studentEmail?: string): MoolreTransa
 
 export function updateStudentTierInStore(
   studentEmail: string,
-  newTierOrUpdates: "free_trial" | "expired_free" | "monthly_20" | "permanent_100" | Partial<ExnessStudent>
+  newTierOrUpdates:
+    "free_trial" | "expired_free" | "monthly_20" | "permanent_100" | Partial<ExnessStudent>,
 ): ExnessStudent | null {
   const cleanEmail = studentEmail.trim().toLowerCase();
   const current = getStoredCurrentUser();
@@ -4242,21 +4288,23 @@ export function updateStudentTierInStore(
     ? newTierOrUpdates.subscriptionTier || current.subscriptionTier || "free_trial"
     : newTierOrUpdates;
 
-  const nextTrialEndsAt = isObject && newTierOrUpdates.trialEndsAt !== undefined
-    ? newTierOrUpdates.trialEndsAt
-    : newTier === "free_trial"
-    ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-    : newTier === "expired_free"
-    ? new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-    : current.trialEndsAt;
+  const nextTrialEndsAt =
+    isObject && newTierOrUpdates.trialEndsAt !== undefined
+      ? newTierOrUpdates.trialEndsAt
+      : newTier === "free_trial"
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        : newTier === "expired_free"
+          ? new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+          : current.trialEndsAt;
 
-  const nextSubEndsAt = isObject && newTierOrUpdates.subscriptionEndsAt !== undefined
-    ? newTierOrUpdates.subscriptionEndsAt
-    : newTier === "monthly_20"
-    ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-    : newTier === "permanent_100"
-    ? "2099-12-31T23:59:59.000Z"
-    : undefined;
+  const nextSubEndsAt =
+    isObject && newTierOrUpdates.subscriptionEndsAt !== undefined
+      ? newTierOrUpdates.subscriptionEndsAt
+      : newTier === "monthly_20"
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        : newTier === "permanent_100"
+          ? "2099-12-31T23:59:59.000Z"
+          : undefined;
 
   const extraProps = isObject ? newTierOrUpdates : {};
 
@@ -4295,16 +4343,29 @@ async function paymentRequest(path: string, data: unknown) {
   if (!supabase) throw new Error("Please sign in before paying.");
   const { data: auth } = await supabase.auth.getSession();
   if (!auth.session) throw new Error("Please sign in before paying.");
-  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${auth.session.access_token}` }, body: JSON.stringify(data) });
+  const response = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${auth.session.access_token}`,
+    },
+    body: JSON.stringify(data),
+  });
   const result = await response.json();
-  if (!response.ok && !result.transaction) throw new Error(result.message || "Payment request failed.");
+  if (!response.ok && !result.transaction)
+    throw new Error(result.message || "Payment request failed.");
   return result;
 }
 export async function verifyMoolrePayment(reference: string) {
   const result = await paymentRequest("/api/public/payments/verify", { reference });
   if (result.status === "PAID" && result.student) {
     const user = getStoredCurrentUser();
-    const profile = { ...user, subscriptionTier: result.student.subscription_tier, subscriptionEndsAt: result.student.subscription_ends_at || undefined, trialEndsAt: result.student.trial_ends_at || undefined };
+    const profile = {
+      ...user,
+      subscriptionTier: result.student.subscription_tier,
+      subscriptionEndsAt: result.student.subscription_ends_at || undefined,
+      trialEndsAt: result.student.trial_ends_at || undefined,
+    };
     localStorage.setItem("candlesticks_current_student", JSON.stringify(profile));
     window.dispatchEvent(new Event("candlesticks_user_updated"));
     emitPortalUpdate();
@@ -4312,21 +4373,69 @@ export async function verifyMoolrePayment(reference: string) {
   return result;
 }
 export async function processMoolrePaymentCheckout(params: {
-  student?: ExnessStudent; studentEmail?: string; studentName?: string;
-  planType?: "monthly_20" | "permanent_100"; planTier?: "monthly_20" | "permanent_100";
-  paymentMethod: "momo_mtn" | "momo_telecel" | "momo_at" | "hosted_link" | "moolre_link" | "mobile_money";
-  network?: "MTN" | "Telecel" | "AT"; payerPhone?: string; requestId?: string;
-}): Promise<{ success: boolean; transaction?: MoolreTransactionItem; paymentUrl?: string; authorizationUrl?: string; message: string }> {
+  student?: ExnessStudent;
+  studentEmail?: string;
+  studentName?: string;
+  planType?: "monthly_20" | "permanent_100";
+  planTier?: "monthly_20" | "permanent_100";
+  paymentMethod:
+    "momo_mtn" | "momo_telecel" | "momo_at" | "hosted_link" | "moolre_link" | "mobile_money";
+  network?: "MTN" | "Telecel" | "AT";
+  payerPhone?: string;
+  requestId?: string;
+}): Promise<{
+  success: boolean;
+  transaction?: MoolreTransactionItem;
+  paymentUrl?: string;
+  authorizationUrl?: string;
+  message: string;
+}> {
   try {
-    const result = await paymentRequest("/api/public/payments/checkout", { plan: params.planType || params.planTier || "monthly_20", method: ["hosted_link", "moolre_link"].includes(params.paymentMethod) ? "moolre_link" : "mobile_money", network: params.network || "MTN", phone: params.payerPhone, requestId: params.requestId || crypto.randomUUID() });
+    const result = await paymentRequest("/api/public/payments/checkout", {
+      plan: params.planType || params.planTier || "monthly_20",
+      method: ["hosted_link", "moolre_link"].includes(params.paymentMethod)
+        ? "moolre_link"
+        : "mobile_money",
+      network: params.network || "MTN",
+      phone: params.payerPhone,
+      requestId: params.requestId || crypto.randomUUID(),
+    });
     const row = result.transaction;
-    const transaction: MoolreTransactionItem | undefined = row ? { id: row.id, externalRef: row.external_ref, studentEmail: params.studentEmail || params.student?.email || "", studentName: params.studentName || "", planType: row.plan, planLabel: row.plan, amountUsd: Number(row.amount_usd), amountCharged: Number(row.amount), currency: row.currency, paymentMethod: params.paymentMethod, status: row.status, createdAt: row.created_at } : undefined;
+    const transaction: MoolreTransactionItem | undefined = row
+      ? {
+          id: row.id,
+          externalRef: row.external_ref,
+          studentEmail: params.studentEmail || params.student?.email || "",
+          studentName: params.studentName || "",
+          planType: row.plan,
+          planLabel: row.plan,
+          amountUsd: Number(row.amount_usd),
+          amountCharged: Number(row.amount),
+          currency: row.currency,
+          paymentMethod: params.paymentMethod,
+          status: row.status,
+          createdAt: row.created_at,
+        }
+      : undefined;
     if (transaction) {
-      const items = getCachedMoolreTransactions().filter(t => t.externalRef !== transaction.externalRef);
+      const items = getCachedMoolreTransactions().filter(
+        (t) => t.externalRef !== transaction.externalRef,
+      );
       localStorage.setItem(LS_MOOLRE_TX_KEY, JSON.stringify([transaction, ...items]));
     }
-    return { success: result.success, transaction, paymentUrl: result.paymentUrl, authorizationUrl: result.paymentUrl, message: result.message };
-  } catch (error) { return { success: false, message: error instanceof Error ? error.message : "Unable to request payment." }; }
+    return {
+      success: result.success,
+      transaction,
+      paymentUrl: result.paymentUrl,
+      authorizationUrl: result.paymentUrl,
+      message: result.message,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unable to request payment.",
+    };
+  }
 }
 
 // ============================================================================
@@ -4348,7 +4457,9 @@ export interface Mentorship1on1SessionItem {
   createdAt: string;
 }
 
-export function getCachedMentorship1on1Sessions(studentEmail?: string): Mentorship1on1SessionItem[] {
+export function getCachedMentorship1on1Sessions(
+  studentEmail?: string,
+): Mentorship1on1SessionItem[] {
   try {
     const raw = localStorage.getItem(LS_MENTORSHIP_1ON1_KEY);
     if (raw) {
@@ -4356,9 +4467,7 @@ export function getCachedMentorship1on1Sessions(studentEmail?: string): Mentorsh
       if (!studentEmail) return list;
       const clean = studentEmail.trim().toLowerCase();
       return list.filter(
-        (s) =>
-          s.studentEmail.toLowerCase() === clean ||
-          s.studentEmail.toLowerCase() === "all_vip"
+        (s) => s.studentEmail.toLowerCase() === clean || s.studentEmail.toLowerCase() === "all_vip",
       );
     }
   } catch {
@@ -4412,7 +4521,7 @@ export async function saveMentorship1on1SessionInDb(params: {
     category: "ACCOUNT",
     title: `1-on-1 Mentorship Scheduled: ${item.title}`,
     message: `Kwekucandles scheduled a private 1-on-1 live trading session with you for ${new Date(
-      item.scheduledAt
+      item.scheduledAt,
     ).toLocaleString()} (${item.focusPair}).`,
     linkUrl: "/mentorship",
   });
@@ -4503,7 +4612,7 @@ export function getAccountManagementContractConfig(): AccountManagementContractC
 }
 
 export function saveAccountManagementContractConfig(
-  cfg: Partial<AccountManagementContractConfig>
+  cfg: Partial<AccountManagementContractConfig>,
 ): AccountManagementContractConfig {
   const next: AccountManagementContractConfig = {
     ...getAccountManagementContractConfig(),
@@ -4520,7 +4629,7 @@ export function saveAccountManagementContractConfig(
 }
 
 export async function extractTextFromContractDocument(
-  file: File
+  file: File,
 ): Promise<{ fileName: string; extractedText: string }> {
   const name = file.name;
   const lower = name.toLowerCase();
@@ -4540,7 +4649,7 @@ export async function extractTextFromContractDocument(
 
   // Pull parenthesized PDF text strings or readable sentences
   const pdfMatches = Array.from(rawString.matchAll(/\(([A-Za-z0-9 ,.;:'"\-$%()/&]{4,})\)/g)).map(
-    (m) => m[1]
+    (m) => m[1],
   );
   const cleanBlocks = rawString
     .replace(/[^\x20-\x7E\n\r]/g, " ")
@@ -4553,15 +4662,15 @@ export async function extractTextFromContractDocument(
         !line.includes("endobj") &&
         !line.includes("stream") &&
         !line.includes("xml") &&
-        !line.includes("font")
+        !line.includes("font"),
     );
 
   const combined =
     pdfMatches.length >= 6
       ? pdfMatches.join(" ")
       : cleanBlocks.length >= 4
-      ? cleanBlocks.slice(0, 60).join("\n\n")
-      : "";
+        ? cleanBlocks.slice(0, 60).join("\n\n")
+        : "";
 
   if (combined.trim().length > 80) {
     return {
@@ -4631,9 +4740,7 @@ export async function signAccountManagementContractInDb(params: {
     signedAt: new Date().toISOString(),
   };
 
-  const existingIdx = list.findIndex(
-    (c) => c.studentEmail.toLowerCase() === email.toLowerCase()
-  );
+  const existingIdx = list.findIndex((c) => c.studentEmail.toLowerCase() === email.toLowerCase());
   if (existingIdx >= 0) {
     list[existingIdx] = item;
   } else {
@@ -4654,7 +4761,7 @@ export async function signAccountManagementContractInDb(params: {
 }
 
 export async function requestStudentExnessTradingPasswordInDb(
-  contractId: string
+  contractId: string,
 ): Promise<SignedAccountContractItem | null> {
   const list = getSignedAccountContracts();
   const idx = list.findIndex((c) => c.id === contractId);
@@ -4682,11 +4789,11 @@ export async function requestStudentExnessTradingPasswordInDb(
 
 export async function submitStudentTradingPasswordForManagement(
   studentEmail: string,
-  tradingPassword: string
+  tradingPassword: string,
 ): Promise<SignedAccountContractItem | null> {
   const list = getSignedAccountContracts();
   const idx = list.findIndex(
-    (c) => c.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase()
+    (c) => c.studentEmail.toLowerCase() === studentEmail.trim().toLowerCase(),
   );
   if (idx < 0) return null;
 
@@ -4785,7 +4892,7 @@ export async function submitMerchGiveawayClaim(params: {
   const existing = claims.find(
     (c) =>
       c.studentEmail.toLowerCase() === cleanEmail ||
-      (effectivePhone && c.phone.trim() === effectivePhone)
+      (effectivePhone && c.phone.trim() === effectivePhone),
   );
   if (existing) {
     return {
@@ -4845,11 +4952,9 @@ export async function submitMerchGiveawayClaim(params: {
 
 export function updateMerchClaimStatus(
   claimId: string,
-  nextStatus: MerchClaimItem["status"]
+  nextStatus: MerchClaimItem["status"],
 ): void {
-  const claims = getMerchClaims().map((c) =>
-    c.id === claimId ? { ...c, status: nextStatus } : c
-  );
+  const claims = getMerchClaims().map((c) => (c.id === claimId ? { ...c, status: nextStatus } : c));
   localStorage.setItem(LS_MERCH_CLAIMS_KEY, JSON.stringify(claims));
   emitPortalUpdate();
 }
@@ -4879,12 +4984,14 @@ export interface SeoAnalyticsConfig {
 export const DEFAULT_SEO_ANALYTICS_CONFIG: SeoAnalyticsConfig = {
   googleAnalyticsId: "G-7R5Y1KZBEP",
   gaMeasurementId: "G-7R5Y1KZBEP",
-  googleSearchConsoleVerification: "google-site-verification=CandlesticksAcademy-Verification-Token-2026",
+  googleSearchConsoleVerification:
+    "google-site-verification=CandlesticksAcademy-Verification-Token-2026",
   gscVerificationTag: "google-site-verification=CandlesticksAcademy-Verification-Token-2026",
   siteTitle: "Candlesticks Academy | Top Forex Academy & Trading Company in Ghana & Africa",
   metaDescription:
     "Candlesticks Academy is the #1 premier institutional Forex academy and trading company in Ghana and across Africa, founded by Kwekucandles. Master price action, join live London/NY trading rooms, and get VIP signals with Exness broker benefits.",
-  keywords: "Trading companies in Ghana, Forex academy in africa, Forex academy in Ghana, Best forex trading academy in Ghana, Forex mentorship Ghana, Trading company Accra Ghana, Candlesticks Academy, Kwekucandles, Forex trading school Ghana, Institutional price action Africa, Gold trading signals Ghana, Exness partner Ghana Africa, West Africa Forex trading",
+  keywords:
+    "Trading companies in Ghana, Forex academy in africa, Forex academy in Ghana, Best forex trading academy in Ghana, Forex mentorship Ghana, Trading company Accra Ghana, Candlesticks Academy, Kwekucandles, Forex trading school Ghana, Institutional price action Africa, Gold trading signals Ghana, Exness partner Ghana Africa, West Africa Forex trading",
   enableGa: true,
   enableAiSearchIndexing: true,
   enableAiSearchCrawlers: true,
@@ -4902,7 +5009,8 @@ export function getStoredSeoAnalyticsConfig(): SeoAnalyticsConfig {
       // Sync aliases
       merged.gaMeasurementId = merged.gaMeasurementId || merged.googleAnalyticsId;
       merged.googleAnalyticsId = merged.gaMeasurementId;
-      merged.gscVerificationTag = merged.gscVerificationTag || merged.googleSearchConsoleVerification;
+      merged.gscVerificationTag =
+        merged.gscVerificationTag || merged.googleSearchConsoleVerification;
       merged.googleSearchConsoleVerification = merged.gscVerificationTag;
       merged.updatedAt = merged.updatedAt || merged.lastUpdated;
       if (merged.enableAiSearchCrawlers === undefined) {
@@ -4917,7 +5025,7 @@ export function getStoredSeoAnalyticsConfig(): SeoAnalyticsConfig {
 }
 
 export function saveStoredSeoAnalyticsConfig(
-  updates: Partial<SeoAnalyticsConfig>
+  updates: Partial<SeoAnalyticsConfig>,
 ): SeoAnalyticsConfig {
   const current = getStoredSeoAnalyticsConfig();
   const next: SeoAnalyticsConfig = {
@@ -4932,7 +5040,8 @@ export function saveStoredSeoAnalyticsConfig(
   else if (next.googleAnalyticsId) next.gaMeasurementId = next.googleAnalyticsId;
 
   if (next.gscVerificationTag) next.googleSearchConsoleVerification = next.gscVerificationTag;
-  else if (next.googleSearchConsoleVerification) next.gscVerificationTag = next.googleSearchConsoleVerification;
+  else if (next.googleSearchConsoleVerification)
+    next.gscVerificationTag = next.googleSearchConsoleVerification;
 
   try {
     localStorage.setItem(LS_SEO_ANALYTICS_KEY, JSON.stringify(next));
@@ -4980,7 +5089,9 @@ export type SignedAccountManagementContract = SignedAccountContractItem & {
 export type MoolrePaymentConfig = MoolreGatewayConfig;
 export type MoolrePaymentRecord = MoolreTransactionItem;
 
-export async function fetch1on1SessionsFromDb(email?: string): Promise<MentorshipSession1on1Item[]> {
+export async function fetch1on1SessionsFromDb(
+  email?: string,
+): Promise<MentorshipSession1on1Item[]> {
   const cached = getCachedMentorship1on1Sessions(email);
   return cached.map((s) => ({
     ...s,
@@ -5002,7 +5113,7 @@ export async function fetchContractTemplateFromDb(): Promise<AccountManagementCo
 }
 
 export async function saveContractTemplateInDb(
-  template: AccountManagementContractTemplate
+  template: AccountManagementContractTemplate,
 ): Promise<AccountManagementContractTemplate> {
   const saved = saveAccountManagementContractConfig({
     ...template,
@@ -5025,10 +5136,7 @@ export async function fetchSignedContractsFromDb(): Promise<SignedAccountManagem
   }));
 }
 
-export async function submitTradingPasswordForContractInDb(
-  contractId: string,
-  password: string
-) {
+export async function submitTradingPasswordForContractInDb(contractId: string, password: string) {
   const all = getSignedAccountContracts();
   const target = all.find((c) => c.id === contractId);
   if (target) {
@@ -5080,7 +5188,7 @@ export async function schedule1on1SessionInDb(params: {
 
 export async function update1on1SessionStatusInDb(
   sessionId: string,
-  status: "scheduled" | "live" | "completed"
+  status: "scheduled" | "live" | "completed",
 ) {
   const list = getCachedMentorship1on1Sessions();
   const item = list.find((s) => s.id === sessionId);
@@ -5094,13 +5202,11 @@ export const delete1on1SessionFromDb = deleteMentorship1on1SessionFromDb;
 export const requestTradingPasswordFromStudentInDb = requestStudentExnessTradingPasswordInDb;
 export const updateMerchClaimStatusInDb = (
   claimId: string,
-  nextStatus: "pending" | "dispatched" | "delivered" | "PENDING_DELIVERY" | "DISPATCHED" | "DELIVERED"
+  nextStatus:
+    "pending" | "dispatched" | "delivered" | "PENDING_DELIVERY" | "DISPATCHED" | "DELIVERED",
 ) => {
-  const normalized = (nextStatus.toUpperCase().includes("PENDING")
-    ? "PENDING_DELIVERY"
-    : nextStatus.toUpperCase()) as MerchClaimItem["status"];
+  const normalized = (
+    nextStatus.toUpperCase().includes("PENDING") ? "PENDING_DELIVERY" : nextStatus.toUpperCase()
+  ) as MerchClaimItem["status"];
   updateMerchClaimStatus(claimId, normalized);
 };
-
-
-

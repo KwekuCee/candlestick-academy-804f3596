@@ -16,13 +16,18 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
-      ...(loaderData ? [
-        { property: "og:image", content: `${loaderData.shareOrigin}${mentorShare.url}` },
-        { name: "twitter:image", content: `${loaderData.shareOrigin}${mentorShare.url}` },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Kwekucandles, Candlesticks Academy forex trading mentor" },
-      ] : []),
+      ...(loaderData
+        ? [
+            { property: "og:image", content: `${loaderData.shareOrigin}${mentorShare.url}` },
+            { name: "twitter:image", content: `${loaderData.shareOrigin}${mentorShare.url}` },
+            { property: "og:image:width", content: "1200" },
+            { property: "og:image:height", content: "630" },
+            {
+              property: "og:image:alt",
+              content: "Kwekucandles, Candlesticks Academy forex trading mentor",
+            },
+          ]
+        : []),
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/" }],

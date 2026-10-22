@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, Download, Share, Smartphone, PlusSquare, MoreVertical, X } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  Share,
+  Smartphone,
+  PlusSquare,
+  MoreVertical,
+  X,
+} from "lucide-react";
 import { LOGO_ASSETS } from "./BrandLogo";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -139,14 +147,13 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#ffb600] block">
                   PROGRESSIVE WEB APP (PWA)
                 </span>
-                <h3 className="text-lg font-extrabold text-white">
-                  Install Candlesticks Academy
-                </h3>
+                <h3 className="text-lg font-extrabold text-white">Install Candlesticks Academy</h3>
               </div>
             </div>
 
             <p className="text-xs text-[#9ea8b8] leading-relaxed mb-4">
-              Install the official Candlesticks Academy trading terminal on your phone for instant one-tap launch, full-screen mobile app view, and real-time TP alerts.
+              Install the official Candlesticks Academy trading terminal on your phone for instant
+              one-tap launch, full-screen mobile app view, and real-time TP alerts.
             </p>
 
             {/* Platform Switcher */}
@@ -195,7 +202,8 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                   <div>
                     <b className="text-white block">Open Chrome Browser Menu</b>
                     <span className="text-[#9ea8b8] text-[11px]">
-                      Tap the <MoreVertical size={12} className="inline text-[#ffb600]" /> three-dots menu icon in the top-right corner of Chrome on your Android phone.
+                      Tap the <MoreVertical size={12} className="inline text-[#ffb600]" />{" "}
+                      three-dots menu icon in the top-right corner of Chrome on your Android phone.
                     </span>
                   </div>
                 </div>
@@ -204,9 +212,12 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                     2
                   </span>
                   <div>
-                    <b className="text-white block">Tap &ldquo;Install app&rdquo; or &ldquo;Add to Home screen&rdquo;</b>
+                    <b className="text-white block">
+                      Tap &ldquo;Install app&rdquo; or &ldquo;Add to Home screen&rdquo;
+                    </b>
                     <span className="text-[#9ea8b8] text-[11px]">
-                      Confirm by tapping <strong className="text-[#ffb600]">Install</strong>. The Candlesticks Academy app icon will appear directly in your Android app drawer.
+                      Confirm by tapping <strong className="text-[#ffb600]">Install</strong>. The
+                      Candlesticks Academy app icon will appear directly in your Android app drawer.
                     </span>
                   </div>
                 </div>
@@ -220,7 +231,9 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                   <div>
                     <b className="text-white block">Tap the Share Button in Safari</b>
                     <span className="text-[#9ea8b8] text-[11px]">
-                      Open this site in <strong>Safari</strong> on your iPhone or iPad and tap the <Share size={12} className="inline text-[#ffb600]" /> <strong>Share</strong> icon at the bottom toolbar.
+                      Open this site in <strong>Safari</strong> on your iPhone or iPad and tap the{" "}
+                      <Share size={12} className="inline text-[#ffb600]" /> <strong>Share</strong>{" "}
+                      icon at the bottom toolbar.
                     </span>
                   </div>
                 </div>
@@ -231,7 +244,9 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                   <div>
                     <b className="text-white block">Select &ldquo;Add to Home Screen&rdquo;</b>
                     <span className="text-[#9ea8b8] text-[11px]">
-                      Scroll down the share sheet and tap <PlusSquare size={12} className="inline text-[#ffb600]" /> <strong>Add to Home Screen</strong>.
+                      Scroll down the share sheet and tap{" "}
+                      <PlusSquare size={12} className="inline text-[#ffb600]" />{" "}
+                      <strong>Add to Home Screen</strong>.
                     </span>
                   </div>
                 </div>
@@ -242,7 +257,8 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
                   <div>
                     <b className="text-white block">Tap &ldquo;Add&rdquo; in Top Right</b>
                     <span className="text-[#9ea8b8] text-[11px]">
-                      Launch <strong>Candlesticks</strong> directly from your iOS Home Screen as a full-screen native app!
+                      Launch <strong>Candlesticks</strong> directly from your iOS Home Screen as a
+                      full-screen native app!
                     </span>
                   </div>
                 </div>

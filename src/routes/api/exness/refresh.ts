@@ -4,7 +4,7 @@ export const Route = createFileRoute("/api/exness/refresh")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const { authorizeExnessRequest } = await import('@/server/exnessAccess');
+        const { authorizeExnessRequest } = await import("@/server/exnessAccess");
         const denied = await authorizeExnessRequest(request, true);
         if (denied) return denied;
         const url = new URL(request.url);

@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
-import { Button as PaymentStatusButton } from '@/components/ui/button';
-import { verifyMoolrePayment } from './portalDataStore';
+import { Button as PaymentStatusButton } from "@/components/ui/button";
+import { verifyMoolrePayment } from "./portalDataStore";
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "@/app/routerCompat";
 import {
   ADMIN_PORTAL_DOMAIN,
@@ -390,8 +390,20 @@ function Button({
   );
 }
 
-function Card({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) {
-  return <section id={id} className={`p-card ${className}`}>{children}</section>;
+function Card({
+  children,
+  className = "",
+  id,
+}: {
+  children: ReactNode;
+  className?: string;
+  id?: string;
+}) {
+  return (
+    <section id={id} className={`p-card ${className}`}>
+      {children}
+    </section>
+  );
 }
 
 function Progress({ value, tone = "" }: { value: number; tone?: string }) {
@@ -534,7 +546,9 @@ export function MoolreCheckoutModal({
   const student = studentProp || currentStudent;
   const moolreCfg = getMoolreConfig();
   const [selectedPlan, setSelectedPlan] = useState<"monthly_20" | "permanent_100">(initialPlan);
-  const [paymentMethod, setPaymentMethod] = useState<"moolre_link" | "mobile_money">("mobile_money");
+  const [paymentMethod, setPaymentMethod] = useState<"moolre_link" | "mobile_money">(
+    "mobile_money",
+  );
   const [network, setNetwork] = useState<"MTN" | "Telecel" | "AT">("MTN");
   const [payerPhone, setPayerPhone] = useState(student.phone || "");
   const [processing, setProcessing] = useState(false);
@@ -577,9 +591,15 @@ export function MoolreCheckoutModal({
     try {
       const result = await verifyMoolrePayment(pendingReference);
       setFeedback({ success: result.success, message: result.message });
-      if (result.status === 'PAID') onSuccess?.();
-    } catch (error) { setFeedback({ success: false, message: error instanceof Error ? error.message : 'Unable to verify payment. Try again.' }); }
-    finally { setProcessing(false); }
+      if (result.status === "PAID") onSuccess?.();
+    } catch (error) {
+      setFeedback({
+        success: false,
+        message: error instanceof Error ? error.message : "Unable to verify payment. Try again.",
+      });
+    } finally {
+      setProcessing(false);
+    }
   }
 
   return (
@@ -623,7 +643,9 @@ export function MoolreCheckoutModal({
               <span className="text-[10px] font-mono uppercase tracking-wider text-[#ffb600]">
                 MONTHLY ACCESS
               </span>
-              {selectedPlan === "monthly_20" && <CheckCircle2 size={16} className="text-[#ffb600]" />}
+              {selectedPlan === "monthly_20" && (
+                <CheckCircle2 size={16} className="text-[#ffb600]" />
+              )}
             </div>
             <div className="text-2xl font-mono font-extrabold text-white mt-1">
               $20 <small className="text-xs text-[#9aa4b5] font-normal">/ month</small>
@@ -646,13 +668,16 @@ export function MoolreCheckoutModal({
               <span className="text-[10px] font-mono uppercase tracking-wider text-[#ffb600]">
                 PERMANENT VIP TIER
               </span>
-              {selectedPlan === "permanent_100" && <CheckCircle2 size={16} className="text-[#ffb600]" />}
+              {selectedPlan === "permanent_100" && (
+                <CheckCircle2 size={16} className="text-[#ffb600]" />
+              )}
             </div>
             <div className="text-2xl font-mono font-extrabold text-white mt-1">
               $100 <small className="text-xs text-[#9aa4b5] font-normal">one-time</small>
             </div>
             <p className="text-[11px] text-[#b4bccb] mt-2 leading-relaxed">
-              Lifetime Full Access + Signal Copy Trading + 1-on-1 Mentorship + $500 Account Management.
+              Lifetime Full Access + Signal Copy Trading + 1-on-1 Mentorship + $500 Account
+              Management.
             </p>
           </button>
         </div>
@@ -717,7 +742,8 @@ export function MoolreCheckoutModal({
 
           <div className="p-4 rounded-xl bg-[#141821] border border-white/10 flex items-center justify-between text-xs">
             <span className="text-[#9aa4b5]">
-              Total Due ({selectedPlan === "permanent_100" ? "Permanent VIP Access" : "Monthly Access"}):
+              Total Due (
+              {selectedPlan === "permanent_100" ? "Permanent VIP Access" : "Monthly Access"}):
             </span>
             <strong className="text-sm font-mono font-extrabold text-[#ffb600]">
               ${amountUsd}.00 USD (≈ GHS {amountGhs.toLocaleString()})
@@ -748,7 +774,16 @@ export function MoolreCheckoutModal({
               )}
             </div>
           )}
-          {pendingReference && <PaymentStatusButton type="button" variant="outline" disabled={processing} onClick={() => void checkPayment()}><CreditCard size={16} /> Check payment status</PaymentStatusButton>}
+          {pendingReference && (
+            <PaymentStatusButton
+              type="button"
+              variant="outline"
+              disabled={processing}
+              onClick={() => void checkPayment()}
+            >
+              <CreditCard size={16} /> Check payment status
+            </PaymentStatusButton>
+          )}
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
             <button
@@ -763,9 +798,7 @@ export function MoolreCheckoutModal({
               disabled={processing}
               className="px-6 py-3 rounded-xl bg-[#ffb600] hover:bg-[#ffc833] text-black font-extrabold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50 transition"
             >
-              {processing
-                ? "Processing via Moolre..."
-                : `Pay $${amountUsd} USD via Moolre`}
+              {processing ? "Processing via Moolre..." : `Pay $${amountUsd} USD via Moolre`}
             </button>
           </div>
         </form>
@@ -820,10 +853,7 @@ function SubscriptionGateNotice({
       </div>
       <p className="text-xs sm:text-sm text-[#9ea8b8] mt-3 leading-relaxed">{featureDescription}</p>
       {showCheckout && (
-        <MoolreCheckoutModal
-          initialPlan={effectivePlan}
-          onClose={() => setShowCheckout(false)}
-        />
+        <MoolreCheckoutModal initialPlan={effectivePlan} onClose={() => setShowCheckout(false)} />
       )}
     </div>
   );
@@ -882,7 +912,8 @@ function DepositGateNotice({
         </div>
         <div className="text-left sm:text-right">
           <div className="text-lg font-mono font-bold text-white">
-            ${student.depositAmount.toFixed(2)} <span className="text-xs text-[#8c94a2]">/ $50.00 USD</span>
+            ${student.depositAmount.toFixed(2)}{" "}
+            <span className="text-xs text-[#8c94a2]">/ $50.00 USD</span>
           </div>
           <span className="text-xs text-amber-400 font-medium">Awaiting deposit detection</span>
         </div>
@@ -1108,8 +1139,8 @@ export function PortalLayout() {
 
   async function handleLogout() {
     const destination = await logoutCurrentUser();
-    if (destination.startsWith('https://')) window.location.replace(destination);
-    else nav('/', { replace: true });
+    if (destination.startsWith("https://")) window.location.replace(destination);
+    else nav("/", { replace: true });
   }
 
   function handleSearchSubmit(e: FormEvent) {
@@ -1184,7 +1215,11 @@ export function PortalLayout() {
             onClick={togglePortalTheme}
             className="h-[44px] px-[13px] rounded-[12px] flex items-center gap-[13px] text-[#a4abb6] hover:text-white hover:bg-white/10 text-[13.5px] font-semibold transition cursor-pointer w-full text-left border-0 bg-transparent"
           >
-            {portalTheme === "dark" ? <Sun size={18} className="text-[#ffb600]" /> : <Moon size={18} />}
+            {portalTheme === "dark" ? (
+              <Sun size={18} className="text-[#ffb600]" />
+            ) : (
+              <Moon size={18} />
+            )}
             <span>{portalTheme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}</span>
           </button>
           <button
@@ -1211,24 +1246,26 @@ export function PortalLayout() {
                 {admin
                   ? "Founder & Lead Mentor"
                   : student.username
-                  ? `@${student.username} · ${
-                      student.depositVerified && student.depositAmount >= 50
-                        ? "Funded ($50+)"
-                        : student.partnerLinked
+                    ? `@${student.username} · ${
+                        student.depositVerified && student.depositAmount >= 50
+                          ? "Funded ($50+)"
+                          : student.partnerLinked
+                            ? "Partner Linked"
+                            : "Unlinked"
+                      }`
+                    : student.depositVerified && student.depositAmount >= 50
+                      ? "Verified & Funded ($50+)"
+                      : student.partnerLinked
                         ? "Partner Linked"
-                        : "Unlinked"
-                    }`
-                  : student.depositVerified && student.depositAmount >= 50
-                  ? "Verified & Funded ($50+)"
-                  : student.partnerLinked
-                  ? "Partner Linked"
-                  : "Unlinked Account"}
+                        : "Unlinked Account"}
               </small>
             </b>
           </div>
         </div>
       </aside>
-      {open && <button aria-label="Close menu" className="sidebar-scrim" onClick={() => setOpen(false)} />}
+      {open && (
+        <button aria-label="Close menu" className="sidebar-scrim" onClick={() => setOpen(false)} />
+      )}
       <div className="portal-main">
         <div className="portal-topbar">
           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -1257,7 +1294,11 @@ export function PortalLayout() {
             <button
               type="button"
               onClick={togglePortalTheme}
-              title={portalTheme === "dark" ? "Switch Dashboard to Light Theme" : "Switch Dashboard to Dark Theme"}
+              title={
+                portalTheme === "dark"
+                  ? "Switch Dashboard to Light Theme"
+                  : "Switch Dashboard to Dark Theme"
+              }
               className="theme-toggle-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold transition cursor-pointer shrink-0"
             >
               {portalTheme === "dark" ? (
@@ -1315,9 +1356,12 @@ export function PortalLayout() {
                     {notifications.length === 0 ? (
                       <div className="p-6 text-center space-y-1.5">
                         <Bell size={22} className="mx-auto text-[#7f8a9d]" />
-                        <p className="text-xs font-bold text-white">No alerts for your account yet</p>
+                        <p className="text-xs font-bold text-white">
+                          No alerts for your account yet
+                        </p>
                         <p className="text-[11px] text-[#8c95a6]">
-                          Whenever you copy a trade, a signal hits TP1–TP5, or an account audit event occurs, it will appear right here.
+                          Whenever you copy a trade, a signal hits TP1–TP5, or an account audit
+                          event occurs, it will appear right here.
                         </p>
                       </div>
                     ) : (
@@ -1337,10 +1381,10 @@ export function PortalLayout() {
                               item.isRead
                                 ? "bg-white/20"
                                 : item.category === "tp_hit"
-                                ? "bg-emerald-400 shadow-[0_0_8px_#34d399]"
-                                : item.category === "trade"
-                                ? "bg-[#ffb600] shadow-[0_0_8px_#ffb600]"
-                                : "bg-sky-400"
+                                  ? "bg-emerald-400 shadow-[0_0_8px_#34d399]"
+                                  : item.category === "trade"
+                                    ? "bg-[#ffb600] shadow-[0_0_8px_#ffb600]"
+                                    : "bg-sky-400"
                             }`}
                           />
                           <div className="flex-1 min-w-0">
@@ -1377,7 +1421,11 @@ export function PortalLayout() {
               )}
             </div>
 
-            <Link to={admin ? "/admin" : "/settings"} title="Profile & Settings" className="shrink-0">
+            <Link
+              to={admin ? "/admin" : "/settings"}
+              title="Profile & Settings"
+              className="shrink-0"
+            >
               {admin ? (
                 <img
                   src={mentorPortrait.url}
@@ -1453,7 +1501,10 @@ export function RegisterPage() {
       <div className="auth-form">
         <p className="p-eyebrow">START FREE THIS MONTH</p>
         <h1>Welcome to Candlesticks Academy</h1>
-        <p>Proceed through our guided onboarding to link your Exness account and claim your free month.</p>
+        <p>
+          Proceed through our guided onboarding to link your Exness account and claim your free
+          month.
+        </p>
         <button
           className="p-button primary rounded-full w-full py-4 text-sm font-bold uppercase tracking-wider"
           onClick={() => nav("/onboarding")}
@@ -1461,7 +1512,8 @@ export function RegisterPage() {
           Begin Onboarding <Icon name="arrow" />
         </button>
         <p className="auth-legal-note">
-          By registering, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
+          By registering, you agree to our <Link to="/terms">Terms</Link> and{" "}
+          <Link to="/privacy">Privacy Policy</Link>.
         </p>
         <span className="auth-switch">
           Already a member? <Link to="/login">Log in</Link>
@@ -1505,7 +1557,8 @@ export function LoginPage() {
         <p className="p-eyebrow">WELCOME BACK</p>
         <h1>Log in to Candlesticks Academy</h1>
         <p>
-          Log in with your registered <strong>Email</strong> or <strong>Username</strong> and password to access your trading terminal.
+          Log in with your registered <strong>Email</strong> or <strong>Username</strong> and
+          password to access your trading terminal.
         </p>
         <label>
           Email or Username
@@ -1646,11 +1699,10 @@ export function DashboardPage() {
   const isDepositCompleted = student.depositVerified && student.depositAmount >= 50;
   const subAccess = getStudentSubscriptionAccess(student);
   const [moolreModalPlan, setMoolreModalPlan] = useState<"monthly_20" | "permanent_100" | null>(
-    null
+    null,
   );
   const nextLesson = metrics.nextLesson;
-  const nextCourse =
-    courses.find((c) => c.slug === nextLesson?.courseSlug) || courses[0];
+  const nextCourse = courses.find((c) => c.slug === nextLesson?.courseSlug) || courses[0];
 
   const todayFormatted = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
@@ -1672,37 +1724,90 @@ export function DashboardPage() {
       <section className="ov-hero">
         <div className="ov-hero-main">
           <div className="ov-hero-id">
-            <StudentAvatarBadge avatarUrl={student.avatarUrl} name={student.fullName} sizeClass="w-14 h-14 text-base" />
+            <StudentAvatarBadge
+              avatarUrl={student.avatarUrl}
+              name={student.fullName}
+              sizeClass="w-14 h-14 text-base"
+            />
             <div>
-              <span className="ov-date">{todayFormatted} · {student.preferredSession || "London & NY Overlap"}</span>
-              <h1>Welcome back, <em>{student.fullName.split(" ")[0] || "Trader"}</em>.</h1>
+              <span className="ov-date">
+                {todayFormatted} · {student.preferredSession || "London & NY Overlap"}
+              </span>
+              <h1>
+                Welcome back, <em>{student.fullName.split(" ")[0] || "Trader"}</em>.
+              </h1>
               <p>
-                {isDepositCompleted ? "Full access unlocked" : student.partnerLinked ? "Partner linked · awaiting $50 deposit" : "Exness account not linked yet"}
+                {isDepositCompleted
+                  ? "Full access unlocked"
+                  : student.partnerLinked
+                    ? "Partner linked · awaiting $50 deposit"
+                    : "Exness account not linked yet"}
                 {" · "}Exness {student.exnessId ? `••••${student.exnessId.slice(-4)}` : "unlinked"}
               </p>
             </div>
           </div>
-          <div className="ov-ring" style={{ ["--p" as any]: `${metrics.overallPercent}` }} aria-label={`Course progress ${metrics.overallPercent}%`}>
-            <div><b>{metrics.overallPercent}%</b><small>Course progress</small></div>
+          <div
+            className="ov-ring"
+            style={{ ["--p" as any]: `${metrics.overallPercent}` }}
+            aria-label={`Course progress ${metrics.overallPercent}%`}
+          >
+            <div>
+              <b>{metrics.overallPercent}%</b>
+              <small>Course progress</small>
+            </div>
           </div>
         </div>
         <div className="ov-stats">
-          <div><small>Lessons done</small><b>{metrics.completedLessonsCount}<span>/{metrics.totalLessons}</span></b></div>
-          <div><small>Learning streak</small><b>{metrics.streakDays}<span> {metrics.streakDays === 1 ? "day" : "days"}</span></b></div>
-          <div><small>Quiz average</small><b>{metrics.quizCount > 0 ? metrics.averageQuizScore : 0}<span>%</span></b></div>
-          <div><small>Risk per trade</small><b>{student.riskPerTradePct || 1}<span>%</span></b></div>
+          <div>
+            <small>Lessons done</small>
+            <b>
+              {metrics.completedLessonsCount}
+              <span>/{metrics.totalLessons}</span>
+            </b>
+          </div>
+          <div>
+            <small>Learning streak</small>
+            <b>
+              {metrics.streakDays}
+              <span> {metrics.streakDays === 1 ? "day" : "days"}</span>
+            </b>
+          </div>
+          <div>
+            <small>Quiz average</small>
+            <b>
+              {metrics.quizCount > 0 ? metrics.averageQuizScore : 0}
+              <span>%</span>
+            </b>
+          </div>
+          <div>
+            <small>Risk per trade</small>
+            <b>
+              {student.riskPerTradePct || 1}
+              <span>%</span>
+            </b>
+          </div>
         </div>
         <div className="ov-actions">
-          <Link to={nextLesson && isDepositCompleted ? `/lessons/${nextLesson.id}` : "/courses"}><Icon name="play" /> Continue learning</Link>
-          <Link to="/sessions"><Icon name="video" /> Live sessions</Link>
-          <Link to="/signals"><Icon name="signal" /> VIP signals</Link>
-          <Link to="/mentorship"><Icon name="users" /> 1-on-1 mentor</Link>
+          <Link to={nextLesson && isDepositCompleted ? `/lessons/${nextLesson.id}` : "/courses"}>
+            <Icon name="play" /> Continue learning
+          </Link>
+          <Link to="/sessions">
+            <Icon name="video" /> Live sessions
+          </Link>
+          <Link to="/signals">
+            <Icon name="signal" /> VIP signals
+          </Link>
+          <Link to="/mentorship">
+            <Icon name="users" /> 1-on-1 mentor
+          </Link>
         </div>
       </section>
 
       <div className="ov-plan">
         <div className="ov-plan-info">
-          <span className="ov-plan-icon"><CreditCard size={18} /></span>
+          <span className="ov-plan-icon">
+            <CreditCard size={18} />
+          </span>
           <div>
             <small>Membership</small>
             <b>{subAccess.tierLabel}</b>
@@ -1710,19 +1815,30 @@ export function DashboardPage() {
               {subAccess.tier === "expired_free"
                 ? "Your free trial has ended. Upgrade to unlock Essential/Advanced courses, live streams and market insights."
                 : subAccess.tier === "permanent_100"
-                ? "Permanent VIP: every course level, live streams, copy trading, mentorship and account management."
-                : "Your free month includes everything in the $20/month plan."}
+                  ? "Permanent VIP: every course level, live streams, copy trading, mentorship and account management."
+                  : "Your free month includes everything in the $20/month plan."}
             </p>
           </div>
         </div>
         {subAccess.tier !== "permanent_100" && (
           <div className="ov-plan-cta">
-            <button type="button" onClick={() => setMoolreModalPlan("monthly_20")} className="ov-btn ghost">$20 / month</button>
-            <button type="button" onClick={() => setMoolreModalPlan("permanent_100")} className="ov-btn gold">$100 Permanent VIP</button>
+            <button
+              type="button"
+              onClick={() => setMoolreModalPlan("monthly_20")}
+              className="ov-btn ghost"
+            >
+              $20 / month
+            </button>
+            <button
+              type="button"
+              onClick={() => setMoolreModalPlan("permanent_100")}
+              className="ov-btn gold"
+            >
+              $100 Permanent VIP
+            </button>
           </div>
         )}
       </div>
-
 
       {/* Case 1: Account NOT linked to Exness Partner Link */}
       {!student.partnerLinked && (
@@ -1733,9 +1849,12 @@ export function DashboardPage() {
                 <ShieldAlert size={22} />
               </span>
               <div>
-                <h3 className="text-base font-bold text-white">Action Required: Link your Exness Account</h3>
+                <h3 className="text-base font-bold text-white">
+                  Action Required: Link your Exness Account
+                </h3>
                 <p className="text-xs text-[#a0a8b6] mt-0.5">
-                  Complete your registration by connecting through our Exness partner link or submitting your existing account ticket.
+                  Complete your registration by connecting through our Exness partner link or
+                  submitting your existing account ticket.
                 </p>
               </div>
             </div>
@@ -1758,10 +1877,13 @@ export function DashboardPage() {
           <div>
             <small>STEP 2: ACTIVATE FULL ACCESS · VERIFIED PARTNER ACCOUNT</small>
             <h3>
-              Deposit ${Math.max(0, 50 - student.depositAmount).toFixed(2)} USD in your Exness account to activate all features
+              Deposit ${Math.max(0, 50 - student.depositAmount).toFixed(2)} USD in your Exness
+              account to activate all features
             </h3>
             <p>
-              Your Exness Trading Account is registered under our Partner Link. Make your minimum <b>$50.00 USD deposit</b> on Exness to automatically unlock all Academy courses, live trading rooms, and daily VIP signals.
+              Your Exness Trading Account is registered under our Partner Link. Make your minimum{" "}
+              <b>$50.00 USD deposit</b> on Exness to automatically unlock all Academy courses, live
+              trading rooms, and daily VIP signals.
             </p>
           </div>
           <div>
@@ -1793,7 +1915,6 @@ export function DashboardPage() {
         </div>
       )}
 
-
       <div className="dash-grid">
         {/* Continue Learning Card (Connected to Real Course & Lesson Progress) */}
         <Card className="continue-card">
@@ -1824,7 +1945,11 @@ export function DashboardPage() {
               <>
                 <Button
                   onClick={() =>
-                    nav(nextLesson ? `/lessons/${nextLesson.id}` : `/courses/${nextCourse?.slug || "forex-foundations"}`)
+                    nav(
+                      nextLesson
+                        ? `/lessons/${nextLesson.id}`
+                        : `/courses/${nextCourse?.slug || "forex-foundations"}`,
+                    )
                   }
                 >
                   {metrics.completedLessonsCount > 0 ? "Resume lesson" : "Start first lesson"}{" "}
@@ -1857,8 +1982,8 @@ export function DashboardPage() {
                 {isSessionLiveNow
                   ? "● LIVE NOW"
                   : featuredSession
-                  ? `LIVE IN ${countdownText}`
-                  : "AWAITING SCHEDULE"}
+                    ? `LIVE IN ${countdownText}`
+                    : "AWAITING SCHEDULE"}
               </Badge>
             </div>
             {featuredSession ? (
@@ -1894,7 +2019,9 @@ export function DashboardPage() {
               <div className="py-3 space-y-2">
                 <h2 className="text-base font-bold text-white">No Live Broadcast Scheduled Yet</h2>
                 <p className="text-xs text-[#9aa4b5]">
-                  When Kwekucandles schedules a London or New York live session or goes live in the Admin Broadcast Studio, the real-time countdown and stream link will appear right here.
+                  When Kwekucandles schedules a London or New York live session or goes live in the
+                  Admin Broadcast Studio, the real-time countdown and stream link will appear right
+                  here.
                 </p>
                 <Link
                   to="/sessions"
@@ -1922,13 +2049,15 @@ export function DashboardPage() {
                   </Badge>
                   <Badge
                     tone={
-                      latestSignal.status === "ALL TPS HIT" || latestSignal.status === "ALL TP HIT" || latestSignal.status === "HIT TP"
+                      latestSignal.status === "ALL TPS HIT" ||
+                      latestSignal.status === "ALL TP HIT" ||
+                      latestSignal.status === "HIT TP"
                         ? "green"
                         : latestSignal.status === "PARTIAL TP"
-                        ? "yellow"
-                        : latestSignal.status === "HIT SL"
-                        ? "red"
-                        : "yellow"
+                          ? "yellow"
+                          : latestSignal.status === "HIT SL"
+                            ? "red"
+                            : "yellow"
                     }
                   >
                     {latestSignal.status}
@@ -1983,7 +2112,8 @@ export function DashboardPage() {
               <div className="py-3 space-y-2">
                 <h2 className="text-base font-bold text-white">No Admin Signals Posted Yet</h2>
                 <p className="text-xs text-[#9aa4b5]">
-                  Only real setups published by Kwekucandles in the Admin Console appear here, complete with live market TP1–TP5 tracking.
+                  Only real setups published by Kwekucandles in the Admin Console appear here,
+                  complete with live market TP1–TP5 tracking.
                 </p>
                 <Link
                   to="/signals"
@@ -2107,19 +2237,17 @@ export function SettingsPage() {
 
   // Trading Risk Profile & Preferences
   const [preferredSession, setPreferredSession] = useState(
-    student.preferredSession || "London & New York Overlap"
+    student.preferredSession || "London & New York Overlap",
   );
   const [tradingStyle, setTradingStyle] = useState(
-    student.tradingStyle || "Intraday / Day Trading"
+    student.tradingStyle || "Intraday / Day Trading",
   );
   const [accountBalanceUsd, setAccountBalanceUsd] = useState(
-    String(student.accountBalanceUsd ?? 500)
+    String(student.accountBalanceUsd ?? 500),
   );
-  const [riskPerTradePct, setRiskPerTradePct] = useState(
-    String(student.riskPerTradePct ?? 1.0)
-  );
+  const [riskPerTradePct, setRiskPerTradePct] = useState(String(student.riskPerTradePct ?? 1.0));
   const [targetMonthlyReturnPct, setTargetMonthlyReturnPct] = useState(
-    String(student.targetMonthlyReturnPct ?? 10.0)
+    String(student.targetMonthlyReturnPct ?? 10.0),
   );
 
   // Notifications & Copy Trading state persisted to student record
@@ -2336,7 +2464,9 @@ export function SettingsPage() {
           <Card className="settings-card" id="profile">
             <h2>Profile, Login Username &amp; Avatar Photo</h2>
             <p>
-              Set your unique <code>@username</code> to log in with either your username or email address, and upload your profile photo (synced to Supabase Storage &amp; visible beside the topbar alert bell).
+              Set your unique <code>@username</code> to log in with either your username or email
+              address, and upload your profile photo (synced to Supabase Storage &amp; visible
+              beside the topbar alert bell).
             </p>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#141821] border border-white/10 my-4">
               <div className="flex items-center gap-4">
@@ -2468,7 +2598,8 @@ export function SettingsPage() {
                     </div>
                   </label>
                   <span className="text-[11px] text-[#8c94a2] mt-1.5 block">
-                    Use this password with your <strong>@username</strong> or <strong>email</strong> on the Sign In page.
+                    Use this password with your <strong>@username</strong> or <strong>email</strong>{" "}
+                    on the Sign In page.
                   </span>
                 </div>
               </div>
@@ -2519,7 +2650,9 @@ export function SettingsPage() {
               </div>
             )}
             <div className="flex items-center gap-4 mt-5">
-              <Button onClick={() => void saveProfile()}>Save Profile &amp; Sync to Database</Button>
+              <Button onClick={() => void saveProfile()}>
+                Save Profile &amp; Sync to Database
+              </Button>
               {saveSuccess && (
                 <span className="text-xs text-green-400 flex items-center gap-1">
                   <CheckCircle2 size={14} /> Saved &amp; synced to Supabase!
@@ -2532,7 +2665,8 @@ export function SettingsPage() {
           <Card className="settings-card" id="risk-profile">
             <h2>Trading Risk Profile &amp; Lot Calculator Defaults</h2>
             <p>
-              Set your account balance and maximum risk per trade. These values automatically power the Position Size Calculator inside the VIP Signal Feed.
+              Set your account balance and maximum risk per trade. These values automatically power
+              the Position Size Calculator inside the VIP Signal Feed.
             </p>
             <div className="form-grid mt-4">
               <label>
@@ -2591,7 +2725,7 @@ export function SettingsPage() {
                     >
                       {style}
                     </button>
-                  )
+                  ),
                 )}
               </div>
             </div>
@@ -2649,7 +2783,8 @@ export function SettingsPage() {
           <Card className="settings-card" id="mentor-qa">
             <h2>Direct 1-on-1 Mentor Q&amp;A with Kwekucandles</h2>
             <p>
-              Ask a question about a course lesson, market structure setup, or your trading plan. Replies appear directly below.
+              Ask a question about a course lesson, market structure setup, or your trading plan.
+              Replies appear directly below.
             </p>
             <form onSubmit={handleSendMentorQuestion} className="space-y-3 mt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2696,7 +2831,9 @@ export function SettingsPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono text-[#8c95a6] mb-1">
-                      <strong className={m.senderRole === "admin" ? "text-[#ffb600]" : "text-white"}>
+                      <strong
+                        className={m.senderRole === "admin" ? "text-[#ffb600]" : "text-white"}
+                      >
                         {m.senderRole === "admin" ? "Kwekucandles (Founder)" : "You"} · {m.subject}
                       </strong>
                       <span>{new Date(m.createdAt).toLocaleString()}</span>
@@ -2774,8 +2911,10 @@ export function SettingsPage() {
             {ticketGuideOpen && (
               <div className="mt-4 pt-4 border-t border-white/10 space-y-3 text-xs text-[#9ea8b8] leading-relaxed">
                 <p>
-                  If you already owned an Exness account before joining Candlesticks Academy, submit your transfer request during onboarding or email{" "}
-                  <strong className="text-white">{config.supportEmail}</strong>. Once your account appears in our Partner Dashboard, enter your Trading Account ID to verify.
+                  If you already owned an Exness account before joining Candlesticks Academy, submit
+                  your transfer request during onboarding or email{" "}
+                  <strong className="text-white">{config.supportEmail}</strong>. Once your account
+                  appears in our Partner Dashboard, enter your Trading Account ID to verify.
                 </p>
               </div>
             )}
@@ -2790,7 +2929,14 @@ export function SettingsPage() {
                 </span>
                 <h2>Client &amp; Admin Dashboard SQL Schema</h2>
                 <p>
-                  Copy and run this idempotent SQL script in your Supabase SQL Editor to upgrade your database with all new tables, columns, and storage buckets (<code>courses</code> level PDFs &amp; quizzes, <code>course_lessons</code>, <code>trading_signals</code> TP1–TP5 targets, <code>student_trades</code> custom TP/SL &amp; Exness sync, <code>client_notifications</code> alert bell feed, <code>certificate_templates</code>, and storage buckets <code>student-avatars</code>, <code>course-videos</code>, <code>course-pdfs</code>, <code>certificate-templates</code>).
+                  Copy and run this idempotent SQL script in your Supabase SQL Editor to upgrade
+                  your database with all new tables, columns, and storage buckets (
+                  <code>courses</code> level PDFs &amp; quizzes, <code>course_lessons</code>,{" "}
+                  <code>trading_signals</code> TP1–TP5 targets, <code>student_trades</code> custom
+                  TP/SL &amp; Exness sync, <code>client_notifications</code> alert bell feed,{" "}
+                  <code>certificate_templates</code>, and storage buckets{" "}
+                  <code>student-avatars</code>, <code>course-videos</code>, <code>course-pdfs</code>
+                  , <code>certificate-templates</code>).
                 </p>
               </div>
               <button
@@ -2844,10 +2990,7 @@ export function CoursesPage() {
   return (
     <>
       {showMoolreUpgrade && (
-        <MoolreCheckoutModal
-          initialPlan="monthly_20"
-          onClose={() => setShowMoolreUpgrade(false)}
-        />
+        <MoolreCheckoutModal initialPlan="monthly_20" onClose={() => setShowMoolreUpgrade(false)} />
       )}
 
       <Header
@@ -2884,7 +3027,8 @@ export function CoursesPage() {
           <Badge>{isDepositCompleted ? "RECOMMENDED TRACK" : "LOCKED"}</Badge>
           <h2>Master the language of the market.</h2>
           <p>
-            {metrics.completedLessonsCount} of {metrics.totalLessons} total video lessons completed across 4 structured tracks ({metrics.overallPercent}% overall progress).
+            {metrics.completedLessonsCount} of {metrics.totalLessons} total video lessons completed
+            across 4 structured tracks ({metrics.overallPercent}% overall progress).
           </p>
           {isDepositCompleted ? (
             <div className="flex flex-wrap gap-3">
@@ -2951,11 +3095,7 @@ export function CoursesPage() {
                   <span>
                     <Badge
                       tone={
-                        c.level === "Advanced"
-                          ? "red"
-                          : c.level === "Beginner"
-                          ? "green"
-                          : "yellow"
+                        c.level === "Advanced" ? "red" : c.level === "Beginner" ? "green" : "yellow"
                       }
                     >
                       {c.level}
@@ -3024,8 +3164,7 @@ export function CourseDetailPage() {
   const metrics = getStudentProgressMetrics(student.email);
   const cStat = metrics.courseBreakdown.find((b) => b.slug === c?.slug);
   const completedIds = new Set(metrics.completedLessonIds);
-  const nextIncompleteLesson =
-    c?.lessons.find((l) => !completedIds.has(l.id)) || c?.lessons[0];
+  const nextIncompleteLesson = c?.lessons.find((l) => !completedIds.has(l.id)) || c?.lessons[0];
 
   if (!c) return null;
 
@@ -3066,9 +3205,8 @@ export function CourseDetailPage() {
             </span>
             <span>
               <Icon name="clock" />{" "}
-              {Math.round(
-                c.lessons.reduce((acc, l) => acc + (l.durationMinutes || 12), 0) / 6
-              ) / 10}
+              {Math.round(c.lessons.reduce((acc, l) => acc + (l.durationMinutes || 12), 0) / 6) /
+                10}
               h total
             </span>
             <span>
@@ -3093,7 +3231,8 @@ export function CourseDetailPage() {
             </div>
           ) : isTierLocked ? (
             <span className="text-xs text-[#ffb600] font-bold flex items-center gap-1.5">
-              <Lock size={14} /> Free Trial Expired · Unlock {c.level} Level via Moolre ($20/mo or $100 Permanent)
+              <Lock size={14} /> Free Trial Expired · Unlock {c.level} Level via Moolre ($20/mo or
+              $100 Permanent)
             </span>
           ) : (
             <span className="text-xs text-[#ffb600] font-bold flex items-center gap-1.5">
@@ -3127,7 +3266,9 @@ export function CourseDetailPage() {
               No Videos Uploaded for {c.title} ({c.level}) Yet
             </h3>
             <p className="text-xs text-[#9aa4b5] max-w-lg mx-auto">
-              Kwekucandles names and uploads the individual course videos for each of the 4 levels directly from the Admin Course Studio. You can already take the {c.level} Level PDF Assessment below!
+              Kwekucandles names and uploads the individual course videos for each of the 4 levels
+              directly from the Admin Course Studio. You can already take the {c.level} Level PDF
+              Assessment below!
             </p>
           </Card>
         ) : (
@@ -3214,7 +3355,7 @@ export function LessonPage() {
 
   for (const c of courses) {
     const found = c.lessons.find(
-      (l) => l.id === lessonId || l.title.toLowerCase().replaceAll(" ", "-") === lessonId
+      (l) => l.id === lessonId || l.title.toLowerCase().replaceAll(" ", "-") === lessonId,
     );
     if (found) {
       activeCourse = c;
@@ -3283,7 +3424,8 @@ export function LessonPage() {
         <VideoIcon size={32} className="mx-auto text-[#ffb600]" />
         <h2 className="text-lg font-bold text-white">No Video Lessons Uploaded Yet</h2>
         <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-          Kwekucandles will upload and name the video lessons for this track in the Admin Course Studio.
+          Kwekucandles will upload and name the video lessons for this track in the Admin Course
+          Studio.
         </p>
         <div className="pt-2">
           <Link className="p-button primary rounded-full" to="/courses">
@@ -3334,10 +3476,7 @@ export function LessonPage() {
                   Next Lesson <Icon name="arrow" />
                 </Button>
               ) : (
-                <Button
-                  variant="secondary"
-                  onClick={() => nav(`/quiz/${activeCourse.slug}`)}
-                >
+                <Button variant="secondary" onClick={() => nav(`/quiz/${activeCourse.slug}`)}>
                   Take Level PDF Quiz <Icon name="arrow" />
                 </Button>
               )}
@@ -3493,8 +3632,7 @@ export function QuizPage() {
     void fetchCoursesWithLessonsFromDb().then(setCourses);
   }, [syncTick]);
 
-  const course =
-    courses.find((c) => c.slug === quizId || c.id === quizId) || courses[0];
+  const course = courses.find((c) => c.slug === quizId || c.id === quizId) || courses[0];
   const generatedQuestions = generateQuizForCourse(course?.slug || "forex-foundations");
 
   const [n, setN] = useState(0);
@@ -3505,13 +3643,11 @@ export function QuizPage() {
   const finished = n >= generatedQuestions.length;
   const score = answers.filter((a, i) => a === generatedQuestions[i]?.correctIndex).length;
   const scorePercent =
-    generatedQuestions.length > 0
-      ? Math.round((score / generatedQuestions.length) * 100)
-      : 0;
+    generatedQuestions.length > 0 ? Math.round((score / generatedQuestions.length) * 100) : 0;
 
   async function handleFinishQuiz(finalAnswers: number[]) {
     const finalScore = finalAnswers.filter(
-      (a, i) => a === generatedQuestions[i]?.correctIndex
+      (a, i) => a === generatedQuestions[i]?.correctIndex,
     ).length;
     setSavingResult(true);
     await recordQuizAttemptInDb(
@@ -3519,7 +3655,7 @@ export function QuizPage() {
       course?.slug || "forex-foundations",
       `${course?.title || "Forex Foundations"} (${course?.level || "Beginner"} PDF Quiz)`,
       finalScore,
-      generatedQuestions.length
+      generatedQuestions.length,
     );
     setSavingResult(false);
   }
@@ -3653,7 +3789,7 @@ export function ProgressPage() {
   const syncTick = usePortalDataSync();
   const [certificates, setCertificates] = useState<StudentCertificateItem[]>([]);
   const [certTemplate, setCertTemplate] = useState<CertificateTemplateConfig>(
-    getCachedCertificateTemplate()
+    getCachedCertificateTemplate(),
   );
   const [previewCert, setPreviewCert] = useState<StudentCertificateItem | null>(null);
   const [downloadingCert, setDownloadingCert] = useState(false);
@@ -3715,11 +3851,7 @@ export function ProgressPage() {
         ctx.fillStyle = "#ffb600";
         ctx.font = "bold 22px Manrope";
         ctx.textAlign = "center";
-        ctx.fillText(
-          "CANDLESTICKS TRADING ACADEMY · OFFICIAL CREDENTIAL",
-          canvas.width / 2,
-          170
-        );
+        ctx.fillText("CANDLESTICKS TRADING ACADEMY · OFFICIAL CREDENTIAL", canvas.width / 2, 170);
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 56px Manrope";
@@ -3741,11 +3873,7 @@ export function ProgressPage() {
       if (certTemplate.showCourseTitle) {
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 28px Manrope";
-        ctx.fillText(
-          `Successfully completed ${cert.courseTitle}`,
-          canvas.width / 2,
-          nameY + 75
-        );
+        ctx.fillText(`Successfully completed ${cert.courseTitle}`, canvas.width / 2, nameY + 75);
       }
 
       // Footer metadata
@@ -3764,7 +3892,7 @@ export function ProgressPage() {
         ctx.fillText(
           `Issued: ${new Date(cert.issuedAt).toLocaleDateString()}`,
           canvas.width * 0.75,
-          footerY
+          footerY,
         );
       }
 
@@ -3802,11 +3930,12 @@ export function ProgressPage() {
               {metrics.overallPercent >= 100
                 ? "All Academy Tracks Completed!"
                 : metrics.overallPercent > 0
-                ? "You're building real trading momentum."
-                : "Start your first video lesson today."}
+                  ? "You're building real trading momentum."
+                  : "Start your first video lesson today."}
             </h2>
             <p>
-              {metrics.completedLessonsCount} of {metrics.totalLessons} lessons complete across 4 learning paths.
+              {metrics.completedLessonsCount} of {metrics.totalLessons} lessons complete across 4
+              learning paths.
             </p>
           </div>
         </Card>
@@ -3861,21 +3990,10 @@ export function ProgressPage() {
             {Array.from({ length: 56 }, (_, i) => {
               const activeThreshold = Math.min(
                 56,
-                metrics.completedLessonsCount * 2 + metrics.quizCount * 3
+                metrics.completedLessonsCount * 2 + metrics.quizCount * 3,
               );
               const isRecent = i >= 56 - activeThreshold;
-              return (
-                <i
-                  className={
-                    isRecent
-                      ? i % 2 === 0
-                        ? "high"
-                        : "mid"
-                      : ""
-                  }
-                  key={i}
-                />
-              );
+              return <i className={isRecent ? (i % 2 === 0 ? "high" : "mid") : ""} key={i} />;
             })}
           </div>
           <h3>Completed Quiz Attempts ({metrics.quizAttempts.length})</h3>
@@ -3921,10 +4039,13 @@ export function ProgressPage() {
           <div className="py-8 text-center space-y-2">
             <Award size={32} className="mx-auto text-[#ffb600]" />
             <p className="text-sm font-bold text-white">
-              Complete a course track &amp; pass its level quiz (70%+) to unlock your verified certificate
+              Complete a course track &amp; pass its level quiz (70%+) to unlock your verified
+              certificate
             </p>
             <p className="text-xs text-[#8c95a6]">
-              Once Kwekucandles issues or approves your certificate from the Admin Console, your personalized certificate with your full name on the official template appears right here for instant download.
+              Once Kwekucandles issues or approves your certificate from the Admin Console, your
+              personalized certificate with your full name on the official template appears right
+              here for instant download.
             </p>
           </div>
         ) : (
@@ -4089,8 +4210,8 @@ export function SessionSchedulePage() {
             {isLiveNow
               ? "● HOST IS LIVE NOW"
               : featured
-              ? `NEXT STREAM IN ${countdownText}`
-              : "NO ACTIVE STREAM"}
+                ? `NEXT STREAM IN ${countdownText}`
+                : "NO ACTIVE STREAM"}
           </Badge>
         }
       />
@@ -4145,16 +4266,14 @@ export function SessionSchedulePage() {
               </span>
             </div>
             {isLiveUnlocked ? (
-              <Link
-                className="p-button primary rounded-full"
-                to={`/sessions/live/${featured.id}`}
-              >
+              <Link className="p-button primary rounded-full" to={`/sessions/live/${featured.id}`}>
                 <Icon name="video" />{" "}
                 {isLiveNow ? "Watch Live Screen Share Now" : "Enter Waiting Room & Live Chat"}
               </Link>
             ) : !subAccess.canAccessLiveStream ? (
               <span className="text-xs text-[#ffb600] font-bold flex items-center gap-1.5">
-                <Lock size={14} /> Free Trial Expired · Upgrade via Moolre ($20/mo) to Watch Live Stream
+                <Lock size={14} /> Free Trial Expired · Upgrade via Moolre ($20/mo) to Watch Live
+                Stream
               </span>
             ) : (
               <span className="text-xs text-[#ffb600] font-bold flex items-center gap-1.5">
@@ -4168,7 +4287,9 @@ export function SessionSchedulePage() {
           <Radio size={32} className="mx-auto text-[#ffb600]" />
           <h2 className="text-lg font-bold text-white">No Live Sessions Scheduled Yet</h2>
           <p className="text-xs text-[#9aa4b5] max-w-lg mx-auto">
-            Only real live sessions scheduled or broadcast by Kwekucandles in the Admin Broadcast Studio appear here. As soon as a session is scheduled or goes live, the countdown and stream room will unlock automatically.
+            Only real live sessions scheduled or broadcast by Kwekucandles in the Admin Broadcast
+            Studio appear here. As soon as a session is scheduled or goes live, the countdown and
+            stream room will unlock automatically.
           </p>
         </Card>
       )}
@@ -4202,7 +4323,9 @@ export function SessionSchedulePage() {
                   </Link>
                 ) : (
                   <Button variant="secondary" disabled>
-                    {!subAccess.canAccessLiveStream ? "Locked ($20/mo Moolre)" : "Locked ($50 Deposit)"}
+                    {!subAccess.canAccessLiveStream
+                      ? "Locked ($20/mo Moolre)"
+                      : "Locked ($50 Deposit)"}
                   </Button>
                 )}
               </Card>
@@ -4405,7 +4528,9 @@ export function LiveRoomPage() {
                       : `Waiting Room Countdown: ${countdownText}`}
                   </div>
                   <p className="text-xs text-[#9aa4b5]">
-                    As soon as Kwekucandles clicks &ldquo;Share Screen &amp; Go Live&rdquo; or starts the RTMP stream in the Admin Studio, the live video feed appears right here automatically.
+                    As soon as Kwekucandles clicks &ldquo;Share Screen &amp; Go Live&rdquo; or
+                    starts the RTMP stream in the Admin Studio, the live video feed appears right
+                    here automatically.
                   </p>
                 </div>
               </div>
@@ -4442,9 +4567,7 @@ export function LiveRoomPage() {
                 <span className="text-[10px] font-mono uppercase text-[#ffb600] block">
                   📌 PINNED BY HOST
                 </span>
-                <span className="text-white">
-                  {chatMessages.find((m) => m.isPinned)?.message}
-                </span>
+                <span className="text-white">{chatMessages.find((m) => m.isPinned)?.message}</span>
               </div>
             )}
 
@@ -4561,8 +4684,12 @@ export function TradesPage() {
   const [trades, setTrades] = useState<StudentTradeItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [directionFilter, setDirectionFilter] = useState<"ALL" | "BUY" | "SELL">("ALL");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "OPEN" | "PARTIAL TP" | "WIN" | "LOSS">("ALL");
-  const [sourceFilter, setSourceFilter] = useState<"ALL" | "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL">("ALL");
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "OPEN" | "PARTIAL TP" | "WIN" | "LOSS">(
+    "ALL",
+  );
+  const [sourceFilter, setSourceFilter] = useState<
+    "ALL" | "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL"
+  >("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const [syncingExness, setSyncingExness] = useState(false);
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
@@ -4601,7 +4728,7 @@ export function TradesPage() {
     setSyncMsg(
       res.synced > 0
         ? "Synced latest Exness Partner trading volume & rebate records into your trade ledger!"
-        : "Your Exness Partner trade feed is up to date."
+        : "Your Exness Partner trade feed is up to date.",
     );
     setTimeout(() => setSyncMsg(null), 4000);
   }
@@ -4656,8 +4783,7 @@ export function TradesPage() {
   const totalPnl = trades.reduce((acc, t) => acc + t.pnlUsd, 0);
   const closedTrades = trades.filter((t) => t.status === "WIN" || t.status === "LOSS");
   const winCount = closedTrades.filter((t) => t.status === "WIN" || t.pnlUsd > 0).length;
-  const winRate =
-    closedTrades.length > 0 ? Math.round((winCount / closedTrades.length) * 100) : 0;
+  const winRate = closedTrades.length > 0 ? Math.round((winCount / closedTrades.length) * 100) : 0;
   const openCount = trades.filter((t) => t.status === "OPEN").length;
   const totalLots = trades.reduce((acc, t) => acc + (t.lots || 0), 0);
 
@@ -4736,9 +4862,7 @@ export function TradesPage() {
             <select
               value={statusFilter}
               onChange={(e) =>
-                setStatusFilter(
-                  e.target.value as "ALL" | "OPEN" | "PARTIAL TP" | "WIN" | "LOSS"
-                )
+                setStatusFilter(e.target.value as "ALL" | "OPEN" | "PARTIAL TP" | "WIN" | "LOSS")
               }
             >
               <option value="ALL">All Outcomes</option>
@@ -4750,9 +4874,7 @@ export function TradesPage() {
             <select
               value={sourceFilter}
               onChange={(e) =>
-                setSourceFilter(
-                  e.target.value as "ALL" | "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL"
-                )
+                setSourceFilter(e.target.value as "ALL" | "EXNESS_SYNC" | "SIGNAL_COPY" | "MANUAL")
               }
             >
               <option value="ALL">All Sources</option>
@@ -4781,7 +4903,9 @@ export function TradesPage() {
               {paginatedTrades.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="text-center py-10 text-xs text-[#8c95a6]">
-                    No trades copied or synced from your Exness account yet. Click &ldquo;Copy &amp; Log Trade&rdquo; on any VIP Signal or &ldquo;Sync Exness Partner Feed&rdquo; above.
+                    No trades copied or synced from your Exness account yet. Click &ldquo;Copy &amp;
+                    Log Trade&rdquo; on any VIP Signal or &ldquo;Sync Exness Partner Feed&rdquo;
+                    above.
                   </td>
                 </tr>
               ) : (
@@ -4804,17 +4928,13 @@ export function TradesPage() {
                       </div>
                     </td>
                     <td>
-                      <Badge tone={t.direction === "BUY" ? "green" : "red"}>
-                        {t.direction}
-                      </Badge>
+                      <Badge tone={t.direction === "BUY" ? "green" : "red"}>{t.direction}</Badge>
                     </td>
                     <td className="font-mono font-bold text-white">{t.lots.toFixed(2)}</td>
                     <td className="font-mono">
                       <div>{t.openPrice}</div>
                       {t.customSl && (
-                        <small className="block text-[10px] text-red-400">
-                          SL: {t.customSl}
-                        </small>
+                        <small className="block text-[10px] text-red-400">SL: {t.customSl}</small>
                       )}
                     </td>
                     <td className="font-mono">
@@ -4826,29 +4946,17 @@ export function TradesPage() {
                       )}
                     </td>
                     <td
-                      className={`font-mono font-bold ${
-                        t.pnlUsd >= 0 ? "positive" : "negative"
-                      }`}
+                      className={`font-mono font-bold ${t.pnlUsd >= 0 ? "positive" : "negative"}`}
                     >
                       {t.pnlUsd >= 0 ? "+" : "-"}${Math.abs(t.pnlUsd).toFixed(2)}
                     </td>
-                    <td
-                      className={`font-mono ${
-                        t.returnPct >= 0 ? "positive" : "negative"
-                      }`}
-                    >
+                    <td className={`font-mono ${t.returnPct >= 0 ? "positive" : "negative"}`}>
                       {t.returnPct >= 0 ? "+" : ""}
                       {t.returnPct.toFixed(2)}%
                     </td>
                     <td>
                       <Badge
-                        tone={
-                          t.status === "WIN"
-                            ? "green"
-                            : t.status === "LOSS"
-                            ? "red"
-                            : "yellow"
-                        }
+                        tone={t.status === "WIN" ? "green" : t.status === "LOSS" ? "red" : "yellow"}
                       >
                         {t.status}
                       </Badge>
@@ -4980,9 +5088,7 @@ export function TradesPage() {
                   Status
                   <select
                     value={tradeStatus}
-                    onChange={(e) =>
-                      setTradeStatus(e.target.value as "WIN" | "LOSS" | "OPEN")
-                    }
+                    onChange={(e) => setTradeStatus(e.target.value as "WIN" | "LOSS" | "OPEN")}
                     className="w-full bg-[#151922] border border-white/10 rounded-xl px-3 py-2 text-white text-xs mt-1"
                   >
                     <option value="WIN">WIN</option>
@@ -5056,7 +5162,7 @@ function CopySignalToExnessModal({
       status: "OPEN",
       source: "SIGNAL_COPY",
       notes: `Copied ${signal.pair} (${signal.direction}) · ${lotsNum.toFixed(
-        2
+        2,
       )} Lots · Target ${selectedTpLabel} (${customTpPrice}) · SL ${customSlPrice}`,
     });
 
@@ -5068,8 +5174,8 @@ function CopySignalToExnessModal({
 
     onCopied(
       `Copied ${signal.pair} (${signal.direction} · ${lotsNum.toFixed(
-        2
-      )} Lots · Target TP: ${customTpPrice} · SL: ${customSlPrice}) to your Exness Trade Ledger!`
+        2,
+      )} Lots · Target TP: ${customTpPrice} · SL: ${customSlPrice}) to your Exness Trade Ledger!`,
     );
   }
 
@@ -5083,12 +5189,11 @@ function CopySignalToExnessModal({
             </span>
             <h2 className="text-xl font-extrabold text-white mt-1 flex items-center gap-2">
               <span>Copy {signal.pair}</span>
-              <Badge tone={signal.direction === "BUY" ? "green" : "red"}>
-                {signal.direction}
-              </Badge>
+              <Badge tone={signal.direction === "BUY" ? "green" : "red"}>{signal.direction}</Badge>
             </h2>
             <p className="text-xs text-[#9aa4b5] mt-1">
-              Customize your Lot Size, Take-Profit (TP), and Stop-Loss (SL) before copying this setup to your linked Exness account (
+              Customize your Lot Size, Take-Profit (TP), and Stop-Loss (SL) before copying this
+              setup to your linked Exness account (
               <strong className="text-white font-mono">
                 {student.exnessId ? `••••${student.exnessId.slice(-4)}` : "Linked"}
               </strong>
@@ -5224,7 +5329,8 @@ function CopySignalToExnessModal({
               className="accent-[#ffb600] w-4 h-4"
             />
             <span>
-              Also open <strong>Exness WebTerminal</strong> in a new tab to place this live order on account{" "}
+              Also open <strong>Exness WebTerminal</strong> in a new tab to place this live order on
+              account{" "}
               <code className="text-[#ffb600]">
                 {student.exnessId ? `••••${student.exnessId.slice(-4)}` : "Exness"}
               </code>
@@ -5252,9 +5358,7 @@ export function SignalFeedPage() {
   const student = useCurrentStudent();
   const syncTick = usePortalDataSync();
   const [signals, setSignals] = useState<TradingSignalItem[]>(getCachedSignals());
-  const [marketPrices, setMarketPrices] = useState<Record<string, number>>(
-    getCachedMarketPrices()
-  );
+  const [marketPrices, setMarketPrices] = useState<Record<string, number>>(getCachedMarketPrices());
   const [syncingPrices, setSyncingPrices] = useState(false);
   const [tab, setTab] = useState<"ALL" | "ACTIVE" | "CLOSED" | "WINS">("ALL");
   const [copy, setCopy] = useState(student.autoCopySignals ?? true);
@@ -5285,7 +5389,7 @@ export function SignalFeedPage() {
   }
 
   const activeSignalsCount = signals.filter(
-    (s) => s.status === "ACTIVE" || s.status === "PARTIAL TP"
+    (s) => s.status === "ACTIVE" || s.status === "PARTIAL TP",
   ).length;
 
   const filteredSignals = signals.filter((s) => {
@@ -5304,7 +5408,7 @@ export function SignalFeedPage() {
   const lotCalc = calculateLotSize(
     Number(calcBalance) || 500,
     Number(calcRiskPct) || 1,
-    Number(calcStopPips) || 30
+    Number(calcStopPips) || 30,
   );
 
   return (
@@ -5362,7 +5466,7 @@ export function SignalFeedPage() {
                 >
                   {sym}: <strong className="text-white">{marketPrices[sym]}</strong>
                 </span>
-              ) : null
+              ) : null,
             )}
           </div>
         </div>
@@ -5523,7 +5627,8 @@ export function SignalFeedPage() {
           <Target size={30} className="mx-auto text-[#ffb600]" />
           <h3 className="text-base font-bold text-white">No Signals Posted by Admin Yet</h3>
           <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-            Only real signals posted by Kwekucandles in the Admin Console appear here. When a signal is posted, its live market price and TP1–TP5 targets will track automatically.
+            Only real signals posted by Kwekucandles in the Admin Console appear here. When a signal
+            is posted, its live market price and TP1–TP5 targets will track automatically.
           </p>
         </Card>
       ) : (
@@ -5543,18 +5648,18 @@ export function SignalFeedPage() {
                 <div>
                   <span className="flex flex-wrap items-center gap-2">
                     <h2>{s.pair}</h2>
-                    <Badge tone={s.direction === "BUY" ? "green" : "red"}>
-                      {s.direction}
-                    </Badge>
+                    <Badge tone={s.direction === "BUY" ? "green" : "red"}>{s.direction}</Badge>
                     <Badge
                       tone={
-                        s.status === "ALL TPS HIT" || s.status === "ALL TP HIT" || s.status === "HIT TP"
+                        s.status === "ALL TPS HIT" ||
+                        s.status === "ALL TP HIT" ||
+                        s.status === "HIT TP"
                           ? "green"
                           : s.status === "PARTIAL TP"
-                          ? "yellow"
-                          : s.status === "HIT SL"
-                          ? "red"
-                          : "yellow"
+                            ? "yellow"
+                            : s.status === "HIT SL"
+                              ? "red"
+                              : "yellow"
                       }
                     >
                       {s.status}
@@ -5673,7 +5778,7 @@ export function SignalDetailPage() {
   const lotCalc = calculateLotSize(
     student.accountBalanceUsd || 500,
     student.riskPerTradePct || 1,
-    30
+    30,
   );
 
   if (!isDepositCompleted) {
@@ -5724,8 +5829,7 @@ export function SignalDetailPage() {
               VIP SIGNAL · {s.timeframe} · {new Date(s.createdAt).toLocaleString()}
             </p>
             <h1>
-              {s.pair}{" "}
-              <Badge tone={s.direction === "BUY" ? "green" : "red"}>{s.direction}</Badge>
+              {s.pair} <Badge tone={s.direction === "BUY" ? "green" : "red"}>{s.direction}</Badge>
             </h1>
           </span>
         </div>
@@ -5735,8 +5839,8 @@ export function SignalDetailPage() {
               s.status === "ALL TPS HIT" || s.status === "ALL TP HIT" || s.status === "HIT TP"
                 ? "green"
                 : s.status === "HIT SL"
-                ? "red"
-                : "yellow"
+                  ? "red"
+                  : "yellow"
             }
           >
             {s.status}
@@ -5790,9 +5894,7 @@ export function SignalDetailPage() {
                   <span className="text-[10px] font-mono uppercase text-[#ffb600] block">
                     {lvl.label}
                   </span>
-                  <strong className="text-sm font-mono font-bold block mt-0.5">
-                    {lvl.price}
-                  </strong>
+                  <strong className="text-sm font-mono font-bold block mt-0.5">{lvl.price}</strong>
                   <small className="text-[10px] font-mono block mt-1">
                     {lvl.hit ? "✓ TARGET HIT" : "ACTIVE TARGET"}
                   </small>
@@ -5829,7 +5931,8 @@ export function SignalDetailPage() {
             <blockquote>
               Recommended Position Size for your ${student.accountBalanceUsd || 500} equity at{" "}
               {student.riskPerTradePct || 1}% risk:{" "}
-              <strong className="text-[#ffb600]">{lotCalc.recommendedLots} Lots</strong> (${lotCalc.riskUsd} max risk).
+              <strong className="text-[#ffb600]">{lotCalc.recommendedLots} Lots</strong> ($
+              {lotCalc.riskUsd} max risk).
             </blockquote>
           </Card>
         </div>
@@ -5906,7 +6009,9 @@ export function Mentorship1on1Page() {
                   Welcome to 1-on-1 VIP Mentorship, {student.fullName.split(" ")[0] || "Trader"}
                 </h2>
                 <p className="text-xs text-[#9aa4b5] max-w-2xl">
-                  Kwekucandles schedules your private 1-on-1 live trading and strategy sessions from the Admin Console. As soon as a session is scheduled for you, it appears below with your direct meeting room link and trading focus.
+                  Kwekucandles schedules your private 1-on-1 live trading and strategy sessions from
+                  the Admin Console. As soon as a session is scheduled for you, it appears below
+                  with your direct meeting room link and trading focus.
                 </p>
               </div>
               <Badge tone="green">{sessions.length} SCHEDULED SESSIONS</Badge>
@@ -5920,7 +6025,9 @@ export function Mentorship1on1Page() {
                 No 1-on-1 Mentorship Sessions Scheduled Yet
               </h3>
               <p className="text-xs text-[#9aa4b5] max-w-md mx-auto">
-                Your $100 Permanent VIP status is active! Kwekucandles will schedule your upcoming 1-on-1 live trading session from the Admin Console, and you will receive an instant notification bell alert when your slot is posted.
+                Your $100 Permanent VIP status is active! Kwekucandles will schedule your upcoming
+                1-on-1 live trading session from the Admin Console, and you will receive an instant
+                notification bell alert when your slot is posted.
               </p>
             </Card>
           ) : (
@@ -5930,18 +6037,14 @@ export function Mentorship1on1Page() {
                   <div className="flex items-center justify-between gap-2">
                     <Badge
                       tone={
-                        s.status === "live"
-                          ? "green"
-                          : s.status === "completed"
-                          ? "gray"
-                          : "yellow"
+                        s.status === "live" ? "green" : s.status === "completed" ? "gray" : "yellow"
                       }
                     >
                       {s.status === "live"
                         ? "● LIVE 1-ON-1 NOW"
                         : s.status === "completed"
-                        ? "COMPLETED"
-                        : "SCHEDULED 1-ON-1"}
+                          ? "COMPLETED"
+                          : "SCHEDULED 1-ON-1"}
                     </Badge>
                     <span className="text-xs font-mono text-[#ffb600] font-bold">
                       {s.focusPair} · {s.durationMinutes} mins
@@ -5989,7 +6092,7 @@ export function AccountManagementPage() {
   const subAccess = getStudentSubscriptionAccess(student);
 
   const [contractTemplate, setContractTemplate] = useState<AccountManagementContractTemplate>(
-    getCachedContractTemplate()
+    getCachedContractTemplate(),
   );
   const [existingSig, setExistingSig] = useState<SignedAccountManagementContract | null>(null);
   const [exnessTradingId, setExnessTradingId] = useState(student.exnessId || "");
@@ -6004,9 +6107,7 @@ export function AccountManagementPage() {
   useEffect(() => {
     void fetchContractTemplateFromDb().then(setContractTemplate);
     void fetchSignedContractsFromDb().then((list) => {
-      const found = list.find(
-        (c) => c.studentEmail.toLowerCase() === student.email.toLowerCase()
-      );
+      const found = list.find((c) => c.studentEmail.toLowerCase() === student.email.toLowerCase());
       setExistingSig(found || null);
       if (found?.exnessTradingAccountId) {
         setExnessTradingId(found.exnessTradingAccountId);
@@ -6026,13 +6127,15 @@ export function AccountManagementPage() {
       student.depositAmount >= 500 ||
       (student.accountBalanceUsd ?? 0) >= 500
     ) {
-      setFeedback("Your $500+ USD Exness deposit is confirmed! You can now sign the Account Management Contract below.");
+      setFeedback(
+        "Your $500+ USD Exness deposit is confirmed! You can now sign the Account Management Contract below.",
+      );
     } else {
       setFeedback(
         `Current verified Exness deposit/equity is $${Math.max(
           student.depositAmount || 0,
-          student.accountBalanceUsd || 0
-        )} USD. Fund your Exness account to at least $500 USD or ask Admin to confirm your $500 deposit.`
+          student.accountBalanceUsd || 0,
+        )} USD. Fund your Exness account to at least $500 USD or ask Admin to confirm your $500 deposit.`,
       );
     }
   }
@@ -6045,7 +6148,11 @@ export function AccountManagementPage() {
       studentEmail: student.email,
       studentName: student.fullName,
       exnessTradingAccountId: exnessTradingId.trim(),
-      depositAmountUsd: Math.max(500, student.depositAmount || 500, student.accountBalanceUsd || 500),
+      depositAmountUsd: Math.max(
+        500,
+        student.depositAmount || 500,
+        student.accountBalanceUsd || 500,
+      ),
       digitalSignature: typedSignature.trim(),
       contractVersionTitle: contractTemplate.title,
       contractSnapshotText: contractTemplate.extractedText,
@@ -6053,7 +6160,7 @@ export function AccountManagementPage() {
     setExistingSig(signed);
     setSubmittingSig(false);
     setFeedback(
-      "Contract digitally signed & saved! Admin has been notified with your Exness Trading Account ID."
+      "Contract digitally signed & saved! Admin has been notified with your Exness Trading Account ID.",
     );
   }
 
@@ -6081,8 +6188,8 @@ export function AccountManagementPage() {
             {existingSig
               ? "✓ CONTRACT SIGNED"
               : is500DepositConfirmed
-              ? "$500 DEPOSIT CONFIRMED"
-              : "AWAITING $500 DEPOSIT"}
+                ? "$500 DEPOSIT CONFIRMED"
+                : "AWAITING $500 DEPOSIT"}
           </Badge>
         }
       />
@@ -6113,7 +6220,10 @@ export function AccountManagementPage() {
                     : "Fund Your Exness Account with $500+ USD to Unlock the Digital Contract"}
                 </h2>
                 <p className="text-xs text-[#9aa4b5] max-w-2xl">
-                  To qualify for hands-free Account Management and Profit Split ({contractTemplate.profitSplitLabel}), your linked Exness account must hold at least <strong>$500 USD</strong> (verified via Exness Partner API sync or Admin confirmation).
+                  To qualify for hands-free Account Management and Profit Split (
+                  {contractTemplate.profitSplitLabel}), your linked Exness account must hold at
+                  least <strong>$500 USD</strong> (verified via Exness Partner API sync or Admin
+                  confirmation).
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2.5 shrink-0">
@@ -6168,9 +6278,7 @@ export function AccountManagementPage() {
                       {new Date(existingSig.signedAt).toLocaleString()}
                     </h3>
                   </div>
-                  <Badge tone="green">
-                    EXNESS ID: {existingSig.exnessTradingAccountId}
-                  </Badge>
+                  <Badge tone="green">EXNESS ID: {existingSig.exnessTradingAccountId}</Badge>
                 </div>
 
                 <p className="text-xs text-[#cfd7e4]">
@@ -6182,7 +6290,8 @@ export function AccountManagementPage() {
                 </p>
 
                 {/* If Admin requested Trading Password or Student wants to provide it */}
-                {(existingSig.passwordRequestedByAdmin || !existingSig.tradingPasswordSubmitted) && (
+                {(existingSig.passwordRequestedByAdmin ||
+                  !existingSig.tradingPasswordSubmitted) && (
                   <form
                     onSubmit={handleSendTradingPassword}
                     className="p-4 rounded-xl bg-[#0d111a] border border-[#ffb600]/40 space-y-3"
@@ -6217,7 +6326,9 @@ export function AccountManagementPage() {
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 flex items-center gap-3">
                 <Lock size={18} className="text-[#ffb600] shrink-0" />
                 <span>
-                  Digital Signature is locked until your <strong>$500 USD Exness deposit</strong> is confirmed. Once your $500 deposit is verified by Exness Partner Sync or Admin, the signature box below unlocks immediately.
+                  Digital Signature is locked until your <strong>$500 USD Exness deposit</strong> is
+                  confirmed. Once your $500 deposit is verified by Exness Partner Sync or Admin, the
+                  signature box below unlocks immediately.
                 </span>
               </div>
             ) : (
@@ -6269,7 +6380,10 @@ export function AccountManagementPage() {
                   />
                   <span>
                     I have read and agree to the fixed, non-negotiable{" "}
-                    <strong>{contractTemplate.title}</strong> ({contractTemplate.profitSplitLabel}), confirm that my Exness account holds at least $500 USD, and authorize Kwekucandles to request my trading password to manage the account and split profits.
+                    <strong>{contractTemplate.title}</strong> ({contractTemplate.profitSplitLabel}),
+                    confirm that my Exness account holds at least $500 USD, and authorize
+                    Kwekucandles to request my trading password to manage the account and split
+                    profits.
                   </span>
                 </label>
 
@@ -6415,8 +6529,8 @@ export function AdminDashboardPage() {
                 {s.depositVerified
                   ? "Exness $50 deposit confirmed · Full access"
                   : s.partnerLinked
-                  ? "Exness partner link verified"
-                  : "Registered on portal"}
+                    ? "Exness partner link verified"
+                    : "Registered on portal"}
               </p>
               <small>{s.country}</small>
             </div>
@@ -6449,12 +6563,7 @@ export function StudentRosterPage() {
 
   async function handleIssueCertificate(courseSlug: string, courseTitle: string) {
     if (!selected) return;
-    await issueStudentCertificateInDb(
-      selected.email,
-      selected.fullName,
-      courseSlug,
-      courseTitle
-    );
+    await issueStudentCertificateInDb(selected.email, selected.fullName, courseSlug, courseTitle);
     const updated = await fetchStudentCertificatesFromDb(selected.email);
     setStudentCerts(updated);
     setCertFeedback(`Issued verified "${courseTitle}" certificate to ${selected.fullName}!`);
@@ -6473,7 +6582,7 @@ export function StudentRosterPage() {
       !search.trim() ||
       s.fullName.toLowerCase().includes(search.toLowerCase()) ||
       s.email.toLowerCase().includes(search.toLowerCase()) ||
-      (s.country || "").toLowerCase().includes(search.toLowerCase())
+      (s.country || "").toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -6543,16 +6652,12 @@ export function StudentRosterPage() {
                       {s.partnerLinked
                         ? "VERIFIED"
                         : s.ticketStatus === "submitted"
-                        ? "TICKET SENT"
-                        : "UNLINKED"}
+                          ? "TICKET SENT"
+                          : "UNLINKED"}
                     </Badge>
                   </td>
                   <td>
-                    <strong
-                      className={
-                        s.depositAmount >= 50 ? "text-[#ffb600]" : "text-[#9aa4b5]"
-                      }
-                    >
+                    <strong className={s.depositAmount >= 50 ? "text-[#ffb600]" : "text-[#9aa4b5]"}>
                       ${s.depositAmount.toFixed(2)}
                     </strong>
                   </td>
@@ -6736,7 +6841,7 @@ export function VerificationPage() {
             partner_code: "qgcrue4rqj",
             status: "submitted",
             submitted_at: t.submittedAt,
-          }))
+          })),
         );
       }
     } catch {
@@ -6799,7 +6904,7 @@ export function VerificationPage() {
     }
     setCheckingTicket(null);
     setTicketActionFeedback(
-      `Account #${ticket.trading_account_id} approved as connected under Partner Code ${config.partnerCode}!`
+      `Account #${ticket.trading_account_id} approved as connected under Partner Code ${config.partnerCode}!`,
     );
     await loadTransferTickets();
     const updated = await refreshRosterFromSupabase();
@@ -6888,7 +6993,9 @@ export function VerificationPage() {
             className="bg-[#ffb600] text-black font-extrabold text-xs uppercase tracking-wider px-5 py-3 rounded-full hover:bg-[#ffc833] transition cursor-pointer flex items-center gap-2 disabled:opacity-60"
           >
             <RefreshCw size={14} className={refreshingLiveExness ? "animate-spin" : ""} />
-            {refreshingLiveExness ? "Syncing External Accounts..." : "Sync External Exness Partner Accounts"}
+            {refreshingLiveExness
+              ? "Syncing External Accounts..."
+              : "Sync External Exness Partner Accounts"}
           </button>
         }
       />
@@ -6901,7 +7008,8 @@ export function VerificationPage() {
               public.exness_partner_clients · PARTNER ACCOUNT #{OFFICIAL_PARTNER_ACCOUNT_ID}
             </span>
             <h3 className="text-lg font-bold text-white mt-0.5">
-              Synced Exness Partner Trading Accounts ({EXNESS_PARTNER_CLIENTS.length} Trading Accounts · {EXNESS_PARTNER_TOTALS.count} Clients)
+              Synced Exness Partner Trading Accounts ({EXNESS_PARTNER_CLIENTS.length} Trading
+              Accounts · {EXNESS_PARTNER_TOTALS.count} Clients)
             </h3>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
@@ -7187,7 +7295,8 @@ export function VerificationPage() {
         <span>
           <h3>Student Partner &amp; Deposit Verification Roster</h3>
           <p>
-            Verify whether new sign-ups are registered under Partner Code {config.partnerCode} and confirm their $50 deposit.
+            Verify whether new sign-ups are registered under Partner Code {config.partnerCode} and
+            confirm their $50 deposit.
           </p>
         </span>
         <b>
@@ -7231,8 +7340,8 @@ export function VerificationPage() {
                       {s.partnerLinked
                         ? "VERIFIED"
                         : s.ticketStatus === "submitted"
-                        ? "TICKET SENT"
-                        : "UNLINKED"}
+                          ? "TICKET SENT"
+                          : "UNLINKED"}
                     </Badge>
                   </td>
                   <td>
@@ -7295,7 +7404,7 @@ export function SignalFormPage() {
   const [tp5, setTp5] = useState("");
   const [rr, setRr] = useState("1 : 2.8");
   const [commentary, setCommentary] = useState(
-    "London liquidity sweep followed by M15 bullish market structure shift (MSS) and displacement."
+    "London liquidity sweep followed by M15 bullish market structure shift (MSS) and displacement.",
   );
   const [publishing, setPublishing] = useState(false);
   const [modal, setModal] = useState(false);
@@ -7539,12 +7648,14 @@ export function SignalFormPage() {
             <Icon name="check" /> Syncs to <code>public.trading_signals</code> with TP1–TP5 targets
           </p>
           <p>
-            <Icon name="check" /> Auto-notifies student Alert Bells when published &amp; when each TP hits
+            <Icon name="check" /> Auto-notifies student Alert Bells when published &amp; when each
+            TP hits
           </p>
           <div>
             <Icon name="trades" />
             <span>
-              <b>Exness Copy &amp; Custom TP Ready</b>Students can select any TP or set custom TP &amp; Lot Size.
+              <b>Exness Copy &amp; Custom TP Ready</b>Students can select any TP or set custom TP
+              &amp; Lot Size.
             </span>
           </div>
           <Button type="submit">Review &amp; Publish Signal</Button>
@@ -7582,7 +7693,8 @@ export function SignalFormPage() {
               {signals.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-8 text-xs text-[#8f98a8]">
-                    No signals posted yet. Publish your first signal above to broadcast it to all client dashboards.
+                    No signals posted yet. Publish your first signal above to broadcast it to all
+                    client dashboards.
                   </td>
                 </tr>
               ) : (
@@ -7590,7 +7702,14 @@ export function SignalFormPage() {
                   const tpList =
                     s.tpLevels && s.tpLevels.length > 0
                       ? s.tpLevels
-                      : [{ level: 1, label: "TP1", price: s.tp, hit: s.status === "ALL TP HIT" || s.status === "HIT TP" }];
+                      : [
+                          {
+                            level: 1,
+                            label: "TP1",
+                            price: s.tp,
+                            hit: s.status === "ALL TP HIT" || s.status === "HIT TP",
+                          },
+                        ];
                   const mktPrice = livePrices[s.pair] || s.lastMarketPrice;
 
                   return (
@@ -7605,8 +7724,12 @@ export function SignalFormPage() {
                         <Badge tone={s.direction === "BUY" ? "green" : "red"}>{s.direction}</Badge>
                       </td>
                       <td className="font-mono text-xs">
-                        <div>Entry: <strong className="text-white">{s.entry}</strong></div>
-                        <div>SL: <span className="text-red-400">{s.sl}</span></div>
+                        <div>
+                          Entry: <strong className="text-white">{s.entry}</strong>
+                        </div>
+                        <div>
+                          SL: <span className="text-red-400">{s.sl}</span>
+                        </div>
                       </td>
                       <td>
                         <div className="flex flex-wrap gap-1.5">
@@ -7616,7 +7739,7 @@ export function SignalFormPage() {
                               type="button"
                               onClick={() =>
                                 void triggerSignalTpLevelInDb(s.id, lvl.level, !lvl.hit).then(() =>
-                                  fetchSignalsFromDb().then(setSignals)
+                                  fetchSignalsFromDb().then(setSignals),
                                 )
                               }
                               className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold border transition cursor-pointer ${
@@ -7637,12 +7760,12 @@ export function SignalFormPage() {
                             s.status === "ACTIVE"
                               ? "yellow"
                               : s.status === "ALL TP HIT" ||
-                                s.status === "HIT TP" ||
-                                s.status === "PARTIAL TP"
-                              ? "green"
-                              : s.status === "HIT SL"
-                              ? "red"
-                              : "gray"
+                                  s.status === "HIT TP" ||
+                                  s.status === "PARTIAL TP"
+                                ? "green"
+                                : s.status === "HIT SL"
+                                  ? "red"
+                                  : "gray"
                           }
                         >
                           {s.status}
@@ -7650,31 +7773,31 @@ export function SignalFormPage() {
                       </td>
                       <td>
                         <div className="flex flex-wrap items-center gap-1.5">
-                          {(["ACTIVE", "PARTIAL TP", "ALL TP HIT", "HIT SL", "CLOSED"] as const).map(
-                            (st) => (
-                              <button
-                                key={st}
-                                type="button"
-                                onClick={() =>
-                                  void updateSignalStatusInDb(s.id, st).then(() =>
-                                    fetchSignalsFromDb().then(setSignals)
-                                  )
-                                }
-                                className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer ${
-                                  s.status === st
-                                    ? "bg-[#ffb600] text-black"
-                                    : "bg-white/10 text-white hover:bg-white/15"
-                                }`}
-                              >
-                                {st}
-                              </button>
-                            )
-                          )}
+                          {(
+                            ["ACTIVE", "PARTIAL TP", "ALL TP HIT", "HIT SL", "CLOSED"] as const
+                          ).map((st) => (
+                            <button
+                              key={st}
+                              type="button"
+                              onClick={() =>
+                                void updateSignalStatusInDb(s.id, st).then(() =>
+                                  fetchSignalsFromDb().then(setSignals),
+                                )
+                              }
+                              className={`px-2 py-1 rounded text-[10px] font-bold cursor-pointer ${
+                                s.status === st
+                                  ? "bg-[#ffb600] text-black"
+                                  : "bg-white/10 text-white hover:bg-white/15"
+                              }`}
+                            >
+                              {st}
+                            </button>
+                          ))}
                           <button
                             type="button"
                             onClick={() =>
                               void deleteSignalFromDb(s.id).then(() =>
-                                fetchSignalsFromDb().then(setSignals)
+                                fetchSignalsFromDb().then(setSignals),
                               )
                             }
                             className="px-2 py-1 rounded bg-red-500/20 text-red-300 text-[10px] font-bold cursor-pointer"
@@ -7702,7 +7825,8 @@ export function SignalFormPage() {
                 </i>
                 <h2>Signal Published &amp; Alerts Sent!</h2>
                 <p>
-                  {pair} ({direction}) with {configuredTpLevels.length} TP target(s) is now live on the Student Overview, VIP Signal Feed, and Topbar Alert Bell.
+                  {pair} ({direction}) with {configuredTpLevels.length} TP target(s) is now live on
+                  the Student Overview, VIP Signal Feed, and Topbar Alert Bell.
                 </p>
                 <div className="flex justify-center gap-3">
                   <Button onClick={() => setModal(false)}>Done</Button>
@@ -7721,7 +7845,8 @@ export function SignalFormPage() {
                 </h2>
                 <p>
                   Entry: {entry} · SL: {sl} · Targets:{" "}
-                  {configuredTpLevels.map((t) => `${t.label} ${t.price}`).join(" / ")} ({rr}). This immediately updates all student dashboards and triggers a notification alert.
+                  {configuredTpLevels.map((t) => `${t.label} ${t.price}`).join(" / ")} ({rr}). This
+                  immediately updates all student dashboards and triggers a notification alert.
                 </p>
                 <div>
                   <Button variant="secondary" onClick={() => setModal(false)}>
@@ -7747,7 +7872,7 @@ export function PaymentsPage() {
   const [payments, setPayments] = useState<MoolrePaymentRecord[]>(getCachedMoolrePayments());
   const [sessions1on1, setSessions1on1] = useState<MentorshipSession1on1Item[]>([]);
   const [contractTemplate, setContractTemplate] = useState<AccountManagementContractTemplate>(
-    getCachedContractTemplate()
+    getCachedContractTemplate(),
   );
   const [signedContracts, setSignedContracts] = useState<SignedAccountManagementContract[]>([]);
   const [merchClaims, setMerchClaims] = useState<MerchClaimItem[]>([]);
@@ -7763,11 +7888,11 @@ export function PaymentsPage() {
   const [topic1on1, setTopic1on1] = useState("Private 1-on-1 London/NY Institutional Execution");
   const [pair1on1, setPair1on1] = useState("XAU / USD · EUR / USD");
   const [date1on1, setDate1on1] = useState(
-    new Date(Date.now() + 86400000).toISOString().slice(0, 16)
+    new Date(Date.now() + 86400000).toISOString().slice(0, 16),
   );
   const [duration1on1, setDuration1on1] = useState("60");
   const [notes1on1, setNotes1on1] = useState(
-    "Bring your trade journal and linked Exness account for live chart breakdown."
+    "Bring your trade journal and linked Exness account for live chart breakdown.",
   );
 
   useEffect(() => {
@@ -7828,7 +7953,7 @@ export function PaymentsPage() {
     const saved = await saveContractTemplateInDb(nextTemplate);
     setContractTemplate(saved);
     showNotice(
-      `Uploaded "${file.name}" and extracted fixed contract terms (${text.length} chars) for student digital signature!`
+      `Uploaded "${file.name}" and extracted fixed contract terms (${text.length} chars) for student digital signature!`,
     );
   }
 
@@ -7951,8 +8076,8 @@ export function PaymentsPage() {
                               access.effectiveTier === "monthly_20"
                                 ? "green"
                                 : access.effectiveTier === "free_trial"
-                                ? "yellow"
-                                : "red"
+                                  ? "yellow"
+                                  : "red"
                             }
                           >
                             {access.tierLabel}
@@ -7970,13 +8095,11 @@ export function PaymentsPage() {
                             onClick={() => {
                               updateStudentTierInStore(s.email, {
                                 accountManagementDepositVerified: !has500,
-                                depositAmount: !has500
-                                  ? Math.max(500, s.depositAmount || 500)
-                                  : 50,
+                                depositAmount: !has500 ? Math.max(500, s.depositAmount || 500) : 50,
                               });
                               setRoster(getStoredRoster());
                               showNotice(
-                                `${!has500 ? "Confirmed" : "Revoked"} $500 Exness Account Management deposit for ${s.fullName}`
+                                `${!has500 ? "Confirmed" : "Revoked"} $500 Exness Account Management deposit for ${s.fullName}`,
                               );
                             }}
                             className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold border cursor-pointer ${
@@ -8000,14 +8123,14 @@ export function PaymentsPage() {
                                   nextTier === "free_trial"
                                     ? new Date(now.getTime() + 30 * 86400000).toISOString()
                                     : nextTier === "expired_free"
-                                    ? new Date(now.getTime() - 86400000).toISOString()
-                                    : s.trialEndsAt,
+                                      ? new Date(now.getTime() - 86400000).toISOString()
+                                      : s.trialEndsAt,
                                 subscriptionEndsAt:
                                   nextTier === "monthly_20"
                                     ? new Date(now.getTime() + 30 * 86400000).toISOString()
                                     : nextTier === "permanent_100"
-                                    ? "2099-12-31T23:59:59.000Z"
-                                    : s.subscriptionEndsAt,
+                                      ? "2099-12-31T23:59:59.000Z"
+                                      : s.subscriptionEndsAt,
                               });
                               setRoster(getStoredRoster());
                               showNotice(`Updated ${s.fullName} to ${nextTier}`);
@@ -8015,7 +8138,9 @@ export function PaymentsPage() {
                             className="bg-[#141821] border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-white"
                           >
                             <option value="free_trial">1-Month Free Trial</option>
-                            <option value="expired_free">Expired Free (Signals + Beg/Int Only)</option>
+                            <option value="expired_free">
+                              Expired Free (Signals + Beg/Int Only)
+                            </option>
                             <option value="monthly_20">$20 / Month Plan</option>
                             <option value="permanent_100">$100 Permanent VIP</option>
                           </select>
@@ -8106,7 +8231,9 @@ export function PaymentsPage() {
               Moolre Merchant Credentials &amp; Plan Pricing
             </h2>
             <p className="text-xs text-[#9aa4b5] mt-1">
-              Connect your Moolre API User (`X-API-USER`), Public Key (`X-API-PUBKEY`), and Merchant Account Number to process live Mobile Money (MTN, Telecel, AirtelTigo) and Card payments.
+              Connect your Moolre API User (`X-API-USER`), Public Key (`X-API-PUBKEY`), and Merchant
+              Account Number to process live Mobile Money (MTN, Telecel, AirtelTigo) and Card
+              payments.
             </p>
           </div>
 
@@ -8119,9 +8246,7 @@ export function PaymentsPage() {
                 <input
                   type="text"
                   value={moolreConfig.apiUser}
-                  onChange={(e) =>
-                    setMoolreConfig({ ...moolreConfig, apiUser: e.target.value })
-                  }
+                  onChange={(e) => setMoolreConfig({ ...moolreConfig, apiUser: e.target.value })}
                   placeholder="Enter your Moolre X-API-USER..."
                   className="w-full h-11 bg-[#141821] border border-white/15 rounded-xl px-3.5 text-xs font-mono text-white"
                 />
@@ -8151,7 +8276,11 @@ export function PaymentsPage() {
                   type="password"
                   value={moolreConfig.apiPubKey || moolreConfig.publicKey || ""}
                   onChange={(e) =>
-                    setMoolreConfig({ ...moolreConfig, apiPubKey: e.target.value, publicKey: e.target.value })
+                    setMoolreConfig({
+                      ...moolreConfig,
+                      apiPubKey: e.target.value,
+                      publicKey: e.target.value,
+                    })
                   }
                   placeholder="Paste your Moolre Public Key..."
                   className="w-full h-11 bg-[#141821] border border-white/15 rounded-xl px-3.5 text-xs font-mono text-white"
@@ -8165,7 +8294,11 @@ export function PaymentsPage() {
                   type="password"
                   value={moolreConfig.secretKey || moolreConfig.apiSecret || ""}
                   onChange={(e) =>
-                    setMoolreConfig({ ...moolreConfig, secretKey: e.target.value, apiSecret: e.target.value })
+                    setMoolreConfig({
+                      ...moolreConfig,
+                      secretKey: e.target.value,
+                      apiSecret: e.target.value,
+                    })
                   }
                   placeholder="Paste your Moolre Secret Key..."
                   className="w-full h-11 bg-[#141821] border border-white/15 rounded-xl px-3.5 text-xs font-mono text-white"
@@ -8191,9 +8324,7 @@ export function PaymentsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
-                  USD to GHS Rate
-                </label>
+                <label className="block text-xs font-bold text-white mb-1">USD to GHS Rate</label>
                 <input
                   type="number"
                   step="0.1"
@@ -8273,7 +8404,9 @@ export function PaymentsPage() {
                   {roster.map((s) => (
                     <option key={s.email} value={s.email}>
                       {s.fullName} ({s.email}) —{" "}
-                      {s.subscriptionTier === "permanent_100" ? "$100 VIP" : s.subscriptionTier || "Free Trial"}
+                      {s.subscriptionTier === "permanent_100"
+                        ? "$100 VIP"
+                        : s.subscriptionTier || "Free Trial"}
                     </option>
                   ))}
                 </select>
@@ -8299,9 +8432,7 @@ export function PaymentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-white mb-1">
-                    Duration (Min)
-                  </label>
+                  <label className="block text-xs font-bold text-white mb-1">Duration (Min)</label>
                   <input
                     type="number"
                     value={duration1on1}
@@ -8311,9 +8442,7 @@ export function PaymentsPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
-                  Date &amp; Time
-                </label>
+                <label className="block text-xs font-bold text-white mb-1">Date &amp; Time</label>
                 <input
                   type="datetime-local"
                   value={date1on1}
@@ -8394,7 +8523,7 @@ export function PaymentsPage() {
                               onClick={() =>
                                 void update1on1SessionStatusInDb(
                                   item.id,
-                                  item.status === "live" ? "completed" : "live"
+                                  item.status === "live" ? "completed" : "live",
                                 ).then(() => fetch1on1SessionsFromDb().then(setSessions1on1))
                               }
                               className="px-2.5 py-1 rounded bg-[#ffb600] text-black text-[10px] font-bold cursor-pointer"
@@ -8451,9 +8580,7 @@ export function PaymentsPage() {
             <form onSubmit={handleSaveContractEdits} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-white mb-1">
-                    Contract Title
-                  </label>
+                  <label className="block text-xs font-bold text-white mb-1">Contract Title</label>
                   <input
                     value={contractTemplate.title}
                     onChange={(e) =>
@@ -8526,7 +8653,9 @@ export function PaymentsPage() {
                   {signedContracts.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="text-center py-8 text-xs text-[#8c95a6]">
-                        No signed Account Management contracts yet. Once a $100 VIP student with a confirmed $500 deposit signs the contract, their Exness Trading Account ID appears here.
+                        No signed Account Management contracts yet. Once a $100 VIP student with a
+                        confirmed $500 deposit signs the contract, their Exness Trading Account ID
+                        appears here.
                       </td>
                     </tr>
                   ) : (
@@ -8573,7 +8702,7 @@ export function PaymentsPage() {
                               const list = await fetchSignedContractsFromDb();
                               setSignedContracts(list);
                               showNotice(
-                                `Sent Trading Password request alert to ${c.studentName} for Exness Account #${c.exnessTradingAccountId}!`
+                                `Sent Trading Password request alert to ${c.studentName} for Exness Account #${c.exnessTradingAccountId}!`,
                               );
                             }}
                             className="px-3 py-1.5 rounded-xl bg-[#ffb600] hover:bg-[#ffc833] text-black font-extrabold text-xs cursor-pointer"
@@ -8597,7 +8726,8 @@ export function PaymentsPage() {
           <div className="p-5 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#ffb600]">
-                FIRST 20 REGISTRANTS · CANDLESTICKS &amp; EXNESS MERCH GIVEAWAY (T-SHIRT, TOTE BAG, CAP)
+                FIRST 20 REGISTRANTS · CANDLESTICKS &amp; EXNESS MERCH GIVEAWAY (T-SHIRT, TOTE BAG,
+                CAP)
               </span>
               <h3 className="text-base font-bold text-white mt-0.5">
                 Merch Delivery Claims ({merchClaims.length} / 20 Claimed)
@@ -8622,7 +8752,8 @@ export function PaymentsPage() {
                 {merchClaims.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="text-center py-8 text-xs text-[#8c95a6]">
-                      No merch giveaway claims submitted yet. The Post-Registration Popup Modal automatically appears for the first 20 registrants right after onboarding.
+                      No merch giveaway claims submitted yet. The Post-Registration Popup Modal
+                      automatically appears for the first 20 registrants right after onboarding.
                     </td>
                   </tr>
                 ) : (
@@ -8633,9 +8764,7 @@ export function PaymentsPage() {
                       </td>
                       <td>
                         <b>{m.fullName}</b>
-                        <small className="block text-[10px] text-[#8c95a6]">
-                          {m.studentEmail}
-                        </small>
+                        <small className="block text-[10px] text-[#8c95a6]">{m.studentEmail}</small>
                       </td>
                       <td className="font-mono text-xs text-white">{m.phone}</td>
                       <td className="text-xs text-[#cfd7e4]">{m.deliveryLocation}</td>
@@ -8649,7 +8778,7 @@ export function PaymentsPage() {
                           onChange={async (e) => {
                             updateMerchClaimStatusInDb(
                               m.id,
-                              e.target.value as "pending" | "dispatched" | "delivered"
+                              e.target.value as "pending" | "dispatched" | "delivered",
                             );
                             const claims = await fetchMerchClaimsFromDb();
                             setMerchClaims(claims);
@@ -8772,7 +8901,7 @@ export function PaymentsPage() {
                 e.preventDefault();
                 saveSeoAnalyticsConfig(seoConfig);
                 setSeoSavedMsg(
-                  "SEO & Google Analytics settings saved! Live tracking code and verification meta tags are updated across all pages."
+                  "SEO & Google Analytics settings saved! Live tracking code and verification meta tags are updated across all pages.",
                 );
                 setTimeout(() => setSeoSavedMsg(null), 6000);
               }}
@@ -8793,7 +8922,8 @@ export function PaymentsPage() {
                     className="w-full bg-[#11141d] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:border-[#ffb600] focus:outline-none"
                   />
                   <p className="text-[11px] text-[#7f8a9d] mt-1">
-                    Found in Google Analytics Admin &rarr; Data Streams &rarr; Measurement ID (Format: <code className="text-[#ffb600]">G-XXXXXXXXXX</code>).
+                    Found in Google Analytics Admin &rarr; Data Streams &rarr; Measurement ID
+                    (Format: <code className="text-[#ffb600]">G-XXXXXXXXXX</code>).
                   </p>
                 </div>
 
@@ -8811,7 +8941,8 @@ export function PaymentsPage() {
                     className="w-full bg-[#11141d] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:border-[#ffb600] focus:outline-none"
                   />
                   <p className="text-[11px] text-[#7f8a9d] mt-1">
-                    Enter your Google Search Console verification code (or paste the entire <code className="text-[#ffb600]">&lt;meta&gt;</code> tag).
+                    Enter your Google Search Console verification code (or paste the entire{" "}
+                    <code className="text-[#ffb600]">&lt;meta&gt;</code> tag).
                   </p>
                 </div>
               </div>
@@ -8828,7 +8959,8 @@ export function PaymentsPage() {
                   className="w-full bg-[#11141d] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-[#ffb600] focus:outline-none"
                 />
                 <p className="text-[11px] text-[#7f8a9d] mt-1">
-                  The primary title shown in Google, Bing, DuckDuckGo, and social previews ({seoConfig.siteTitle.length} characters).
+                  The primary title shown in Google, Bing, DuckDuckGo, and social previews (
+                  {seoConfig.siteTitle.length} characters).
                 </p>
               </div>
 
@@ -8844,7 +8976,8 @@ export function PaymentsPage() {
                   className="w-full bg-[#11141d] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-[#ffb600] focus:outline-none"
                 />
                 <p className="text-[11px] text-[#7f8a9d] mt-1">
-                  Recommended length: 150-160 characters (Current: {seoConfig.metaDescription.length} chars).
+                  Recommended length: 150-160 characters (Current:{" "}
+                  {seoConfig.metaDescription.length} chars).
                 </p>
               </div>
 
@@ -8880,13 +9013,20 @@ export function PaymentsPage() {
                     }
                     className="accent-[#ffb600] w-4 h-4 rounded"
                   />
-                  <span>Allow AI Search Engines (GPTBot, PerplexityBot, ClaudeBot, Google-Extended)</span>
+                  <span>
+                    Allow AI Search Engines (GPTBot, PerplexityBot, ClaudeBot, Google-Extended)
+                  </span>
                 </label>
               </div>
 
               <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
                 <div className="text-[11px] text-[#8c95a6]">
-                  Last synced: <span className="text-white font-mono">{new Date(seoConfig.updatedAt || seoConfig.lastUpdated || Date.now()).toLocaleString()}</span>
+                  Last synced:{" "}
+                  <span className="text-white font-mono">
+                    {new Date(
+                      seoConfig.updatedAt || seoConfig.lastUpdated || Date.now(),
+                    ).toLocaleString()}
+                  </span>
                 </div>
                 <button
                   type="submit"
@@ -8916,7 +9056,8 @@ export function PaymentsPage() {
                   <Badge tone="green">XML ACTIVE</Badge>
                 </div>
                 <p className="text-[11px] text-[#8c95a6]">
-                  Full index of all public academy routes with priorities (1.0 for home, 0.9 for courses/signals, 0.8 for mentorship).
+                  Full index of all public academy routes with priorities (1.0 for home, 0.9 for
+                  courses/signals, 0.8 for mentorship).
                 </p>
                 <a
                   href="/sitemap.xml"
@@ -8934,7 +9075,8 @@ export function PaymentsPage() {
                   <Badge tone="green">PERMISSIONS OK</Badge>
                 </div>
                 <p className="text-[11px] text-[#8c95a6]">
-                  Explicit directives granting access to Googlebot, Bingbot, PerplexityBot, GPTBot, and ClaudeBot while protecting private auth routes.
+                  Explicit directives granting access to Googlebot, Bingbot, PerplexityBot, GPTBot,
+                  and ClaudeBot while protecting private auth routes.
                 </p>
                 <a
                   href="/robots.txt"
@@ -8952,7 +9094,8 @@ export function PaymentsPage() {
                   <Badge tone="yellow">AI DISCOVERY</Badge>
                 </div>
                 <p className="text-[11px] text-[#8c95a6]">
-                  Standard machine-readable knowledge base for LLM search assistants (ChatGPT, Perplexity, Claude, Gemini) to cite Candlesticks Academy.
+                  Standard machine-readable knowledge base for LLM search assistants (ChatGPT,
+                  Perplexity, Claude, Gemini) to cite Candlesticks Academy.
                 </p>
                 <a
                   href="/llms.txt"
@@ -9006,7 +9149,8 @@ export function PaymentsPage() {
                   GOOGLE SEARCH SNIPPET &amp; CRAWL DIAGNOSTIC
                 </span>
                 <h3 className="text-base font-bold text-white mt-0.5">
-                  Fix &ldquo;We would like to show you a description here but the site won&apos;t allow us&rdquo;
+                  Fix &ldquo;We would like to show you a description here but the site won&apos;t
+                  allow us&rdquo;
                 </h3>
               </div>
               <Badge tone="yellow">ACTION REQUIRED IN SEARCH CONSOLE</Badge>
@@ -9019,10 +9163,17 @@ export function PaymentsPage() {
                   Why Google Shows This Message Right Now:
                 </p>
                 <p className="text-[#cfd7e4] leading-relaxed">
-                  Google displays this message when it indexed your domain (<code>www.candlesticksacademy.online</code>) from external web links, but Googlebot previously encountered a restrictive <code>robots.txt</code> or cached an early deployment state where the crawler wasn&apos;t permitted to read the page title and meta description.
+                  Google displays this message when it indexed your domain (
+                  <code>www.candlesticksacademy.online</code>) from external web links, but
+                  Googlebot previously encountered a restrictive <code>robots.txt</code> or cached
+                  an early deployment state where the crawler wasn&apos;t permitted to read the page
+                  title and meta description.
                 </p>
                 <p className="text-[#cfd7e4] leading-relaxed">
-                  <strong>The Good News:</strong> We have now completely opened and optimized <code>robots.txt</code>, added explicit HTML <code>&lt;title&gt;</code>, meta descriptions, Ghana/Africa geo-tags, and Schema.org rich data. You just need to trigger Googlebot to recrawl your site now!
+                  <strong>The Good News:</strong> We have now completely opened and optimized{" "}
+                  <code>robots.txt</code>, added explicit HTML <code>&lt;title&gt;</code>, meta
+                  descriptions, Ghana/Africa geo-tags, and Schema.org rich data. You just need to
+                  trigger Googlebot to recrawl your site now!
                 </p>
               </div>
 
@@ -9035,7 +9186,8 @@ export function PaymentsPage() {
                     <span className="text-[#ffb600] font-mono font-bold">STEP 1</span>
                     <b className="block text-white">Open Search Console</b>
                     <p className="text-[#8c95a6] text-[11px]">
-                      Sign in to Google Search Console with your Google account (<code>mike.vinci77@gmail.com</code>).
+                      Sign in to Google Search Console with your Google account (
+                      <code>mike.vinci77@gmail.com</code>).
                     </p>
                     <a
                       href="https://search.google.com/search-console"
@@ -9051,7 +9203,13 @@ export function PaymentsPage() {
                     <span className="text-[#ffb600] font-mono font-bold">STEP 2</span>
                     <b className="block text-white">Inspect Both URLs</b>
                     <p className="text-[#8c95a6] text-[11px]">
-                      Paste <code className="text-[#ffb600]">https://candlesticksacademy.online/</code> into the top URL Inspection bar, then test <code className="text-[#ffb600]">https://www.candlesticksacademy.online/</code>.
+                      Paste{" "}
+                      <code className="text-[#ffb600]">https://candlesticksacademy.online/</code>{" "}
+                      into the top URL Inspection bar, then test{" "}
+                      <code className="text-[#ffb600]">
+                        https://www.candlesticksacademy.online/
+                      </code>
+                      .
                     </p>
                   </div>
 
@@ -9059,7 +9217,9 @@ export function PaymentsPage() {
                     <span className="text-[#ffb600] font-mono font-bold">STEP 3</span>
                     <b className="block text-white">Click &ldquo;Request Indexing&rdquo;</b>
                     <p className="text-[#8c95a6] text-[11px]">
-                      Click <strong>&ldquo;Test Live URL&rdquo;</strong> &rarr; <strong>&ldquo;Request Indexing&rdquo;</strong>. Googlebot will immediately crawl the updated title, description, and rich snippet!
+                      Click <strong>&ldquo;Test Live URL&rdquo;</strong> &rarr;{" "}
+                      <strong>&ldquo;Request Indexing&rdquo;</strong>. Googlebot will immediately
+                      crawl the updated title, description, and rich snippet!
                     </p>
                   </div>
                 </div>
@@ -9073,15 +9233,17 @@ export function PaymentsPage() {
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#ffb600]">
                 SUBDOMAIN ROUTING &amp; MULTI-TENANT ARCHITECTURE
               </span>
-              <h3 className="text-base font-bold text-white mt-0.5">
-                Domain Routing Architecture
-              </h3>
+              <h3 className="text-base font-bold text-white mt-0.5">Domain Routing Architecture</h3>
             </div>
             <div className="p-5 space-y-3 text-xs text-[#a4abb6]">
               <div className="flex items-center justify-between p-3 rounded-xl bg-[#11141d] border border-white/10">
                 <div>
-                  <b className="text-white block font-mono">candlesticksacademy.online / www.candlesticksacademy.online</b>
-                  <span className="text-[11px] text-[#7f8a9d]">Public Homepage, Curriculum, Pricing, Free Trial, and Student Signup</span>
+                  <b className="text-white block font-mono">
+                    candlesticksacademy.online / www.candlesticksacademy.online
+                  </b>
+                  <span className="text-[11px] text-[#7f8a9d]">
+                    Public Homepage, Curriculum, Pricing, Free Trial, and Student Signup
+                  </span>
                 </div>
                 <Badge tone="green">PUBLIC / SEO</Badge>
               </div>
@@ -9089,15 +9251,22 @@ export function PaymentsPage() {
               <div className="flex items-center justify-between p-3 rounded-xl bg-[#11141d] border border-white/10">
                 <div>
                   <b className="text-white block font-mono">student.candlesticksacademy.online</b>
-                  <span className="text-[11px] text-[#7f8a9d]">Student Trading Terminal, Course Player, Signals, 1-on-1 Mentorship</span>
+                  <span className="text-[11px] text-[#7f8a9d]">
+                    Student Trading Terminal, Course Player, Signals, 1-on-1 Mentorship
+                  </span>
                 </div>
                 <Badge tone="yellow">CLIENT PORTAL</Badge>
               </div>
 
               <div className="flex items-center justify-between p-3 rounded-xl bg-[#11141d] border border-white/10">
                 <div>
-                  <b className="text-white block font-mono">master.candlesticksacademy.online (or master.candlesticks.online)</b>
-                  <span className="text-[11px] text-[#7f8a9d]">Founder Admin Console, Roster Management, Signal Broadcasting, Moolre &amp; SEO Controls</span>
+                  <b className="text-white block font-mono">
+                    master.candlesticksacademy.online (or master.candlesticks.online)
+                  </b>
+                  <span className="text-[11px] text-[#7f8a9d]">
+                    Founder Admin Console, Roster Management, Signal Broadcasting, Moolre &amp; SEO
+                    Controls
+                  </span>
                 </div>
                 <Badge tone="yellow">ADMIN PORTAL</Badge>
               </div>
@@ -9105,7 +9274,10 @@ export function PaymentsPage() {
               <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 mt-2">
                 <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
                 <span>
-                  <strong>Clean URL Guarantee:</strong> The long character string (<code>?ca_sso=...</code>) has been permanently removed from the URL bar. Authentication uses secure domain-wide cookies across <code>.candlesticksacademy.online</code>.
+                  <strong>Clean URL Guarantee:</strong> The long character string (
+                  <code>?ca_sso=...</code>) has been permanently removed from the URL bar.
+                  Authentication uses secure domain-wide cookies across{" "}
+                  <code>.candlesticksacademy.online</code>.
                 </span>
               </div>
             </div>

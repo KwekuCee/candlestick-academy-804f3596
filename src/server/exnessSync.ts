@@ -38,8 +38,8 @@ export async function fetchLiveExnessPartnerData(jwtToken?: string): Promise<{
   clients: ExnessSyncClientItem[];
   totals: { count: number; volume_lots: number; reward_usd: string };
 }> {
-  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
-  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
+  const PARTNER_CODE = process.env["EXNESS_PARTNER_CODE"] || "qgcrue4rqj";
+  const PARTNER_ACCOUNT_ID = process.env["EXNESS_PARTNER_ACCOUNT_ID"] || "1064144938140187556";
   const jwt = jwtToken || process.env.EXNESS_API_JWT_TOKEN;
   if (!jwt) {
     return {
@@ -58,7 +58,7 @@ export async function fetchLiveExnessPartnerData(jwtToken?: string): Promise<{
         `https://my.exnessaffiliates.com/api/v2/reports/rewards/?aggregate_by=day&reward_date_from=2023-01-01&reward_date_to=${today}&limit=500`,
         {
           headers: { Authorization: `Bearer ${jwt}`, Accept: "application/json" },
-        }
+        },
       ),
     ]);
 
@@ -142,7 +142,11 @@ export async function fetchLiveExnessPartnerData(jwtToken?: string): Promise<{
       // Check if this client already has accounts in accountsMap
       let foundAccount = false;
       for (const item of accountsMap.values()) {
-        if (item.client_uid === shortId || item.client_uid === fullUid || item.client_id === shortId) {
+        if (
+          item.client_uid === shortId ||
+          item.client_uid === fullUid ||
+          item.client_id === shortId
+        ) {
           item.client_uid = fullUid;
           if (c.reg_date) item.reg_date = c.reg_date;
           if (c.client_country) item.client_country = c.client_country;
@@ -217,9 +221,9 @@ export async function syncLiveExnessWithSupabase(query?: {
   accounts: string[];
   syncedAt: string;
 }> {
-  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
-  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
-  const supabaseUrl = process.env['SUPABASE_URL'];
+  const PARTNER_CODE = process.env["EXNESS_PARTNER_CODE"] || "qgcrue4rqj";
+  const PARTNER_ACCOUNT_ID = process.env["EXNESS_PARTNER_ACCOUNT_ID"] || "1064144938140187556";
+  const supabaseUrl = process.env["SUPABASE_URL"];
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const jwt = process.env.EXNESS_API_JWT_TOKEN;
 
@@ -257,7 +261,9 @@ export async function syncLiveExnessWithSupabase(query?: {
         if (affJson.affiliation && Array.isArray(affJson.accounts)) {
           for (const acct of affJson.accounts) {
             const acctStr = String(acct);
-            const shortUid = affJson.client_uid ? String(affJson.client_uid).slice(0, 8) : "partner";
+            const shortUid = affJson.client_uid
+              ? String(affJson.client_uid).slice(0, 8)
+              : "partner";
             if (!clients.some((c) => c.trading_account_id === acctStr)) {
               clients.unshift({
                 id: `acct-${acctStr}`,
@@ -329,7 +335,7 @@ export async function syncLiveExnessWithSupabase(query?: {
             deposit_amount: c.deposit_amount,
             ftd_amount: c.ftd_amount,
             synced_at: new Date().toISOString(),
-          }))
+          })),
         ),
       });
     } catch (err) {
@@ -341,7 +347,8 @@ export async function syncLiveExnessWithSupabase(query?: {
       const studentRows = clients.map((c) => ({
         id: `std-exn-${c.trading_account_id}`,
         full_name: `Exness Trader #${c.trading_account_id} (${c.client_id})`,
-        country: c.client_country === "GH" ? "Ghana" : c.client_country === "JP" ? "Japan" : "Ghana",
+        country:
+          c.client_country === "GH" ? "Ghana" : c.client_country === "JP" ? "Japan" : "Ghana",
         email: `acct${c.trading_account_id}@partner.exness.com`,
         has_exness_account: true,
         exness_id: c.trading_account_id,
@@ -409,9 +416,9 @@ export async function connectExistingExnessClientInDb(params: {
     body: string;
   };
 }> {
-  const PARTNER_CODE = process.env['EXNESS_PARTNER_CODE'] || 'qgcrue4rqj';
-  const PARTNER_ACCOUNT_ID = process.env['EXNESS_PARTNER_ACCOUNT_ID'] || '1064144938140187556';
-  const supabaseUrl = process.env['SUPABASE_URL'];
+  const PARTNER_CODE = process.env["EXNESS_PARTNER_CODE"] || "qgcrue4rqj";
+  const PARTNER_ACCOUNT_ID = process.env["EXNESS_PARTNER_ACCOUNT_ID"] || "1064144938140187556";
+  const supabaseUrl = process.env["SUPABASE_URL"];
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   const cleanAccount = params.tradingAccountId.trim();

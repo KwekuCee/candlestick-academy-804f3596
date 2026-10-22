@@ -14,14 +14,19 @@ export type StudentReview = {
 const table = () => (supabase as any).from("student_reviews");
 
 export async function fetchReviews(includeHidden = false): Promise<StudentReview[]> {
-  let q = table().select("id,quote,student_name,location,badge,is_published,sort_order").order("sort_order").order("created_at");
+  let q = table()
+    .select("id,quote,student_name,location,badge,is_published,sort_order")
+    .order("sort_order")
+    .order("created_at");
   if (!includeHidden) q = q.eq("is_published", true);
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return (data ?? []) as StudentReview[];
 }
 
-export async function saveReview(r: Partial<StudentReview> & { quote: string; student_name: string }) {
+export async function saveReview(
+  r: Partial<StudentReview> & { quote: string; student_name: string },
+) {
   const row = {
     quote: r.quote.trim(),
     student_name: r.student_name.trim(),

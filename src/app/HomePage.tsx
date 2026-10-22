@@ -21,20 +21,67 @@ type IconName =
   | "users";
 
 const iconPaths: Record<IconName, ReactNode> = {
-  arrow: <><path d="M5 12h14M14 7l5 5-5 5" /></>,
-  arrowUpRight: <><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></>,
-  book: <><path d="M4 19.5A2.5 2.5 0 016.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" /></>,
-  calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></>,
+  arrow: (
+    <>
+      <path d="M5 12h14M14 7l5 5-5 5" />
+    </>
+  ),
+  arrowUpRight: (
+    <>
+      <line x1="7" y1="17" x2="17" y2="7" />
+      <polyline points="7 7 17 7 17 17" />
+    </>
+  ),
+  book: (
+    <>
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M16 3v4M8 3v4M3 10h18" />
+    </>
+  ),
   check: <path d="M5 12.5l4 4L19 7" />,
   chevron: <path d="M9 18l6-6-6-6" />,
-  close: <><path d="M6 6l12 12M18 6L6 18" /></>,
-  menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
+  close: (
+    <>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </>
+  ),
+  menu: (
+    <>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </>
+  ),
   message: <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z" />,
   play: <path d="M8 5v14l11-7z" />,
-  shield: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></>,
-  signal: <><path d="M4 20v-4M10 20V10M16 20V4M22 20H2" /></>,
-  trend: <><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></>,
-  users: <><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></>,
+  shield: (
+    <>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
+  signal: (
+    <>
+      <path d="M4 20v-4M10 20V10M16 20V4M22 20H2" />
+    </>
+  ),
+  trend: (
+    <>
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+      <polyline points="17 6 23 6 23 12" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+    </>
+  ),
 };
 
 function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
@@ -126,7 +173,10 @@ const HERO_PAIRS: Record<HeroPairId, PairConfig> = {
   },
 };
 
-const TIMEFRAME_META: Record<HeroTimeframe, { label: string; seconds: number; krakenInterval: number }> = {
+const TIMEFRAME_META: Record<
+  HeroTimeframe,
+  { label: string; seconds: number; krakenInterval: number }
+> = {
   "1m": { label: "1-Minute", seconds: 60, krakenInterval: 1 },
   "5m": { label: "5-Minute", seconds: 300, krakenInterval: 5 },
   "15m": { label: "15-Minute", seconds: 900, krakenInterval: 15 },
@@ -165,7 +215,7 @@ function getSecondsToNextCandle(tf: HeroTimeframe): number {
 
 async function fetchDirectKrakenMarketData(
   pairCfg: PairConfig,
-  tf: HeroTimeframe
+  tf: HeroTimeframe,
 ): Promise<{
   candles: Candle[];
   currentPrice: number;
@@ -180,7 +230,9 @@ async function fetchDirectKrakenMarketData(
   try {
     const tfInfo = TIMEFRAME_META[tf];
     const [ohlcResp, tickerResp] = await Promise.all([
-      fetch(`https://api.kraken.com/0/public/OHLC?pair=${pairCfg.krakenPair}&interval=${tfInfo.krakenInterval}`),
+      fetch(
+        `https://api.kraken.com/0/public/OHLC?pair=${pairCfg.krakenPair}&interval=${tfInfo.krakenInterval}`,
+      ),
       fetch(`https://api.kraken.com/0/public/Ticker?pair=${pairCfg.krakenPair}`),
     ]);
     if (!ohlcResp.ok) return null;
@@ -400,7 +452,7 @@ function MarketCard() {
       // 2. Optional fallback to internal API route if direct fails
       try {
         const res = await fetch(
-          `/api/market/candles?symbol=${encodeURIComponent(selectedPair)}&interval=${timeframe}`
+          `/api/market/candles?symbol=${encodeURIComponent(selectedPair)}&interval=${timeframe}`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -463,14 +515,14 @@ function MarketCard() {
             event: "subscribe",
             pair: [wsPairName],
             subscription: { name: "spread" },
-          })
+          }),
         );
         ws?.send(
           JSON.stringify({
             event: "subscribe",
             pair: [wsPairName],
             subscription: { name: "trade" },
-          })
+          }),
         );
       };
       ws.onmessage = (evt) => {
@@ -551,10 +603,7 @@ function MarketCard() {
 
   const rawMin = Math.min(...activeCandles.map((c) => Math.min(c.low, c.ema9)));
   const rawMax = Math.max(...activeCandles.map((c) => Math.max(c.high, c.ema9)));
-  const rawSpan = Math.max(
-    rawMax - rawMin,
-    selectedPair === "XAU/USD" ? 1.2 : 0.00025
-  );
+  const rawSpan = Math.max(rawMax - rawMin, selectedPair === "XAU/USD" ? 1.2 : 0.00025);
   const padBuffer = rawSpan * 0.14;
   const minVal = rawMin - padBuffer;
   const maxVal = rawMax + padBuffer;
@@ -591,7 +640,7 @@ function MarketCard() {
 
   const maPathD = maPoints.reduce(
     (acc, pt, idx) => (idx === 0 ? `M ${pt.cx} ${pt.cy}` : `${acc} L ${pt.cx} ${pt.cy}`),
-    ""
+    "",
   );
 
   // Trendline & area path coordinates
@@ -603,11 +652,14 @@ function MarketCard() {
 
   const trendPathD = trendPoints.reduce(
     (acc, pt, idx) => (idx === 0 ? `M ${pt.cx} ${pt.cy}` : `${acc} L ${pt.cx} ${pt.cy}`),
-    ""
+    "",
   );
 
   const firstPt = trendPoints[0] || { cx: padLeft, cy: padTop + chartH };
-  const lastPt = trendPoints[trendPoints.length - 1] || { cx: padLeft + chartW, cy: padTop + chartH };
+  const lastPt = trendPoints[trendPoints.length - 1] || {
+    cx: padLeft + chartW,
+    cy: padTop + chartH,
+  };
   const areaPathD = `${trendPathD} L ${lastPt.cx} ${padTop + chartH} L ${firstPt.cx} ${padTop + chartH} Z`;
 
   const liveY = getY(currentPrice);
@@ -625,7 +677,11 @@ function MarketCard() {
       <div className="glow glow-two" />
       <div className="market-card expanded-euro">
         {/* Instrument Switcher Bar: EUR/USD, GBP/USD, Gold (XAU/USD) */}
-        <div className="market-pair-switcher" role="tablist" aria-label="Select live market instrument">
+        <div
+          className="market-pair-switcher"
+          role="tablist"
+          aria-label="Select live market instrument"
+        >
           <div className="pair-switch-tabs">
             {(["EUR/USD", "GBP/USD", "XAU/USD"] as const).map((pairId) => {
               const cfg = HERO_PAIRS[pairId];
@@ -647,7 +703,13 @@ function MarketCard() {
           </div>
           <span className="live-source-tag">
             <i className="dot-pulse" />
-            {loadingChart ? "Syncing live feed..." : <>LIVE SPOT OHLCV · <b>{pairConfig.shortLabel}</b></>}
+            {loadingChart ? (
+              "Syncing live feed..."
+            ) : (
+              <>
+                LIVE SPOT OHLCV · <b>{pairConfig.shortLabel}</b>
+              </>
+            )}
           </span>
         </div>
 
@@ -658,7 +720,9 @@ function MarketCard() {
               <div className="pair-title-row">
                 <b>{pairConfig.shortLabel}</b>
                 <span className="timeframe-badge">{timeframe.toUpperCase()} LIVE</span>
-                <span className="live-feed-pill"><i /> REAL-TIME</span>
+                <span className="live-feed-pill">
+                  <i /> REAL-TIME
+                </span>
               </div>
               <small>
                 {pairConfig.fullName} · {tfMeta.label} Real Market Candlesticks
@@ -667,7 +731,11 @@ function MarketCard() {
           </div>
 
           <div className="market-head-controls">
-            <div className="market-timeframe-selector" role="group" aria-label="Select chart timeframe">
+            <div
+              className="market-timeframe-selector"
+              role="group"
+              aria-label="Select chart timeframe"
+            >
               {(["1m", "5m", "15m"] as const).map((tf) => (
                 <button
                   key={tf}
@@ -928,14 +996,30 @@ function MarketCard() {
           {hoveredCandle && (
             <div className="candle-tooltip">
               <span>
-                Time: <b>{hoveredCandle.time} ({timeframe})</b>
+                Time:{" "}
+                <b>
+                  {hoveredCandle.time} ({timeframe})
+                </b>
               </span>
-              <span>O: <b>{hoveredCandle.open.toFixed(pairConfig.decimals)}</b></span>
-              <span>H: <b>{hoveredCandle.high.toFixed(pairConfig.decimals)}</b></span>
-              <span>L: <b>{hoveredCandle.low.toFixed(pairConfig.decimals)}</b></span>
-              <span>C: <b>{hoveredCandle.close.toFixed(pairConfig.decimals)}</b></span>
+              <span>
+                O: <b>{hoveredCandle.open.toFixed(pairConfig.decimals)}</b>
+              </span>
+              <span>
+                H: <b>{hoveredCandle.high.toFixed(pairConfig.decimals)}</b>
+              </span>
+              <span>
+                L: <b>{hoveredCandle.low.toFixed(pairConfig.decimals)}</b>
+              </span>
+              <span>
+                C: <b>{hoveredCandle.close.toFixed(pairConfig.decimals)}</b>
+              </span>
               {showIndicators && (
-                <span>EMA(9): <b style={{ color: "#38bdf8" }}>{hoveredCandle.ema9.toFixed(pairConfig.decimals)}</b></span>
+                <span>
+                  EMA(9):{" "}
+                  <b style={{ color: "#38bdf8" }}>
+                    {hoveredCandle.ema9.toFixed(pairConfig.decimals)}
+                  </b>
+                </span>
               )}
             </div>
           )}
@@ -966,7 +1050,9 @@ function MarketCard() {
       </div>
 
       <div className="floating-win">
-        <span><Icon name="signal" size={18} /></span>
+        <span>
+          <Icon name="signal" size={18} />
+        </span>
         <div>
           <small>WEEKLY ACCURACY</small>
           <b>84.6% · +8.4%</b>
@@ -1004,28 +1090,57 @@ function RegisterModal({ close }: { close: () => void }) {
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={close}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onMouseDown={(e) => e.stopPropagation()}>
-        <button className="icon-button modal-close" onClick={close} aria-label="Close registration"><Icon name="close" /></button>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <button className="icon-button modal-close" onClick={close} aria-label="Close registration">
+          <Icon name="close" />
+        </button>
         {complete ? (
           <div className="success-state">
-            <span className="success-check"><Icon name="check" size={34} /></span>
+            <span className="success-check">
+              <Icon name="check" size={34} />
+            </span>
             <p className="eyebrow">YOU&apos;RE ON THE LIST</p>
             <h2 id="modal-title">Welcome to the Academy.</h2>
-            <p>Check your inbox for the next step. Your free month starts when your account is ready.</p>
-            <button className="button primary wide" onClick={close}>Done <Icon name="arrow" /></button>
+            <p>
+              Check your inbox for the next step. Your free month starts when your account is ready.
+            </p>
+            <button className="button primary wide" onClick={close}>
+              Done <Icon name="arrow" />
+            </button>
           </div>
         ) : (
           <>
             <p className="eyebrow">START YOUR FREE MONTH</p>
             <h2 id="modal-title">Create your account</h2>
-            <p className="modal-copy">No card required. Learn the foundations and join the student community today.</p>
+            <p className="modal-copy">
+              No card required. Learn the foundations and join the student community today.
+            </p>
             <form onSubmit={submit}>
-              <label>Full name<input required name="name" placeholder="Kwame Mensah" autoFocus /></label>
-              <label>Email address<input required name="email" type="email" placeholder="you@example.com" /></label>
-              <label>Phone number<input required name="phone" type="tel" placeholder="+233 00 000 0000" /></label>
-              <button className="button primary wide" type="submit">Create free account <Icon name="arrow" /></button>
+              <label>
+                Full name
+                <input required name="name" placeholder="Kwame Mensah" autoFocus />
+              </label>
+              <label>
+                Email address
+                <input required name="email" type="email" placeholder="you@example.com" />
+              </label>
+              <label>
+                Phone number
+                <input required name="phone" type="tel" placeholder="+233 00 000 0000" />
+              </label>
+              <button className="button primary wide" type="submit">
+                Create free account <Icon name="arrow" />
+              </button>
             </form>
-            <small className="form-note">By continuing, you agree to our Terms and Privacy Policy.</small>
+            <small className="form-note">
+              By continuing, you agree to our Terms and Privacy Policy.
+            </small>
           </>
         )}
       </div>
@@ -1034,16 +1149,48 @@ function RegisterModal({ close }: { close: () => void }) {
 }
 
 const benefits = [
-  { icon: "book" as IconName, n: "01", title: "Structured courses", text: "Build real trading skill from first principles with step-by-step lessons designed for clarity." },
-  { icon: "calendar" as IconName, n: "02", title: "Live market sessions", text: "Watch the analysis unfold in real time, ask questions, and learn how decisions are made." },
-  { icon: "signal" as IconName, n: "03", title: "Actionable signals", text: "Receive clear trade setups with entry, stop-loss, take-profit, and the reasoning behind each call." },
-  { icon: "message" as IconName, n: "04", title: "Direct mentorship", text: "Get guidance from an active trader who is invested in your progress, discipline, and consistency." },
+  {
+    icon: "book" as IconName,
+    n: "01",
+    title: "Structured courses",
+    text: "Build real trading skill from first principles with step-by-step lessons designed for clarity.",
+  },
+  {
+    icon: "calendar" as IconName,
+    n: "02",
+    title: "Live market sessions",
+    text: "Watch the analysis unfold in real time, ask questions, and learn how decisions are made.",
+  },
+  {
+    icon: "signal" as IconName,
+    n: "03",
+    title: "Actionable signals",
+    text: "Receive clear trade setups with entry, stop-loss, take-profit, and the reasoning behind each call.",
+  },
+  {
+    icon: "message" as IconName,
+    n: "04",
+    title: "Direct mentorship",
+    text: "Get guidance from an active trader who is invested in your progress, discipline, and consistency.",
+  },
 ];
 
 const steps = [
-  { n: "01", title: "Register free", text: "Create your Academy account. No card and no commitment." },
-  { n: "02", title: "Link Exness", text: "Connect your Exness trading account securely in minutes." },
-  { n: "03", title: "Unlock everything", text: "Fund with $50+ to access live sessions, signals, and mentorship." },
+  {
+    n: "01",
+    title: "Register free",
+    text: "Create your Academy account. No card and no commitment.",
+  },
+  {
+    n: "02",
+    title: "Link Exness",
+    text: "Connect your Exness trading account securely in minutes.",
+  },
+  {
+    n: "03",
+    title: "Unlock everything",
+    text: "Fund with $50+ to access live sessions, signals, and mentorship.",
+  },
 ];
 
 export default function App() {
@@ -1053,7 +1200,9 @@ export default function App() {
   const [reviews, setReviews] = useState<StudentReview[]>([]);
 
   useEffect(() => {
-    fetchReviews().then(setReviews).catch(() => setReviews([]));
+    fetchReviews()
+      .then(setReviews)
+      .catch(() => setReviews([]));
   }, []);
 
   useEffect(() => {
@@ -1073,16 +1222,35 @@ export default function App() {
         <div className="container nav">
           <Logo />
           <nav className={menuOpen ? "nav-links open" : "nav-links"} aria-label="Main navigation">
-            <a href="#learn" onClick={() => setMenuOpen(false)}>How it works</a>
-            <a href="#benefits" onClick={() => setMenuOpen(false)}>What you get</a>
-            <a href="#mentor" onClick={() => setMenuOpen(false)}>Mentor</a>
-            <a href="#results" onClick={() => setMenuOpen(false)}>Results</a>
-            <button className="button primary mobile-cta rounded-pill" onClick={openRegister}>Start for free</button>
+            <a href="#learn" onClick={() => setMenuOpen(false)}>
+              How it works
+            </a>
+            <a href="#benefits" onClick={() => setMenuOpen(false)}>
+              What you get
+            </a>
+            <a href="#mentor" onClick={() => setMenuOpen(false)}>
+              Mentor
+            </a>
+            <a href="#results" onClick={() => setMenuOpen(false)}>
+              Results
+            </a>
+            <button className="button primary mobile-cta rounded-pill" onClick={openRegister}>
+              Start for free
+            </button>
           </nav>
           <div className="nav-actions">
-            <button className="text-button" onClick={() => navigate("/login")}>Log in</button>
-            <button className="button primary desktop-cta rounded-pill" onClick={openRegister}>Start for free <Icon name="arrow" size={18} /></button>
-            <button className="icon-button menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">
+            <button className="text-button" onClick={() => navigate("/login")}>
+              Log in
+            </button>
+            <button className="button primary desktop-cta rounded-pill" onClick={openRegister}>
+              Start for free <Icon name="arrow" size={18} />
+            </button>
+            <button
+              className="icon-button menu-button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-label="Toggle menu"
+            >
               <Icon name={menuOpen ? "close" : "menu"} />
             </button>
           </div>
@@ -1093,18 +1261,42 @@ export default function App() {
         <section className="hero">
           <div className="container hero-grid">
             <div className="hero-copy">
-              <div className="status-pill"><i /> #1 FOREX ACADEMY IN AFRICA <span>ACCRA, GHANA · 1-MONTH FREE</span></div>
-              <h1>Forex trading <br /><em>education &amp; mentorship.</em></h1>
-              <p className="hero-sub">The premier institutional Forex academy and trading company in Ghana and across Africa, led by Kwekucandles. Master price action, join live London &amp; NY trading rooms, and execute high-probability institutional setups.</p>
+              <div className="status-pill">
+                <i /> #1 FOREX ACADEMY IN AFRICA <span>ACCRA, GHANA · 1-MONTH FREE</span>
+              </div>
+              <h1>
+                Forex trading <br />
+                <em>education &amp; mentorship.</em>
+              </h1>
+              <p className="hero-sub">
+                The premier institutional Forex academy and trading company in Ghana and across
+                Africa, led by Kwekucandles. Master price action, join live London &amp; NY trading
+                rooms, and execute high-probability institutional setups.
+              </p>
               <div className="hero-actions">
-                <button className="button primary large rounded-pill" onClick={openRegister}>Start free this month <Icon name="arrow" /></button>
-                <a className="watch-link" href="#learn"><span><Icon name="play" size={16} /></span> See how it works</a>
+                <button className="button primary large rounded-pill" onClick={openRegister}>
+                  Start free this month <Icon name="arrow" />
+                </button>
+                <a className="watch-link" href="#learn">
+                  <span>
+                    <Icon name="play" size={16} />
+                  </span>{" "}
+                  See how it works
+                </a>
               </div>
               <div className="trust-row">
                 <div className="avatars" aria-hidden="true">
-                  <span>KM</span><span>AA</span><span>EO</span><span>+</span>
+                  <span>KM</span>
+                  <span>AA</span>
+                  <span>EO</span>
+                  <span>+</span>
                 </div>
-                <div><b>Join 1,200+ traders across Ghana &amp; Africa</b><span><i>★★★★★</i> 4.9 Rating · #1 Rated Trading Company in Ghana</span></div>
+                <div>
+                  <b>Join 1,200+ traders across Ghana &amp; Africa</b>
+                  <span>
+                    <i>★★★★★</i> 4.9 Rating · #1 Rated Trading Company in Ghana
+                  </span>
+                </div>
               </div>
             </div>
             <MarketCard />
@@ -1112,8 +1304,19 @@ export default function App() {
 
           <div className="ticker" aria-label="Market prices">
             <div className="ticker-track">
-              {[["EUR/USD", "1.0842", "+0.62%"], ["GBP/USD", "1.2674", "+0.38%"], ["USD/JPY", "149.82", "-0.21%"], ["XAU/USD", "2,326.40", "+1.14%"], ["BTC/USD", "68,421", "+2.08%"], ["EUR/USD", "1.0842", "+0.62%"], ["GBP/USD", "1.2674", "+0.38%"]].map((item, i) => (
-                <span key={`ticker-${item[0]}-${i}`}><b>{item[0]}</b> {item[1]} <em className={item[2][0] === "+" ? "up" : "down"}>{item[2]}</em></span>
+              {[
+                ["EUR/USD", "1.0842", "+0.62%"],
+                ["GBP/USD", "1.2674", "+0.38%"],
+                ["USD/JPY", "149.82", "-0.21%"],
+                ["XAU/USD", "2,326.40", "+1.14%"],
+                ["BTC/USD", "68,421", "+2.08%"],
+                ["EUR/USD", "1.0842", "+0.62%"],
+                ["GBP/USD", "1.2674", "+0.38%"],
+              ].map((item, i) => (
+                <span key={`ticker-${item[0]}-${i}`}>
+                  <b>{item[0]}</b> {item[1]}{" "}
+                  <em className={item[2][0] === "+" ? "up" : "down"}>{item[2]}</em>
+                </span>
               ))}
             </div>
           </div>
@@ -1124,19 +1327,32 @@ export default function App() {
             <div className="section-heading centered">
               <p className="eyebrow">YOUR PATH TO THE MARKETS</p>
               <h2>Three steps. One smarter start.</h2>
-              <p>We removed the noise so you can focus on what matters: learning, practising, and growing.</p>
+              <p>
+                We removed the noise so you can focus on what matters: learning, practising, and
+                growing.
+              </p>
             </div>
             <div className="steps">
               {steps.map((step, i) => (
                 <div className="step" key={step.n}>
                   <div className="step-number">{step.n}</div>
-                  <div className="step-icon"><Icon name={i === 0 ? "users" : i === 1 ? "shield" : "signal"} size={25} /></div>
-                  <h3>{step.title}</h3><p>{step.text}</p>
-                  {i < 2 && <span className="step-line"><Icon name="chevron" size={16} /></span>}
+                  <div className="step-icon">
+                    <Icon name={i === 0 ? "users" : i === 1 ? "shield" : "signal"} size={25} />
+                  </div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                  {i < 2 && (
+                    <span className="step-line">
+                      <Icon name="chevron" size={16} />
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
-            <p className="secure-note"><Icon name="shield" size={16} /> Your credentials stay private. We never access or manage your funds.</p>
+            <p className="secure-note">
+              <Icon name="shield" size={16} /> Your credentials stay private. We never access or
+              manage your funds.
+            </p>
           </div>
         </section>
 
@@ -1145,15 +1361,32 @@ export default function App() {
             <div className="sticky-heading">
               <p className="eyebrow">THE ACADEMY ADVANTAGE</p>
               <h2>Everything you need to stop guessing.</h2>
-              <p>Not another library of theory. A complete learning environment designed to help you read the market with confidence.</p>
-              <button className="button secondary" onClick={openRegister}>Explore the academy <Icon name="arrow" /></button>
+              <p>
+                Not another library of theory. A complete learning environment designed to help you
+                read the market with confidence.
+              </p>
+              <button className="button secondary" onClick={openRegister}>
+                Explore the academy <Icon name="arrow" />
+              </button>
             </div>
             <div className="benefit-grid">
               {benefits.map((item) => (
                 <article className="benefit-card" key={item.n}>
-                  <div className="card-top"><span><Icon name={item.icon} size={24} /></span><small>{item.n}</small></div>
-                  <h3>{item.title}</h3><p>{item.text}</p>
-                  <button className="card-link" onClick={openRegister} aria-label={`Learn more about ${item.title}`}>JOIN THE ACADEMY <Icon name="arrow" size={16} /></button>
+                  <div className="card-top">
+                    <span>
+                      <Icon name={item.icon} size={24} />
+                    </span>
+                    <small>{item.n}</small>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                  <button
+                    className="card-link"
+                    onClick={openRegister}
+                    aria-label={`Learn more about ${item.title}`}
+                  >
+                    JOIN THE ACADEMY <Icon name="arrow" size={16} />
+                  </button>
                 </article>
               ))}
             </div>
@@ -1172,19 +1405,47 @@ export default function App() {
                 decoding="async"
               />
               <div className="image-accent" />
-              <div className="experience-badge"><b>8+</b><span>YEARS IN<br />THE MARKET</span></div>
+              <div className="experience-badge">
+                <b>8+</b>
+                <span>
+                  YEARS IN
+                  <br />
+                  THE MARKET
+                </span>
+              </div>
             </div>
             <div className="mentor-copy">
               <p className="eyebrow">HEAD OF TRADING · ACCRA, GHANA</p>
-              <h2>Built by a trader,<br />not a textbook.</h2>
-              <blockquote>“I built Candlesticks Academy to bring institutional trading education to Ghana and all of Africa — with honest mentorship, live execution, and capital preservation.”</blockquote>
-              <p>No shortcuts. No unrealistic promises. Just the skills, habits, and market experience you need to become a disciplined trader in Ghana, Nigeria, and worldwide.</p>
+              <h2>
+                Built by a trader,
+                <br />
+                not a textbook.
+              </h2>
+              <blockquote>
+                “I built Candlesticks Academy to bring institutional trading education to Ghana and
+                all of Africa — with honest mentorship, live execution, and capital preservation.”
+              </blockquote>
+              <p>
+                No shortcuts. No unrealistic promises. Just the skills, habits, and market
+                experience you need to become a disciplined trader in Ghana, Nigeria, and worldwide.
+              </p>
               <ul>
-                <li><Icon name="check" size={16} /> Lead Mentor at Ghana&apos;s Premier Trading Company &amp; Academy</li>
-                <li><Icon name="check" size={16} /> Official Exness Broker Partner across Africa (Code: 9s8109d94y)</li>
-                <li><Icon name="check" size={16} /> Daily live London &amp; New York session trading execution</li>
+                <li>
+                  <Icon name="check" size={16} /> Lead Mentor at Ghana&apos;s Premier Trading
+                  Company &amp; Academy
+                </li>
+                <li>
+                  <Icon name="check" size={16} /> Official Exness Broker Partner across Africa
+                  (Code: 9s8109d94y)
+                </li>
+                <li>
+                  <Icon name="check" size={16} /> Daily live London &amp; New York session trading
+                  execution
+                </li>
               </ul>
-              <span className="signature">Kwekucandles <small>FOUNDER &amp; HEAD TRADER, CANDLESTICKS ACADEMY GHANA</small></span>
+              <span className="signature">
+                Kwekucandles <small>FOUNDER &amp; HEAD TRADER, CANDLESTICKS ACADEMY GHANA</small>
+              </span>
             </div>
           </div>
         </section>
@@ -1198,8 +1459,15 @@ export default function App() {
             <div className="testimonials">
               {reviews.map((t) => (
                 <article className="quote-card" key={t.id}>
-                  <span className="quote-mark">“</span><p>{t.quote}</p>
-                  <div><span className="student-avatar">{t.badge}</span><b>{t.student_name}<small>{t.location ? `${t.location} · ` : ""}VERIFIED STUDENT</small></b></div>
+                  <span className="quote-mark">“</span>
+                  <p>{t.quote}</p>
+                  <div>
+                    <span className="student-avatar">{t.badge}</span>
+                    <b>
+                      {t.student_name}
+                      <small>{t.location ? `${t.location} · ` : ""}VERIFIED STUDENT</small>
+                    </b>
+                  </div>
                 </article>
               ))}
             </div>
@@ -1212,7 +1480,10 @@ export default function App() {
             <div className="section-heading centered">
               <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
               <h2>The Premier Forex Academy &amp; Trading Company in Ghana</h2>
-              <p>Everything you need to know about institutional Forex and Gold trading with Kwekucandles across Africa.</p>
+              <p>
+                Everything you need to know about institutional Forex and Gold trading with
+                Kwekucandles across Africa.
+              </p>
             </div>
 
             <div className="faq-list">
@@ -1250,10 +1521,19 @@ export default function App() {
         <section className="final-cta">
           <div className="container cta-inner">
             <p className="eyebrow">YOUR NEXT MOVE</p>
-            <h2>The market won&apos;t wait.<br />Neither should you.</h2>
+            <h2>
+              The market won&apos;t wait.
+              <br />
+              Neither should you.
+            </h2>
             <p>Start learning today. Your first month is completely free.</p>
-            <button className="button dark large rounded-pill" onClick={openRegister}>Create your free account <Icon name="arrow" /></button>
-            <span><Icon name="check" size={15} /> No card required <Icon name="check" size={15} /> Cancel anytime</span>
+            <button className="button dark large rounded-pill" onClick={openRegister}>
+              Create your free account <Icon name="arrow" />
+            </button>
+            <span>
+              <Icon name="check" size={15} /> No card required <Icon name="check" size={15} />{" "}
+              Cancel anytime
+            </span>
           </div>
         </section>
       </main>
@@ -1262,7 +1542,12 @@ export default function App() {
         <div className="container footer-top">
           <Logo />
           <p>Practical Forex education for traders who are ready to learn with purpose.</p>
-          <div className="footer-links"><a href="#learn">How it works</a><a href="#benefits">Academy</a><a href="#mentor">Mentor</a><a href="mailto:contact@candlesticksacademy.online">Contact</a></div>
+          <div className="footer-links">
+            <a href="#learn">How it works</a>
+            <a href="#benefits">Academy</a>
+            <a href="#mentor">Mentor</a>
+            <a href="mailto:contact@candlesticksacademy.online">Contact</a>
+          </div>
         </div>
         <div className="container footer-bottom">
           <span>© 2026 Candlesticks Academy. All rights reserved.</span>
@@ -1272,7 +1557,10 @@ export default function App() {
             <Link to="/terms#exness-disclosure">Exness partner disclosure</Link>
           </span>
         </div>
-        <p className="risk-note container"><b>Risk warning:</b> Forex trading involves significant risk and may not be suitable for all investors. Educational content is not financial advice.</p>
+        <p className="risk-note container">
+          <b>Risk warning:</b> Forex trading involves significant risk and may not be suitable for
+          all investors. Educational content is not financial advice.
+        </p>
       </footer>
     </div>
   );

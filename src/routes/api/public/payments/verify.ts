@@ -1,2 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
-export const Route = createFileRoute('/api/public/payments/verify')({ server: { handlers: { POST: async ({ request }) => (await import('@/server/moolre')).paymentAction(request, 'verify') } } });
+import { createFileRoute } from "@tanstack/react-router";
+export const Route = createFileRoute("/api/public/payments/verify")({
+  server: {
+    handlers: {
+      POST: async ({ request }) =>
+        (await import("@/server/moolre")).paymentAction(request, "verify"),
+    },
+  },
+});
