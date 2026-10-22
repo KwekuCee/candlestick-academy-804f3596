@@ -1331,9 +1331,10 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
   let apiMessage = "";
 
   try {
+    const quizSession = supabase ? (await supabase.auth.getSession()).data.session : null;
     const res = await fetch("/api/quiz/generate-from-pdf", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(quizSession ? { Authorization: `Bearer ${quizSession.access_token}` } : {}) },
       body: JSON.stringify({
         courseId: track.id,
         courseTitle: track.title,
@@ -3935,7 +3936,10 @@ export async function uploadStudentProfileAvatar(
   if (isSupabaseConfigured && supabase) {
     try {
       const ext = file.name.split(".").pop() || "jpg";
-      const filePath = `${student.id || "student"}-${Date.now()}.${ext}`;
+      const ownerId = (await supabase.auth.getUser()).data.user?.id;
+      if (!ownerId) throw new Error("Please sign in again to upload a photo.");
+      // Avatars live in the uploader's own folder so storage rules can bind files to their owner.
+      const filePath = `${ownerId}/${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("student-avatars")
         .upload(filePath, file, {

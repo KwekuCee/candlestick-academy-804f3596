@@ -1850,7 +1850,8 @@ export async function checkExnessAccountDeposit(
 ): Promise<{ success: boolean; depositAmount: number; isEligible: boolean; message: string }> {
   const cleanKey = accountIdOrEmail.trim().toLowerCase();
 
-  if (simulatedDeposit !== undefined) {
+  // Browser-supplied deposit amounts are never trusted; only the server sync can verify deposits.
+  if (false as boolean && simulatedDeposit !== undefined) {
     const isEligible = simulatedDeposit >= 50;
     if (isSupabaseConfigured && supabase && cleanKey) {
       try {
