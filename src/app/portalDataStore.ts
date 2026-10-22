@@ -1331,9 +1331,10 @@ export async function uploadCourseLevelPdfAndGenerateQuiz(params: {
   let apiMessage = "";
 
   try {
+    const quizSession = supabase ? (await supabase.auth.getSession()).data.session : null;
     const res = await fetch("/api/quiz/generate-from-pdf", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(quizSession ? { Authorization: `Bearer ${quizSession.access_token}` } : {}) },
       body: JSON.stringify({
         courseId: track.id,
         courseTitle: track.title,
