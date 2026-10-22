@@ -958,7 +958,7 @@ const adminNav = [
   ["Mentor Q&A Inbox", "/admin/messages", "bell"],
   ["Exness Partner Sync", "/admin/verification", "shield"],
   ["Payments & tiers", "/admin/payments", "trades"],
-  ["Student reviews", "/admin/reviews", "message"],
+  ["Student reviews", "/admin/reviews", "users"],
 ] as const;
 
 const mobileStudentTabs = [
@@ -1166,6 +1166,18 @@ export function PortalLayout() {
               Switch to Client View
             </a>
           )}
+          {!admin && isMasterAdminAuthenticated() && (
+            <a
+              href={buildRolePortalUrl("admin", "/admin")}
+              onClick={(e) => {
+                e.preventDefault();
+                redirectToRolePortal("admin", "/admin", (p) => nav(p));
+              }}
+            >
+              <Icon name="shield" />
+              Switch to Admin View
+            </a>
+          )}
           <button
             type="button"
             onClick={togglePortalTheme}
@@ -1185,7 +1197,7 @@ export function PortalLayout() {
           <div className="profile">
             {admin ? (
               <img
-                src="/ceo.png"
+                src={mentorPortrait.url}
                 alt="Kwekucandles"
                 className="w-9 h-9 rounded-full object-cover border border-[#ffb600]/50 shrink-0"
               />
@@ -5889,7 +5901,7 @@ export function SignalDetailPage() {
           <Card className="analysis">
             <div className="profile">
               <img
-                src="/ceo.png"
+                src={mentorPortrait.url}
                 alt="Kwekucandles"
                 className="w-10 h-10 rounded-full object-cover border border-[#ffb600]/50"
               />
