@@ -18,3 +18,4 @@
 - Moolre checkout and status calls run only on the server; fulfillment uses a service-role-only atomic SQL function matching stored references, amounts and wallets so browser state cannot grant paid access.
 - Portal login uses Supabase password verification and trusted user_roles; encrypted HttpOnly parent-domain cookies transfer sessions without URL tokens or client admin flags.
 - Email templates render server-side and send through the linked Resend gateway; fixed feature events derive recipients from authenticated identities or persisted records, and audit entries plus provider idempotency prevent repeat event emails without a queue.
+- Each content route owns its social metadata and self-referencing canonical; homepage share images use the displayed CDN mentor asset with a request-derived origin so previews work without a hardcoded deployment host.

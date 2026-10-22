@@ -1220,7 +1220,7 @@ footer { background: #0b0d0f; padding: 62px 0 28px; color: #a4abb5; }
   color: #c084fc;
 }
 
-.legal-highlight-card h4 {
+.legal-highlight-card h2 {
   font-size: 14.5px;
   font-weight: 700;
   margin: 0 0 4px;
@@ -1373,7 +1373,7 @@ footer { background: #0b0d0f; padding: 62px 0 28px; color: #a4abb5; }
   place-items: center;
 }
 
-.legal-support-card h5 {
+.legal-support-card h2 {
   font-size: 13px;
   font-weight: 700;
   margin: 0 0 3px;
@@ -1528,7 +1528,7 @@ footer { background: #0b0d0f; padding: 62px 0 28px; color: #a4abb5; }
   margin-bottom: 10px;
 }
 
-.legal-alert-box .alert-header h4 {
+.legal-alert-box .alert-header h3 {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
@@ -1555,7 +1555,7 @@ footer { background: #0b0d0f; padding: 62px 0 28px; color: #a4abb5; }
   margin: 20px 0;
 }
 
-.legal-card-inset h5 {
+.legal-card-inset h3 {
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
@@ -1648,7 +1648,7 @@ footer { background: #0b0d0f; padding: 62px 0 28px; color: #a4abb5; }
   margin-top: 20px;
 }
 
-.legal-contact-card h4 {
+.legal-contact-card h3 {
   margin: 0 0 12px;
   color: #ffb600;
   font-size: 15px;
