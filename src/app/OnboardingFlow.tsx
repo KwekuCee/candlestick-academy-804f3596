@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "@/app/routerCompat";
+import { Link, useNavigate, useLocation } from "@/app/routerCompat";
 import {
   DEFAULT_EXNESS_SUPPORT_EMAIL,
   DEFAULT_PARTNER_EMAIL,
