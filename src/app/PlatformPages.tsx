@@ -1,5 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
-import { Button } from '@/components/ui/button';
+import { Button as PaymentStatusButton } from '@/components/ui/button';
 import { verifyMoolrePayment } from './portalDataStore';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "@/app/routerCompat";
 import {
@@ -747,7 +747,7 @@ export function MoolreCheckoutModal({
               )}
             </div>
           )}
-          {pendingReference && <Button type="button" variant="outline" disabled={processing} onClick={() => void checkPayment()}><CreditCard size={16} /> Check payment status</Button>}
+          {pendingReference && <PaymentStatusButton type="button" variant="outline" disabled={processing} onClick={() => void checkPayment()}><CreditCard size={16} /> Check payment status</PaymentStatusButton>}
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
             <button
