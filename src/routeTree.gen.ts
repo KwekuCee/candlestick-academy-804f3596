@@ -47,7 +47,9 @@ import { Route as PortalAdminSignalsNewRouteImport } from './routes/_portal/admi
 import { Route as PortalSessionsLiveSessionIdRouteImport } from './routes/_portal/sessions.live.$sessionId'
 import { Route as PortalSessionsReplaySessionIdRouteImport } from './routes/_portal/sessions.replay.$sessionId'
 import { Route as ApiPublicPaymentsCheckoutRouteImport } from './routes/api/public/payments/checkout'
+import { Route as ApiPublicPaymentsMoolreWebhookRouteImport } from './routes/api/public/payments/moolre-webhook'
 import { Route as ApiPublicPaymentsVerifyRouteImport } from './routes/api/public/payments/verify'
+import { Route as ApiPublicPortalLoginRouteImport } from './routes/api/public/portal/login'
 import { Route as ApiPublicPortalSessionRouteImport } from './routes/api/public/portal/session'
 
 const IndexRoute = IndexRouteImport.update({
@@ -244,9 +246,20 @@ const ApiPublicPaymentsCheckoutRoute =
     path: '/api/public/payments/checkout',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsMoolreWebhookRoute =
+  ApiPublicPaymentsMoolreWebhookRouteImport.update({
+    id: '/api/public/payments/moolre-webhook',
+    path: '/api/public/payments/moolre-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPaymentsVerifyRoute = ApiPublicPaymentsVerifyRouteImport.update({
   id: '/api/public/payments/verify',
   path: '/api/public/payments/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPortalLoginRoute = ApiPublicPortalLoginRouteImport.update({
+  id: '/api/public/portal/login',
+  path: '/api/public/portal/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPortalSessionRoute = ApiPublicPortalSessionRouteImport.update({
@@ -293,7 +306,9 @@ export interface FileRoutesByFullPath {
   '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
   '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/moolre-webhook': typeof ApiPublicPaymentsMoolreWebhookRoute
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
+  '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRoutesByTo {
@@ -334,7 +349,9 @@ export interface FileRoutesByTo {
   '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
   '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/moolre-webhook': typeof ApiPublicPaymentsMoolreWebhookRoute
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
+  '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRoutesById {
@@ -377,7 +394,9 @@ export interface FileRoutesById {
   '/_portal/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/_portal/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
   '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/moolre-webhook': typeof ApiPublicPaymentsMoolreWebhookRoute
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
+  '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRouteTypes {
@@ -420,7 +439,9 @@ export interface FileRouteTypes {
     | '/sessions/live/$sessionId'
     | '/sessions/replay/$sessionId'
     | '/api/public/payments/checkout'
+    | '/api/public/payments/moolre-webhook'
     | '/api/public/payments/verify'
+    | '/api/public/portal/login'
     | '/api/public/portal/session'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -461,7 +482,9 @@ export interface FileRouteTypes {
     | '/sessions/live/$sessionId'
     | '/sessions/replay/$sessionId'
     | '/api/public/payments/checkout'
+    | '/api/public/payments/moolre-webhook'
     | '/api/public/payments/verify'
+    | '/api/public/portal/login'
     | '/api/public/portal/session'
   id:
     | '__root__'
@@ -503,7 +526,9 @@ export interface FileRouteTypes {
     | '/_portal/sessions/live/$sessionId'
     | '/_portal/sessions/replay/$sessionId'
     | '/api/public/payments/checkout'
+    | '/api/public/payments/moolre-webhook'
     | '/api/public/payments/verify'
+    | '/api/public/portal/login'
     | '/api/public/portal/session'
   fileRoutesById: FileRoutesById
 }
@@ -523,7 +548,9 @@ export interface RootRouteChildren {
   ApiMarketPricesRoute: typeof ApiMarketPricesRoute
   ApiQuizGenerateFromPdfRoute: typeof ApiQuizGenerateFromPdfRoute
   ApiPublicPaymentsCheckoutRoute: typeof ApiPublicPaymentsCheckoutRoute
+  ApiPublicPaymentsMoolreWebhookRoute: typeof ApiPublicPaymentsMoolreWebhookRoute
   ApiPublicPaymentsVerifyRoute: typeof ApiPublicPaymentsVerifyRoute
+  ApiPublicPortalLoginRoute: typeof ApiPublicPortalLoginRoute
   ApiPublicPortalSessionRoute: typeof ApiPublicPortalSessionRoute
 }
 
@@ -795,11 +822,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/moolre-webhook': {
+      id: '/api/public/payments/moolre-webhook'
+      path: '/api/public/payments/moolre-webhook'
+      fullPath: '/api/public/payments/moolre-webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsMoolreWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/verify': {
       id: '/api/public/payments/verify'
       path: '/api/public/payments/verify'
       fullPath: '/api/public/payments/verify'
       preLoaderRoute: typeof ApiPublicPaymentsVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/portal/login': {
+      id: '/api/public/portal/login'
+      path: '/api/public/portal/login'
+      fullPath: '/api/public/portal/login'
+      preLoaderRoute: typeof ApiPublicPortalLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/portal/session': {
@@ -883,7 +924,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMarketPricesRoute: ApiMarketPricesRoute,
   ApiQuizGenerateFromPdfRoute: ApiQuizGenerateFromPdfRoute,
   ApiPublicPaymentsCheckoutRoute: ApiPublicPaymentsCheckoutRoute,
+  ApiPublicPaymentsMoolreWebhookRoute: ApiPublicPaymentsMoolreWebhookRoute,
   ApiPublicPaymentsVerifyRoute: ApiPublicPaymentsVerifyRoute,
+  ApiPublicPortalLoginRoute: ApiPublicPortalLoginRoute,
   ApiPublicPortalSessionRoute: ApiPublicPortalSessionRoute,
 }
 export const routeTree = rootRouteImport

@@ -4131,49 +4131,12 @@ const LS_MERCH_CLAIMS_KEY = "candlesticks_first20_merch_claims_v1";
 export const MAX_MERCH_GIVEAWAY_SPOTS = 20;
 
 export function getMoolreConfig(): MoolreGatewayConfig {
-  const defaultCfg: MoolreGatewayConfig = {
-    apiUser: import.meta.env.VITE_MOOLRE_API_USER || "PRIME HAVEN",
-    publicKey:
-      import.meta.env.VITE_MOOLRE_PUBLIC_KEY ||
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjExMDE1OSwid2FsbGV0aWQiOiI3NjQ4NCIsImV4cCI6MTk1NjUyNzk5OX0.m5VnvN1F-UThFIEk-NBrSw8RDlPyzyjw0XqBtqKIJcI",
-    accountNumber: import.meta.env.VITE_MOOLRE_ACCOUNT_NUMBER || "11015906076484",
-    businessEmail: "mike.vinci77@gmail.com",
-    currency: (import.meta.env.VITE_MOOLRE_CURRENCY as "GHS" | "USD" | "NGN") || "GHS",
-    usdToGhsRate: 15.5,
-    updatedAt: new Date().toISOString(),
-  };
-
-  try {
-    const raw = localStorage.getItem(LS_MOOLRE_CONFIG_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<MoolreGatewayConfig>;
-      return {
-        ...defaultCfg,
-        ...parsed,
-        apiUser: parsed.apiUser || defaultCfg.apiUser,
-        publicKey: parsed.publicKey || defaultCfg.publicKey,
-        accountNumber: parsed.accountNumber || defaultCfg.accountNumber,
-      };
-    }
-  } catch {
-    // ignore
-  }
-  return defaultCfg;
+  // Browser-visible presentation only; credentials and prices are server-owned.
+  return { apiUser: "", publicKey: "", accountNumber: "", businessEmail: "payments@candlesticksacademy.online", currency: "GHS", usdToGhsRate: 15.5, updatedAt: "" };
 }
-
-export function saveMoolreConfig(cfg: Partial<MoolreGatewayConfig>): MoolreGatewayConfig {
-  const next: MoolreGatewayConfig = {
-    ...getMoolreConfig(),
-    ...cfg,
-    updatedAt: new Date().toISOString(),
-  };
-  try {
-    localStorage.setItem(LS_MOOLRE_CONFIG_KEY, JSON.stringify(next));
-  } catch {
-    // ignore
-  }
-  emitPortalUpdate();
-  return next;
+export function saveMoolreConfig(_cfg: Partial<MoolreGatewayConfig>): MoolreGatewayConfig {
+  localStorage.removeItem(LS_MOOLRE_CONFIG_KEY);
+  return getMoolreConfig();
 }
 
 export function getStudentSubscriptionAccess(student: ExnessStudent): StudentSubscriptionAccess {
@@ -4196,7 +4159,8 @@ export function getStudentSubscriptionAccess(student: ExnessStudent): StudentSub
   }
 
   const isPermanent100 = tier === "permanent_100";
-  const isMonthly20Active = tier === "monthly_20";
+  const isMonthly20Active = tier === "monthly_20" && Boolean(student.subscriptionEndsAt) && new Date(student.subscriptionEndsAt || 0).getTime() > Date.now();
+  if (tier === "monthly_20" && !isMonthly20Active) tier = "expired_free";
   const isFreeTrialActive = tier === "free_trial" && msRemaining > 0;
   const hasFullStandardAccess = isFreeTrialActive || isMonthly20Active || isPermanent100;
 
@@ -4323,162 +4287,42 @@ export function updateStudentTierInStore(
   return updatedRecord;
 }
 
+async function paymentRequest(path: string, data: unknown) {
+  if (!supabase) throw new Error("Please sign in before paying.");
+  const { data: auth } = await supabase.auth.getSession();
+  if (!auth.session) throw new Error("Please sign in before paying.");
+  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${auth.session.access_token}` }, body: JSON.stringify(data) });
+  const result = await response.json();
+  if (!response.ok && !result.transaction) throw new Error(result.message || "Payment request failed.");
+  return result;
+}
+export async function verifyMoolrePayment(reference: string) {
+  const result = await paymentRequest("/api/public/payments/verify", { reference });
+  if (result.status === "PAID" && result.student) {
+    const user = getStoredCurrentUser();
+    const profile = { ...user, subscriptionTier: result.student.subscription_tier, subscriptionEndsAt: result.student.subscription_ends_at || undefined, trialEndsAt: result.student.trial_ends_at || undefined };
+    localStorage.setItem("candlesticks_current_student", JSON.stringify(profile));
+    window.dispatchEvent(new Event("candlesticks_user_updated"));
+    emitPortalUpdate();
+  }
+  return result;
+}
 export async function processMoolrePaymentCheckout(params: {
-  student?: ExnessStudent;
-  studentEmail?: string;
-  studentName?: string;
-  planType?: "monthly_20" | "permanent_100";
-  planTier?: "monthly_20" | "permanent_100";
+  student?: ExnessStudent; studentEmail?: string; studentName?: string;
+  planType?: "monthly_20" | "permanent_100"; planTier?: "monthly_20" | "permanent_100";
   paymentMethod: "momo_mtn" | "momo_telecel" | "momo_at" | "hosted_link" | "moolre_link" | "mobile_money";
-  network?: "MTN" | "Telecel" | "AT";
-  payerPhone?: string;
-}): Promise<{
-  success: boolean;
-  transaction: MoolreTransactionItem;
-  authorizationUrl?: string;
-  paymentUrl?: string;
-  message: string;
-}> {
-  const cfg = getMoolreConfig();
-  const plan = params.planType || params.planTier || "monthly_20";
-  const email = params.student?.email || params.studentEmail || "trader@candlesticksacademy.online";
-  const name = params.student?.fullName || params.studentName || "Trader";
-  const amountUsd = plan === "permanent_100" ? 100 : 20;
-  const amountCharged =
-    cfg.currency === "GHS"
-      ? Number((amountUsd * (cfg.usdToGhsRate || 15.5)).toFixed(2))
-      : amountUsd;
-  const externalRef = `CSA-MOOLRE-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-  const planLabel =
-    plan === "permanent_100"
-      ? "$100 Permanent VIP Access"
-      : "$20/Month Full Academy Access";
-
-  let authorizationUrl = "";
-
-  // Attempt live Moolre API call with 2.5s timeout fallback
+  network?: "MTN" | "Telecel" | "AT"; payerPhone?: string; requestId?: string;
+}): Promise<{ success: boolean; transaction?: MoolreTransactionItem; paymentUrl?: string; authorizationUrl?: string; message: string }> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-    const secretVal = cfg.secretKey || cfg.apiSecret || "";
-    const moolreHeaders: Record<string, string> = {
-      "Content-Type": "application/json",
-      "X-API-USER": cfg.apiUser || "PRIME HAVEN",
-      "X-API-PUBKEY": cfg.publicKey || "default",
-    };
-    if (secretVal) {
-      moolreHeaders["X-API-SECRET"] = secretVal;
-      moolreHeaders["X-API-KEY"] = secretVal;
-      moolreHeaders["Authorization"] = `Bearer ${secretVal}`;
+    const result = await paymentRequest("/api/public/payments/checkout", { plan: params.planType || params.planTier || "monthly_20", method: ["hosted_link", "moolre_link"].includes(params.paymentMethod) ? "moolre_link" : "mobile_money", network: params.network || "MTN", phone: params.payerPhone, requestId: params.requestId || crypto.randomUUID() });
+    const row = result.transaction;
+    const transaction: MoolreTransactionItem | undefined = row ? { id: row.id, externalRef: row.external_ref, studentEmail: params.studentEmail || params.student?.email || "", studentName: params.studentName || "", planType: row.plan, planLabel: row.plan, amountUsd: Number(row.amount_usd), amountCharged: Number(row.amount), currency: row.currency, paymentMethod: params.paymentMethod, status: row.status, createdAt: row.created_at } : undefined;
+    if (transaction) {
+      const items = getCachedMoolreTransactions().filter(t => t.externalRef !== transaction.externalRef);
+      localStorage.setItem(LS_MOOLRE_TX_KEY, JSON.stringify([transaction, ...items]));
     }
-
-    if (params.paymentMethod === "hosted_link" || params.paymentMethod === "moolre_link") {
-      const res = await fetch("https://api.moolre.com/embed/link", {
-        method: "POST",
-        headers: moolreHeaders,
-        body: JSON.stringify({
-          type: 1,
-          amount: String(amountCharged),
-          email: cfg.businessEmail || email,
-          externalref: externalRef,
-          reusable: "0",
-          currency: cfg.currency,
-          accountnumber: cfg.accountNumber || "default",
-          metadata: {
-            studentEmail: email,
-            planType: plan,
-          },
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      const data = await res.json().catch(() => null);
-      if (data?.data?.authorization_url || data?.authorization_url) {
-        authorizationUrl = String(data.data?.authorization_url || data.authorization_url);
-      }
-    } else {
-      const channelMap: Record<string, number> = {
-        momo_mtn: 13,
-        momo_telecel: 6,
-        momo_at: 7,
-        MTN: 13,
-        Telecel: 6,
-        AT: 7,
-      };
-      const netKey = params.network || "MTN";
-      await fetch("https://api.moolre.com/open/transact/payment", {
-        method: "POST",
-        headers: moolreHeaders,
-        body: JSON.stringify({
-          type: 1,
-          channel: channelMap[netKey] || 13,
-          currency: cfg.currency,
-          payer: params.payerPhone || "",
-          amount: String(amountCharged),
-          externalref: externalRef,
-          reference: `Candlesticks Academy - ${planLabel}`,
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-    }
-  } catch (err) {
-    console.debug("Moolre API checkout timeout/fallback executed:", err);
-  }
-
-  const tx: MoolreTransactionItem = {
-    id: `mtx-${Date.now()}`,
-    externalRef,
-    studentEmail: email,
-    studentName: name,
-    planType: plan,
-    plan: plan,
-    planLabel,
-    amountUsd,
-    amountCharged,
-    amountLocal: amountCharged,
-    currency: cfg.currency,
-    paymentMethod: params.paymentMethod,
-    payerPhone: params.payerPhone,
-    phone: params.payerPhone,
-    network: params.network,
-    authorizationUrl: authorizationUrl || undefined,
-    status: "PAID",
-    createdAt: new Date().toISOString(),
-  };
-
-  try {
-    const list = getCachedMoolreTransactions();
-    list.unshift(tx);
-    localStorage.setItem(LS_MOOLRE_TX_KEY, JSON.stringify(list));
-  } catch {
-    // ignore
-  }
-
-  // Upgrade student's tier immediately
-  updateStudentTierInStore(email, plan);
-
-  await createClientNotificationInDb({
-    studentEmail: email,
-    category: "ACCOUNT",
-    title: `Moolre Payment Confirmed: ${planLabel}`,
-    message: `Ref ${externalRef} · $${amountUsd} USD (${amountCharged} ${cfg.currency}). ${
-      plan === "permanent_100"
-        ? "1-on-1 Mentorship, Copy Trading, and Account Management tabs are now unlocked in your sidebar!"
-        : "All 4 Course Levels, Live Trading Rooms, and Market Insights are now unlocked!"
-    }`,
-    linkUrl: plan === "permanent_100" ? "/mentorship" : "/courses",
-  });
-
-  emitPortalUpdate();
-  return {
-    success: true,
-    transaction: tx,
-    authorizationUrl: authorizationUrl || undefined,
-    paymentUrl: authorizationUrl || undefined,
-    message: `Moolre payment (${externalRef}) confirmed! Your account is now upgraded to ${planLabel}.`,
-  };
+    return { success: result.success, transaction, paymentUrl: result.paymentUrl, authorizationUrl: result.paymentUrl, message: result.message };
+  } catch (error) { return { success: false, message: error instanceof Error ? error.message : "Unable to request payment." }; }
 }
 
 // ============================================================================
