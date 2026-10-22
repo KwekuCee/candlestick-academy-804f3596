@@ -6,7 +6,9 @@
 - [x] Implement trusted-role portal redirects and logout to the apex domain.
 - [x] Create branded signup/login/payment/support/blog/contact email templates.
 - [x] Apply Manrope throughout the app, chart/certificate output and emails.
-- [ ] Wire Resend account, payment and support events and verify sending — Resend connected and candlesticksacademy.online verified.
+- [x] Connect Resend, verify candlesticksacademy.online and wire welcome/login notifications, confirmed-payment receipts and persisted support-ticket acknowledgements; 36 tests pass and unsigned welcome requests return 401.
+- [ ] Confirm inbox delivery — Resend accepted the requested test to essilfim3@gmail.com but reported it bounced; recipient confirmation or another test address needed.
+- [ ] Contact/blog sending — templates are ready, but no contact submission or blog event exists in the imported app to wire.
 - [ ] Verify a real live payment and duplicate callbacks update the student only once — blocked on published custom domains, Moolre callback configuration and a real authorized payment; automated rule/reconciliation tests and unsigned browser checks passed, authenticated checks unavailable for external Supabase.
 - [ ] Verify sign-in across production subdomains and logout — blocked on published domains and real sign-in; external Supabase does not provide a managed test session.
 
