@@ -1,14 +1,61 @@
+# robots.txt for Candlesticks Academy (https://candlesticksacademy.online and https://www.candlesticksacademy.online)
+User-agent: *
+Allow: /
+Allow: /courses
+Allow: /sessions
+Allow: /signals
+Allow: /mentorship
+Allow: /terms
+Allow: /privacy
+Allow: /login
+Allow: /register
+Allow: /onboarding
+Allow: /sitemap.xml
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /admin/
+Disallow: /settings
+Disallow: /quiz/
+Disallow: /progress
+
+# Search Engine Web Crawlers (Googlebot, Bingbot, Applebot)
 User-agent: Googlebot
+Allow: /
+Allow: /*
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /*
+
+User-agent: Google-Extended
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+User-agent: Applebot
 Allow: /
 
-User-agent: facebookexternalhit
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: ChatGPT-User
 Allow: /
 
-User-agent: *
+User-agent: ClaudeBot
 Allow: /
+Allow: /llms.txt
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+Sitemap: https://candlesticksacademy.online/sitemap.xml

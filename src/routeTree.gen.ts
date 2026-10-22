@@ -10,33 +10,481 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortalRouteImport } from './routes/_portal'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PortalAccountManagementRouteImport } from './routes/_portal/account-management'
+import { Route as PortalDashboardRouteImport } from './routes/_portal/dashboard'
+import { Route as PortalMentorshipRouteImport } from './routes/_portal/mentorship'
+import { Route as PortalProgressRouteImport } from './routes/_portal/progress'
+import { Route as PortalSettingsRouteImport } from './routes/_portal/settings'
+import { Route as PortalTradesRouteImport } from './routes/_portal/trades'
+import { Route as PortalAdminIndexRouteImport } from './routes/_portal/admin.index'
+import { Route as PortalAdminCoursesRouteImport } from './routes/_portal/admin.courses'
+import { Route as PortalAdminMessagesRouteImport } from './routes/_portal/admin.messages'
+import { Route as PortalAdminPaymentsRouteImport } from './routes/_portal/admin.payments'
+import { Route as PortalAdminSessionsRouteImport } from './routes/_portal/admin.sessions'
+import { Route as PortalAdminStudentsRouteImport } from './routes/_portal/admin.students'
+import { Route as PortalAdminVerificationRouteImport } from './routes/_portal/admin.verification'
+import { Route as PortalCoursesIndexRouteImport } from './routes/_portal/courses.index'
+import { Route as PortalCoursesCourseIdRouteImport } from './routes/_portal/courses.$courseId'
+import { Route as PortalLessonsLessonIdRouteImport } from './routes/_portal/lessons.$lessonId'
+import { Route as PortalQuizQuizIdRouteImport } from './routes/_portal/quiz.$quizId'
+import { Route as PortalSessionsIndexRouteImport } from './routes/_portal/sessions.index'
+import { Route as PortalSignalsIndexRouteImport } from './routes/_portal/signals.index'
+import { Route as PortalSignalsSignalIdRouteImport } from './routes/_portal/signals.$signalId'
+import { Route as ApiExnessConnectExistingRouteImport } from './routes/api/exness/connect-existing'
+import { Route as ApiExnessRefreshRouteImport } from './routes/api/exness/refresh'
+import { Route as ApiExnessSubmitTransferTicketRouteImport } from './routes/api/exness/submit-transfer-ticket'
+import { Route as ApiExnessSyncRouteImport } from './routes/api/exness/sync'
+import { Route as ApiMarketCandlesRouteImport } from './routes/api/market/candles'
+import { Route as ApiMarketPricesRouteImport } from './routes/api/market/prices'
+import { Route as ApiQuizGenerateFromPdfRouteImport } from './routes/api/quiz/generate-from-pdf'
+import { Route as PortalAdminSignalsNewRouteImport } from './routes/_portal/admin.signals.new'
+import { Route as PortalSessionsLiveSessionIdRouteImport } from './routes/_portal/sessions.live.$sessionId'
+import { Route as PortalSessionsReplaySessionIdRouteImport } from './routes/_portal/sessions.replay.$sessionId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/_portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalAccountManagementRoute = PortalAccountManagementRouteImport.update({
+  id: '/account-management',
+  path: '/account-management',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalDashboardRoute = PortalDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMentorshipRoute = PortalMentorshipRouteImport.update({
+  id: '/mentorship',
+  path: '/mentorship',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalProgressRoute = PortalProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSettingsRoute = PortalSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalTradesRoute = PortalTradesRouteImport.update({
+  id: '/trades',
+  path: '/trades',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminIndexRoute = PortalAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminCoursesRoute = PortalAdminCoursesRouteImport.update({
+  id: '/admin/courses',
+  path: '/admin/courses',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminMessagesRoute = PortalAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminPaymentsRoute = PortalAdminPaymentsRouteImport.update({
+  id: '/admin/payments',
+  path: '/admin/payments',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminSessionsRoute = PortalAdminSessionsRouteImport.update({
+  id: '/admin/sessions',
+  path: '/admin/sessions',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminStudentsRoute = PortalAdminStudentsRouteImport.update({
+  id: '/admin/students',
+  path: '/admin/students',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminVerificationRoute = PortalAdminVerificationRouteImport.update({
+  id: '/admin/verification',
+  path: '/admin/verification',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalCoursesIndexRoute = PortalCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalCoursesCourseIdRoute = PortalCoursesCourseIdRouteImport.update({
+  id: '/courses/$courseId',
+  path: '/courses/$courseId',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalLessonsLessonIdRoute = PortalLessonsLessonIdRouteImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalQuizQuizIdRoute = PortalQuizQuizIdRouteImport.update({
+  id: '/quiz/$quizId',
+  path: '/quiz/$quizId',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSessionsIndexRoute = PortalSessionsIndexRouteImport.update({
+  id: '/sessions/',
+  path: '/sessions/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSignalsIndexRoute = PortalSignalsIndexRouteImport.update({
+  id: '/signals/',
+  path: '/signals/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSignalsSignalIdRoute = PortalSignalsSignalIdRouteImport.update({
+  id: '/signals/$signalId',
+  path: '/signals/$signalId',
+  getParentRoute: () => PortalRoute,
+} as any)
+const ApiExnessConnectExistingRoute =
+  ApiExnessConnectExistingRouteImport.update({
+    id: '/api/exness/connect-existing',
+    path: '/api/exness/connect-existing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiExnessRefreshRoute = ApiExnessRefreshRouteImport.update({
+  id: '/api/exness/refresh',
+  path: '/api/exness/refresh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExnessSubmitTransferTicketRoute =
+  ApiExnessSubmitTransferTicketRouteImport.update({
+    id: '/api/exness/submit-transfer-ticket',
+    path: '/api/exness/submit-transfer-ticket',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiExnessSyncRoute = ApiExnessSyncRouteImport.update({
+  id: '/api/exness/sync',
+  path: '/api/exness/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMarketCandlesRoute = ApiMarketCandlesRouteImport.update({
+  id: '/api/market/candles',
+  path: '/api/market/candles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMarketPricesRoute = ApiMarketPricesRouteImport.update({
+  id: '/api/market/prices',
+  path: '/api/market/prices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiQuizGenerateFromPdfRoute = ApiQuizGenerateFromPdfRouteImport.update({
+  id: '/api/quiz/generate-from-pdf',
+  path: '/api/quiz/generate-from-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalAdminSignalsNewRoute = PortalAdminSignalsNewRouteImport.update({
+  id: '/admin/signals/new',
+  path: '/admin/signals/new',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSessionsLiveSessionIdRoute =
+  PortalSessionsLiveSessionIdRouteImport.update({
+    id: '/sessions/live/$sessionId',
+    path: '/sessions/live/$sessionId',
+    getParentRoute: () => PortalRoute,
+  } as any)
+const PortalSessionsReplaySessionIdRoute =
+  PortalSessionsReplaySessionIdRouteImport.update({
+    id: '/sessions/replay/$sessionId',
+    path: '/sessions/replay/$sessionId',
+    getParentRoute: () => PortalRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/terms': typeof TermsRoute
+  '/account-management': typeof PortalAccountManagementRoute
+  '/dashboard': typeof PortalDashboardRoute
+  '/mentorship': typeof PortalMentorshipRoute
+  '/progress': typeof PortalProgressRoute
+  '/settings': typeof PortalSettingsRoute
+  '/trades': typeof PortalTradesRoute
+  '/admin/courses': typeof PortalAdminCoursesRoute
+  '/admin/messages': typeof PortalAdminMessagesRoute
+  '/admin/payments': typeof PortalAdminPaymentsRoute
+  '/admin/sessions': typeof PortalAdminSessionsRoute
+  '/admin/students': typeof PortalAdminStudentsRoute
+  '/admin/verification': typeof PortalAdminVerificationRoute
+  '/courses/$courseId': typeof PortalCoursesCourseIdRoute
+  '/lessons/$lessonId': typeof PortalLessonsLessonIdRoute
+  '/quiz/$quizId': typeof PortalQuizQuizIdRoute
+  '/signals/$signalId': typeof PortalSignalsSignalIdRoute
+  '/api/exness/connect-existing': typeof ApiExnessConnectExistingRoute
+  '/api/exness/refresh': typeof ApiExnessRefreshRoute
+  '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
+  '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/market/candles': typeof ApiMarketCandlesRoute
+  '/api/market/prices': typeof ApiMarketPricesRoute
+  '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/admin/': typeof PortalAdminIndexRoute
+  '/courses/': typeof PortalCoursesIndexRoute
+  '/sessions/': typeof PortalSessionsIndexRoute
+  '/signals/': typeof PortalSignalsIndexRoute
+  '/admin/signals/new': typeof PortalAdminSignalsNewRoute
+  '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
+  '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/terms': typeof TermsRoute
+  '/account-management': typeof PortalAccountManagementRoute
+  '/dashboard': typeof PortalDashboardRoute
+  '/mentorship': typeof PortalMentorshipRoute
+  '/progress': typeof PortalProgressRoute
+  '/settings': typeof PortalSettingsRoute
+  '/trades': typeof PortalTradesRoute
+  '/admin/courses': typeof PortalAdminCoursesRoute
+  '/admin/messages': typeof PortalAdminMessagesRoute
+  '/admin/payments': typeof PortalAdminPaymentsRoute
+  '/admin/sessions': typeof PortalAdminSessionsRoute
+  '/admin/students': typeof PortalAdminStudentsRoute
+  '/admin/verification': typeof PortalAdminVerificationRoute
+  '/courses/$courseId': typeof PortalCoursesCourseIdRoute
+  '/lessons/$lessonId': typeof PortalLessonsLessonIdRoute
+  '/quiz/$quizId': typeof PortalQuizQuizIdRoute
+  '/signals/$signalId': typeof PortalSignalsSignalIdRoute
+  '/api/exness/connect-existing': typeof ApiExnessConnectExistingRoute
+  '/api/exness/refresh': typeof ApiExnessRefreshRoute
+  '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
+  '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/market/candles': typeof ApiMarketCandlesRoute
+  '/api/market/prices': typeof ApiMarketPricesRoute
+  '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/admin': typeof PortalAdminIndexRoute
+  '/courses': typeof PortalCoursesIndexRoute
+  '/sessions': typeof PortalSessionsIndexRoute
+  '/signals': typeof PortalSignalsIndexRoute
+  '/admin/signals/new': typeof PortalAdminSignalsNewRoute
+  '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
+  '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_portal': typeof PortalRouteWithChildren
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/register': typeof RegisterRoute
+  '/terms': typeof TermsRoute
+  '/_portal/account-management': typeof PortalAccountManagementRoute
+  '/_portal/dashboard': typeof PortalDashboardRoute
+  '/_portal/mentorship': typeof PortalMentorshipRoute
+  '/_portal/progress': typeof PortalProgressRoute
+  '/_portal/settings': typeof PortalSettingsRoute
+  '/_portal/trades': typeof PortalTradesRoute
+  '/_portal/admin/courses': typeof PortalAdminCoursesRoute
+  '/_portal/admin/messages': typeof PortalAdminMessagesRoute
+  '/_portal/admin/payments': typeof PortalAdminPaymentsRoute
+  '/_portal/admin/sessions': typeof PortalAdminSessionsRoute
+  '/_portal/admin/students': typeof PortalAdminStudentsRoute
+  '/_portal/admin/verification': typeof PortalAdminVerificationRoute
+  '/_portal/courses/$courseId': typeof PortalCoursesCourseIdRoute
+  '/_portal/lessons/$lessonId': typeof PortalLessonsLessonIdRoute
+  '/_portal/quiz/$quizId': typeof PortalQuizQuizIdRoute
+  '/_portal/signals/$signalId': typeof PortalSignalsSignalIdRoute
+  '/api/exness/connect-existing': typeof ApiExnessConnectExistingRoute
+  '/api/exness/refresh': typeof ApiExnessRefreshRoute
+  '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
+  '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/market/candles': typeof ApiMarketCandlesRoute
+  '/api/market/prices': typeof ApiMarketPricesRoute
+  '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/_portal/admin/': typeof PortalAdminIndexRoute
+  '/_portal/courses/': typeof PortalCoursesIndexRoute
+  '/_portal/sessions/': typeof PortalSessionsIndexRoute
+  '/_portal/signals/': typeof PortalSignalsIndexRoute
+  '/_portal/admin/signals/new': typeof PortalAdminSignalsNewRoute
+  '/_portal/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
+  '/_portal/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/onboarding'
+    | '/privacy'
+    | '/register'
+    | '/terms'
+    | '/account-management'
+    | '/dashboard'
+    | '/mentorship'
+    | '/progress'
+    | '/settings'
+    | '/trades'
+    | '/admin/courses'
+    | '/admin/messages'
+    | '/admin/payments'
+    | '/admin/sessions'
+    | '/admin/students'
+    | '/admin/verification'
+    | '/courses/$courseId'
+    | '/lessons/$lessonId'
+    | '/quiz/$quizId'
+    | '/signals/$signalId'
+    | '/api/exness/connect-existing'
+    | '/api/exness/refresh'
+    | '/api/exness/submit-transfer-ticket'
+    | '/api/exness/sync'
+    | '/api/market/candles'
+    | '/api/market/prices'
+    | '/api/quiz/generate-from-pdf'
+    | '/admin/'
+    | '/courses/'
+    | '/sessions/'
+    | '/signals/'
+    | '/admin/signals/new'
+    | '/sessions/live/$sessionId'
+    | '/sessions/replay/$sessionId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/onboarding'
+    | '/privacy'
+    | '/register'
+    | '/terms'
+    | '/account-management'
+    | '/dashboard'
+    | '/mentorship'
+    | '/progress'
+    | '/settings'
+    | '/trades'
+    | '/admin/courses'
+    | '/admin/messages'
+    | '/admin/payments'
+    | '/admin/sessions'
+    | '/admin/students'
+    | '/admin/verification'
+    | '/courses/$courseId'
+    | '/lessons/$lessonId'
+    | '/quiz/$quizId'
+    | '/signals/$signalId'
+    | '/api/exness/connect-existing'
+    | '/api/exness/refresh'
+    | '/api/exness/submit-transfer-ticket'
+    | '/api/exness/sync'
+    | '/api/market/candles'
+    | '/api/market/prices'
+    | '/api/quiz/generate-from-pdf'
+    | '/admin'
+    | '/courses'
+    | '/sessions'
+    | '/signals'
+    | '/admin/signals/new'
+    | '/sessions/live/$sessionId'
+    | '/sessions/replay/$sessionId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_portal'
+    | '/login'
+    | '/onboarding'
+    | '/privacy'
+    | '/register'
+    | '/terms'
+    | '/_portal/account-management'
+    | '/_portal/dashboard'
+    | '/_portal/mentorship'
+    | '/_portal/progress'
+    | '/_portal/settings'
+    | '/_portal/trades'
+    | '/_portal/admin/courses'
+    | '/_portal/admin/messages'
+    | '/_portal/admin/payments'
+    | '/_portal/admin/sessions'
+    | '/_portal/admin/students'
+    | '/_portal/admin/verification'
+    | '/_portal/courses/$courseId'
+    | '/_portal/lessons/$lessonId'
+    | '/_portal/quiz/$quizId'
+    | '/_portal/signals/$signalId'
+    | '/api/exness/connect-existing'
+    | '/api/exness/refresh'
+    | '/api/exness/submit-transfer-ticket'
+    | '/api/exness/sync'
+    | '/api/market/candles'
+    | '/api/market/prices'
+    | '/api/quiz/generate-from-pdf'
+    | '/_portal/admin/'
+    | '/_portal/courses/'
+    | '/_portal/sessions/'
+    | '/_portal/signals/'
+    | '/_portal/admin/signals/new'
+    | '/_portal/sessions/live/$sessionId'
+    | '/_portal/sessions/replay/$sessionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PortalRoute: typeof PortalRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RegisterRoute: typeof RegisterRoute
+  TermsRoute: typeof TermsRoute
+  ApiExnessConnectExistingRoute: typeof ApiExnessConnectExistingRoute
+  ApiExnessRefreshRoute: typeof ApiExnessRefreshRoute
+  ApiExnessSubmitTransferTicketRoute: typeof ApiExnessSubmitTransferTicketRoute
+  ApiExnessSyncRoute: typeof ApiExnessSyncRoute
+  ApiMarketCandlesRoute: typeof ApiMarketCandlesRoute
+  ApiMarketPricesRoute: typeof ApiMarketPricesRoute
+  ApiQuizGenerateFromPdfRoute: typeof ApiQuizGenerateFromPdfRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +496,331 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_portal': {
+      id: '/_portal'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal/account-management': {
+      id: '/_portal/account-management'
+      path: '/account-management'
+      fullPath: '/account-management'
+      preLoaderRoute: typeof PortalAccountManagementRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/dashboard': {
+      id: '/_portal/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PortalDashboardRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/mentorship': {
+      id: '/_portal/mentorship'
+      path: '/mentorship'
+      fullPath: '/mentorship'
+      preLoaderRoute: typeof PortalMentorshipRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/progress': {
+      id: '/_portal/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof PortalProgressRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/settings': {
+      id: '/_portal/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof PortalSettingsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/trades': {
+      id: '/_portal/trades'
+      path: '/trades'
+      fullPath: '/trades'
+      preLoaderRoute: typeof PortalTradesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/': {
+      id: '/_portal/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof PortalAdminIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/courses': {
+      id: '/_portal/admin/courses'
+      path: '/admin/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof PortalAdminCoursesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/messages': {
+      id: '/_portal/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof PortalAdminMessagesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/payments': {
+      id: '/_portal/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof PortalAdminPaymentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/sessions': {
+      id: '/_portal/admin/sessions'
+      path: '/admin/sessions'
+      fullPath: '/admin/sessions'
+      preLoaderRoute: typeof PortalAdminSessionsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/students': {
+      id: '/_portal/admin/students'
+      path: '/admin/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof PortalAdminStudentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/verification': {
+      id: '/_portal/admin/verification'
+      path: '/admin/verification'
+      fullPath: '/admin/verification'
+      preLoaderRoute: typeof PortalAdminVerificationRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/courses/': {
+      id: '/_portal/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof PortalCoursesIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/courses/$courseId': {
+      id: '/_portal/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/courses/$courseId'
+      preLoaderRoute: typeof PortalCoursesCourseIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/lessons/$lessonId': {
+      id: '/_portal/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof PortalLessonsLessonIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/quiz/$quizId': {
+      id: '/_portal/quiz/$quizId'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof PortalQuizQuizIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/sessions/': {
+      id: '/_portal/sessions/'
+      path: '/sessions'
+      fullPath: '/sessions/'
+      preLoaderRoute: typeof PortalSessionsIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/signals/': {
+      id: '/_portal/signals/'
+      path: '/signals'
+      fullPath: '/signals/'
+      preLoaderRoute: typeof PortalSignalsIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/signals/$signalId': {
+      id: '/_portal/signals/$signalId'
+      path: '/signals/$signalId'
+      fullPath: '/signals/$signalId'
+      preLoaderRoute: typeof PortalSignalsSignalIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/api/exness/connect-existing': {
+      id: '/api/exness/connect-existing'
+      path: '/api/exness/connect-existing'
+      fullPath: '/api/exness/connect-existing'
+      preLoaderRoute: typeof ApiExnessConnectExistingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/exness/refresh': {
+      id: '/api/exness/refresh'
+      path: '/api/exness/refresh'
+      fullPath: '/api/exness/refresh'
+      preLoaderRoute: typeof ApiExnessRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/exness/submit-transfer-ticket': {
+      id: '/api/exness/submit-transfer-ticket'
+      path: '/api/exness/submit-transfer-ticket'
+      fullPath: '/api/exness/submit-transfer-ticket'
+      preLoaderRoute: typeof ApiExnessSubmitTransferTicketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/exness/sync': {
+      id: '/api/exness/sync'
+      path: '/api/exness/sync'
+      fullPath: '/api/exness/sync'
+      preLoaderRoute: typeof ApiExnessSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/market/candles': {
+      id: '/api/market/candles'
+      path: '/api/market/candles'
+      fullPath: '/api/market/candles'
+      preLoaderRoute: typeof ApiMarketCandlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/market/prices': {
+      id: '/api/market/prices'
+      path: '/api/market/prices'
+      fullPath: '/api/market/prices'
+      preLoaderRoute: typeof ApiMarketPricesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/quiz/generate-from-pdf': {
+      id: '/api/quiz/generate-from-pdf'
+      path: '/api/quiz/generate-from-pdf'
+      fullPath: '/api/quiz/generate-from-pdf'
+      preLoaderRoute: typeof ApiQuizGenerateFromPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal/admin/signals/new': {
+      id: '/_portal/admin/signals/new'
+      path: '/admin/signals/new'
+      fullPath: '/admin/signals/new'
+      preLoaderRoute: typeof PortalAdminSignalsNewRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/sessions/live/$sessionId': {
+      id: '/_portal/sessions/live/$sessionId'
+      path: '/sessions/live/$sessionId'
+      fullPath: '/sessions/live/$sessionId'
+      preLoaderRoute: typeof PortalSessionsLiveSessionIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/sessions/replay/$sessionId': {
+      id: '/_portal/sessions/replay/$sessionId'
+      path: '/sessions/replay/$sessionId'
+      fullPath: '/sessions/replay/$sessionId'
+      preLoaderRoute: typeof PortalSessionsReplaySessionIdRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
 
+interface PortalRouteChildren {
+  PortalAccountManagementRoute: typeof PortalAccountManagementRoute
+  PortalDashboardRoute: typeof PortalDashboardRoute
+  PortalMentorshipRoute: typeof PortalMentorshipRoute
+  PortalProgressRoute: typeof PortalProgressRoute
+  PortalSettingsRoute: typeof PortalSettingsRoute
+  PortalTradesRoute: typeof PortalTradesRoute
+  PortalAdminCoursesRoute: typeof PortalAdminCoursesRoute
+  PortalAdminMessagesRoute: typeof PortalAdminMessagesRoute
+  PortalAdminPaymentsRoute: typeof PortalAdminPaymentsRoute
+  PortalAdminSessionsRoute: typeof PortalAdminSessionsRoute
+  PortalAdminStudentsRoute: typeof PortalAdminStudentsRoute
+  PortalAdminVerificationRoute: typeof PortalAdminVerificationRoute
+  PortalCoursesCourseIdRoute: typeof PortalCoursesCourseIdRoute
+  PortalLessonsLessonIdRoute: typeof PortalLessonsLessonIdRoute
+  PortalQuizQuizIdRoute: typeof PortalQuizQuizIdRoute
+  PortalSignalsSignalIdRoute: typeof PortalSignalsSignalIdRoute
+  PortalAdminIndexRoute: typeof PortalAdminIndexRoute
+  PortalCoursesIndexRoute: typeof PortalCoursesIndexRoute
+  PortalSessionsIndexRoute: typeof PortalSessionsIndexRoute
+  PortalSignalsIndexRoute: typeof PortalSignalsIndexRoute
+  PortalAdminSignalsNewRoute: typeof PortalAdminSignalsNewRoute
+  PortalSessionsLiveSessionIdRoute: typeof PortalSessionsLiveSessionIdRoute
+  PortalSessionsReplaySessionIdRoute: typeof PortalSessionsReplaySessionIdRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalAccountManagementRoute: PortalAccountManagementRoute,
+  PortalDashboardRoute: PortalDashboardRoute,
+  PortalMentorshipRoute: PortalMentorshipRoute,
+  PortalProgressRoute: PortalProgressRoute,
+  PortalSettingsRoute: PortalSettingsRoute,
+  PortalTradesRoute: PortalTradesRoute,
+  PortalAdminCoursesRoute: PortalAdminCoursesRoute,
+  PortalAdminMessagesRoute: PortalAdminMessagesRoute,
+  PortalAdminPaymentsRoute: PortalAdminPaymentsRoute,
+  PortalAdminSessionsRoute: PortalAdminSessionsRoute,
+  PortalAdminStudentsRoute: PortalAdminStudentsRoute,
+  PortalAdminVerificationRoute: PortalAdminVerificationRoute,
+  PortalCoursesCourseIdRoute: PortalCoursesCourseIdRoute,
+  PortalLessonsLessonIdRoute: PortalLessonsLessonIdRoute,
+  PortalQuizQuizIdRoute: PortalQuizQuizIdRoute,
+  PortalSignalsSignalIdRoute: PortalSignalsSignalIdRoute,
+  PortalAdminIndexRoute: PortalAdminIndexRoute,
+  PortalCoursesIndexRoute: PortalCoursesIndexRoute,
+  PortalSessionsIndexRoute: PortalSessionsIndexRoute,
+  PortalSignalsIndexRoute: PortalSignalsIndexRoute,
+  PortalAdminSignalsNewRoute: PortalAdminSignalsNewRoute,
+  PortalSessionsLiveSessionIdRoute: PortalSessionsLiveSessionIdRoute,
+  PortalSessionsReplaySessionIdRoute: PortalSessionsReplaySessionIdRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PortalRoute: PortalRouteWithChildren,
+  LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
+  PrivacyRoute: PrivacyRoute,
+  RegisterRoute: RegisterRoute,
+  TermsRoute: TermsRoute,
+  ApiExnessConnectExistingRoute: ApiExnessConnectExistingRoute,
+  ApiExnessRefreshRoute: ApiExnessRefreshRoute,
+  ApiExnessSubmitTransferTicketRoute: ApiExnessSubmitTransferTicketRoute,
+  ApiExnessSyncRoute: ApiExnessSyncRoute,
+  ApiMarketCandlesRoute: ApiMarketCandlesRoute,
+  ApiMarketPricesRoute: ApiMarketPricesRoute,
+  ApiQuizGenerateFromPdfRoute: ApiQuizGenerateFromPdfRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -26,4 +26,6 @@ const csrfMiddleware = createCsrfMiddleware({
 
 export const startInstance = createStart(() => ({
   requestMiddleware: [errorMiddleware, csrfMiddleware],
+  // Pages read browser storage at render time, so they render in the browser only.
+  defaultSsr: false,
 }));
