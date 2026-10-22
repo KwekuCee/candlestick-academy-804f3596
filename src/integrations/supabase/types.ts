@@ -890,6 +890,42 @@ export type Database = {
           },
         ]
       }
+      student_reviews: {
+        Row: {
+          badge: string
+          created_at: string
+          id: string
+          is_published: boolean
+          location: string
+          quote: string
+          sort_order: number
+          student_name: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          quote: string
+          sort_order?: number
+          student_name: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          quote?: string
+          sort_order?: number
+          student_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       student_trades: {
         Row: {
           close_price: string

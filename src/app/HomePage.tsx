@@ -1,7 +1,7 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@/app/routerCompat";
 import { BrandLogo } from "./BrandLogo";
-import mentorShare from "@/assets/academy-mentor-share.jpg.asset.json";
+import { fetchReviews, type StudentReview } from "./reviewsStore";
 import mentorPortrait from "@/assets/mentor-portrait.webp.asset.json";
 
 type IconName =
@@ -1050,6 +1050,11 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const [reviews, setReviews] = useState<StudentReview[]>([]);
+
+  useEffect(() => {
+    fetchReviews().then(setReviews).catch(() => setReviews([]));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -1191,14 +1196,10 @@ export default function App() {
               <h2>Progress you can feel.</h2>
             </div>
             <div className="testimonials">
-              {[
-                ["The live sessions changed everything. I finally understand why a setup works instead of blindly copying trades.", "AKOSUA D.", "ACCRA", "+"],
-                ["The structure gave me discipline. I stopped overtrading and started making decisions I could actually explain.", "NANA K.", "KUMASI", "✓"],
-                ["Clear, practical, and honest. This is the first trading community where I never felt lost or pressured.", "YAW M.", "TAKORADI", "↑"],
-              ].map((t) => (
-                <article className="quote-card" key={t[1]}>
-                  <span className="quote-mark">“</span><p>{t[0]}</p>
-                  <div><span className="student-avatar">{t[3]}</span><b>{t[1]}<small>{t[2]} · VERIFIED STUDENT</small></b></div>
+              {reviews.map((t) => (
+                <article className="quote-card" key={t.id}>
+                  <span className="quote-mark">“</span><p>{t.quote}</p>
+                  <div><span className="student-avatar">{t.badge}</span><b>{t.student_name}<small>{t.location ? `${t.location} · ` : ""}VERIFIED STUDENT</small></b></div>
                 </article>
               ))}
             </div>
@@ -1214,7 +1215,7 @@ export default function App() {
               <p>Everything you need to know about institutional Forex and Gold trading with Kwekucandles across Africa.</p>
             </div>
 
-            <div className="max-w-3xl mx-auto space-y-4 pt-4">
+            <div className="faq-list">
               {[
                 {
                   q: "What makes Candlesticks Academy the #1 Forex academy in Africa and Ghana?",
@@ -1233,15 +1234,14 @@ export default function App() {
                   a: "Create your free student account on candlesticksacademy.online, register with Exness using our official partner link, and deposit a minimum of $50 into your own trading account. Full access to courses, live sessions, and VIP signals is automatically unlocked.",
                 },
               ].map((faq, idx) => (
-                <div key={idx} className="p-5 rounded-2xl bg-[#131722] border border-white/10 hover:border-[#ffb600]/40 transition text-left">
-                  <h3 className="text-sm sm:text-base font-bold text-white mb-2 flex items-start gap-2.5">
-                    <span className="text-[#ffb600] font-mono text-xs sm:text-sm shrink-0 mt-0.5">0{idx + 1}.</span>
-                    <span>{faq.q}</span>
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#9aa4b5] leading-relaxed pl-6 sm:pl-7">
-                    {faq.a}
-                  </p>
-                </div>
+                <details key={idx} className="faq-item" open={idx === 0}>
+                  <summary>
+                    <span className="faq-num">0{idx + 1}</span>
+                    <h3>{faq.q}</h3>
+                    <span className="faq-toggle" aria-hidden="true" />
+                  </summary>
+                  <p>{faq.a}</p>
+                </details>
               ))}
             </div>
           </div>
@@ -1262,7 +1262,7 @@ export default function App() {
         <div className="container footer-top">
           <Logo />
           <p>Practical Forex education for traders who are ready to learn with purpose.</p>
-          <div className="footer-links"><a href="#learn">How it works</a><a href="#benefits">Academy</a><a href="#mentor">Mentor</a><a href="mailto:hello@candlesticks.academy">Contact</a></div>
+          <div className="footer-links"><a href="#learn">How it works</a><a href="#benefits">Academy</a><a href="#mentor">Mentor</a><a href="mailto:contact@candlesticksacademy.online">Contact</a></div>
         </div>
         <div className="container footer-bottom">
           <span>© 2026 Candlesticks Academy. All rights reserved.</span>
