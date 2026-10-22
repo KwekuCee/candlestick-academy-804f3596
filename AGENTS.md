@@ -15,3 +15,6 @@
 - Imported pages use the generated Supabase client through their compatibility export so sessions and opaque publishable-key handling stay consistent.
 - Trusted privileges live in `public.user_roles`; Exness server operations validate bearer sessions and require a trusted admin role for partner-wide syncs, never browser admin flags.
 - Environment uploads are never copied into source; private credentials use encrypted runtime secrets and server code reads `SUPABASE_URL`, not browser configuration.
+- Moolre checkout and status calls run only on the server; fulfillment uses a service-role-only atomic SQL function matching stored references, amounts and wallets so browser state cannot grant paid access.
+- Portal login uses Supabase password verification and trusted user_roles; encrypted HttpOnly parent-domain cookies transfer sessions without URL tokens or client admin flags.
+- Email templates are React Email components; provider sends stay disconnected until the requested Resend connection and verified sender domain are available.

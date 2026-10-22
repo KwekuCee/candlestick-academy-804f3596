@@ -1,4 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { Button } from '@/components/ui/button';
+import { verifyMoolrePayment } from './portalDataStore';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "@/app/routerCompat";
 import {
   ADMIN_PORTAL_DOMAIN,
@@ -535,6 +537,8 @@ export function MoolreCheckoutModal({
   const [network, setNetwork] = useState<"MTN" | "Telecel" | "AT">("MTN");
   const [payerPhone, setPayerPhone] = useState(student.phone || "");
   const [processing, setProcessing] = useState(false);
+  const [pendingReference, setPendingReference] = useState<string | null>(null);
+  const checkoutRequestId = useRef(crypto.randomUUID());
   const [feedback, setFeedback] = useState<{
     success: boolean;
     message: string;
@@ -555,6 +559,7 @@ export function MoolreCheckoutModal({
       paymentMethod,
       payerPhone,
       network,
+      requestId: checkoutRequestId.current,
     });
     setProcessing(false);
     setFeedback({
@@ -562,11 +567,18 @@ export function MoolreCheckoutModal({
       message: res.message,
       paymentUrl: res.paymentUrl,
     });
-    if (res.success && onSuccess) {
-      setTimeout(() => {
-        onSuccess();
-      }, 1500);
-    }
+    if (res.transaction) setPendingReference(res.transaction.externalRef);
+  }
+
+  async function checkPayment() {
+    if (!pendingReference) return;
+    setProcessing(true);
+    try {
+      const result = await verifyMoolrePayment(pendingReference);
+      setFeedback({ success: result.success, message: result.message });
+      if (result.status === 'PAID') onSuccess?.();
+    } catch (error) { setFeedback({ success: false, message: error instanceof Error ? error.message : 'Unable to verify payment. Try again.' }); }
+    finally { setProcessing(false); }
   }
 
   return (
@@ -735,6 +747,7 @@ export function MoolreCheckoutModal({
               )}
             </div>
           )}
+          {pendingReference && <Button type="button" variant="outline" disabled={processing} onClick={() => void checkPayment()}><CreditCard size={16} /> Check payment status</Button>}
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
             <button
@@ -1091,21 +1104,10 @@ export function PortalLayout() {
     }
   }
 
-  function handleLogout() {
-    logoutCurrentUser();
-    if (typeof window !== "undefined") {
-      const host = window.location.hostname.toLowerCase();
-      if (
-        host === ADMIN_PORTAL_DOMAIN ||
-        host === STUDENT_PORTAL_DOMAIN ||
-        host.includes("candlesticksacademy.online") ||
-        host.includes("candlesticks.online")
-      ) {
-        window.location.href = "/login";
-        return;
-      }
-    }
-    nav("/login");
+  async function handleLogout() {
+    const destination = await logoutCurrentUser();
+    if (destination.startsWith('https://')) window.location.replace(destination);
+    else nav('/', { replace: true });
   }
 
   function handleSearchSubmit(e: FormEvent) {

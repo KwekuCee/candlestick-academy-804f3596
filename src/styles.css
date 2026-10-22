@@ -1,6 +1,19 @@
 @import "tailwindcss" source(none);
 @source "../src";
 
+@theme {
+  --font-sans: "Manrope";
+  --font-mono: "Manrope";
+  --font-serif: "Manrope";
+  --color-background: var(--bg);
+  --color-foreground: #f7f7f3;
+  --color-primary: var(--yellow);
+  --color-primary-foreground: var(--ink);
+  --color-input: var(--border);
+  --color-accent: var(--surface-2);
+  --color-accent-foreground: #f7f7f3;
+}
+
 :root {
   --yellow: #ffb600;
   --yellow-soft: #ffc933;

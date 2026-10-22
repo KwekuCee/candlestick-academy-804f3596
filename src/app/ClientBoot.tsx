@@ -18,18 +18,17 @@ export function ClientBoot() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
-    hydrateCrossDomainSession();
+    void hydrateCrossDomainSession();
     const host = window.location.hostname.toLowerCase();
     const path = window.location.pathname;
     const full = path + window.location.search + window.location.hash;
     let dest: string | null = null;
     if ((host === ADMIN_PORTAL_DOMAIN || host.startsWith("master.")) && path === "/") {
-      dest = isMasterAdminAuthenticated() ? "/admin" : "/login";
+      dest = "/login";
     } else if ((host === STUDENT_PORTAL_DOMAIN || host.startsWith("student.") || host.startsWith("stu.")) && path === "/") {
-      dest = localStorage.getItem("candlesticks_current_student") ? "/dashboard" : "/login";
+      dest = "/login";
     } else if (path === "/" && !window.location.search && !window.location.hash) {
-      const saved = getSavedActiveRoute();
-      if (saved && saved !== "/" && saved.startsWith("/")) dest = saved;
+      // The apex homepage is always the logout destination, never a saved private page.
     } else {
       saveActiveRoute(full);
     }
