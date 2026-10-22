@@ -46,6 +46,8 @@ import { Route as ApiQuizGenerateFromPdfRouteImport } from './routes/api/quiz/ge
 import { Route as PortalAdminSignalsNewRouteImport } from './routes/_portal/admin.signals.new'
 import { Route as PortalSessionsLiveSessionIdRouteImport } from './routes/_portal/sessions.live.$sessionId'
 import { Route as PortalSessionsReplaySessionIdRouteImport } from './routes/_portal/sessions.replay.$sessionId'
+import { Route as ApiPublicPaymentsCheckoutRouteImport } from './routes/api/public/payments/checkout'
+import { Route as ApiPublicPaymentsVerifyRouteImport } from './routes/api/public/payments/verify'
 import { Route as ApiPublicPortalSessionRouteImport } from './routes/api/public/portal/session'
 
 const IndexRoute = IndexRouteImport.update({
@@ -236,6 +238,17 @@ const PortalSessionsReplaySessionIdRoute =
     path: '/sessions/replay/$sessionId',
     getParentRoute: () => PortalRoute,
   } as any)
+const ApiPublicPaymentsCheckoutRoute =
+  ApiPublicPaymentsCheckoutRouteImport.update({
+    id: '/api/public/payments/checkout',
+    path: '/api/public/payments/checkout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicPaymentsVerifyRoute = ApiPublicPaymentsVerifyRouteImport.update({
+  id: '/api/public/payments/verify',
+  path: '/api/public/payments/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPortalSessionRoute = ApiPublicPortalSessionRouteImport.update({
   id: '/api/public/portal/session',
   path: '/api/public/portal/session',
@@ -279,6 +292,8 @@ export interface FileRoutesByFullPath {
   '/admin/signals/new': typeof PortalAdminSignalsNewRoute
   '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
+  '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRoutesByTo {
@@ -318,6 +333,8 @@ export interface FileRoutesByTo {
   '/admin/signals/new': typeof PortalAdminSignalsNewRoute
   '/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
+  '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRoutesById {
@@ -359,6 +376,8 @@ export interface FileRoutesById {
   '/_portal/admin/signals/new': typeof PortalAdminSignalsNewRoute
   '/_portal/sessions/live/$sessionId': typeof PortalSessionsLiveSessionIdRoute
   '/_portal/sessions/replay/$sessionId': typeof PortalSessionsReplaySessionIdRoute
+  '/api/public/payments/checkout': typeof ApiPublicPaymentsCheckoutRoute
+  '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
 }
 export interface FileRouteTypes {
@@ -400,6 +419,8 @@ export interface FileRouteTypes {
     | '/admin/signals/new'
     | '/sessions/live/$sessionId'
     | '/sessions/replay/$sessionId'
+    | '/api/public/payments/checkout'
+    | '/api/public/payments/verify'
     | '/api/public/portal/session'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -439,6 +460,8 @@ export interface FileRouteTypes {
     | '/admin/signals/new'
     | '/sessions/live/$sessionId'
     | '/sessions/replay/$sessionId'
+    | '/api/public/payments/checkout'
+    | '/api/public/payments/verify'
     | '/api/public/portal/session'
   id:
     | '__root__'
@@ -479,6 +502,8 @@ export interface FileRouteTypes {
     | '/_portal/admin/signals/new'
     | '/_portal/sessions/live/$sessionId'
     | '/_portal/sessions/replay/$sessionId'
+    | '/api/public/payments/checkout'
+    | '/api/public/payments/verify'
     | '/api/public/portal/session'
   fileRoutesById: FileRoutesById
 }
@@ -497,6 +522,8 @@ export interface RootRouteChildren {
   ApiMarketCandlesRoute: typeof ApiMarketCandlesRoute
   ApiMarketPricesRoute: typeof ApiMarketPricesRoute
   ApiQuizGenerateFromPdfRoute: typeof ApiQuizGenerateFromPdfRoute
+  ApiPublicPaymentsCheckoutRoute: typeof ApiPublicPaymentsCheckoutRoute
+  ApiPublicPaymentsVerifyRoute: typeof ApiPublicPaymentsVerifyRoute
   ApiPublicPortalSessionRoute: typeof ApiPublicPortalSessionRoute
 }
 
@@ -761,6 +788,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalSessionsReplaySessionIdRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/api/public/payments/checkout': {
+      id: '/api/public/payments/checkout'
+      path: '/api/public/payments/checkout'
+      fullPath: '/api/public/payments/checkout'
+      preLoaderRoute: typeof ApiPublicPaymentsCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/payments/verify': {
+      id: '/api/public/payments/verify'
+      path: '/api/public/payments/verify'
+      fullPath: '/api/public/payments/verify'
+      preLoaderRoute: typeof ApiPublicPaymentsVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/portal/session': {
       id: '/api/public/portal/session'
       path: '/api/public/portal/session'
@@ -841,6 +882,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMarketCandlesRoute: ApiMarketCandlesRoute,
   ApiMarketPricesRoute: ApiMarketPricesRoute,
   ApiQuizGenerateFromPdfRoute: ApiQuizGenerateFromPdfRoute,
+  ApiPublicPaymentsCheckoutRoute: ApiPublicPaymentsCheckoutRoute,
+  ApiPublicPaymentsVerifyRoute: ApiPublicPaymentsVerifyRoute,
   ApiPublicPortalSessionRoute: ApiPublicPortalSessionRoute,
 }
 export const routeTree = rootRouteImport
