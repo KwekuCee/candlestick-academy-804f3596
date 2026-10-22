@@ -1,7 +1,7 @@
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@/app/routerCompat";
 import { BrandLogo } from "./BrandLogo";
-import mentorShare from "@/assets/academy-mentor-share.jpg.asset.json";
+import { fetchReviews, type StudentReview } from "./reviewsStore";
 import mentorPortrait from "@/assets/mentor-portrait.webp.asset.json";
 
 type IconName =
@@ -1050,6 +1050,11 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const [reviews, setReviews] = useState<StudentReview[]>([]);
+
+  useEffect(() => {
+    fetchReviews().then(setReviews).catch(() => setReviews([]));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
