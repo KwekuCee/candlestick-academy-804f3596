@@ -1,5 +1,5 @@
 import { isSupabaseConfigured, supabase } from "./supabaseClient";
-import schemaSqlRaw from "../../supabase/schema.sql?raw";
+import schemaSqlRaw from "./schema.sql?raw";
 
 export interface ExnessStudent {
   id: string;
