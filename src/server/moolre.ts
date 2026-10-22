@@ -39,6 +39,15 @@ export async function reconcilePayment(ref: string) {
   }
   const { data: updated, error: readError } = await admin.from('moolre_payment_attempts').select('*').eq('id', attempt.id).single();
   if (readError || !updated) throw new Error('Unable to read payment confirmation.');
+  if (updated.status === 'PAID') {
+    const { data: student } = await admin.from('students').select('email,full_name').eq('id', updated.student_id).single();
+    if (student?.email) {
+      try {
+        const { sendEventEmail } = await import('./academy-emails');
+        await sendEventEmail('payment', student.email, updated.id, { name: student.full_name, reference: updated.external_ref, amount: `${updated.currency} ${Number(updated.amount).toFixed(2)}`, actionUrl: 'https://student.candlesticksacademy.online/dashboard' });
+      } catch { console.error('Verified payment receipt unavailable; payment remains confirmed'); }
+    }
+  }
   return updated;
 }
 export async function paymentAction(request: Request, action: 'checkout' | 'verify') {

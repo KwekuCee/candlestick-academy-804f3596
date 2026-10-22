@@ -51,6 +51,7 @@ import { Route as ApiPublicPaymentsMoolreWebhookRouteImport } from './routes/api
 import { Route as ApiPublicPaymentsVerifyRouteImport } from './routes/api/public/payments/verify'
 import { Route as ApiPublicPortalLoginRouteImport } from './routes/api/public/portal/login'
 import { Route as ApiPublicPortalSessionRouteImport } from './routes/api/public/portal/session'
+import { Route as ApiPublicPortalWelcomeRouteImport } from './routes/api/public/portal/welcome'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -267,6 +268,11 @@ const ApiPublicPortalSessionRoute = ApiPublicPortalSessionRouteImport.update({
   path: '/api/public/portal/session',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPortalWelcomeRoute = ApiPublicPortalWelcomeRouteImport.update({
+  id: '/api/public/portal/welcome',
+  path: '/api/public/portal/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -310,6 +316,7 @@ export interface FileRoutesByFullPath {
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
+  '/api/public/portal/welcome': typeof ApiPublicPortalWelcomeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -353,6 +360,7 @@ export interface FileRoutesByTo {
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
+  '/api/public/portal/welcome': typeof ApiPublicPortalWelcomeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/api/public/payments/verify': typeof ApiPublicPaymentsVerifyRoute
   '/api/public/portal/login': typeof ApiPublicPortalLoginRoute
   '/api/public/portal/session': typeof ApiPublicPortalSessionRoute
+  '/api/public/portal/welcome': typeof ApiPublicPortalWelcomeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -443,6 +452,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/verify'
     | '/api/public/portal/login'
     | '/api/public/portal/session'
+    | '/api/public/portal/welcome'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -486,6 +496,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/verify'
     | '/api/public/portal/login'
     | '/api/public/portal/session'
+    | '/api/public/portal/welcome'
   id:
     | '__root__'
     | '/'
@@ -530,6 +541,7 @@ export interface FileRouteTypes {
     | '/api/public/payments/verify'
     | '/api/public/portal/login'
     | '/api/public/portal/session'
+    | '/api/public/portal/welcome'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -552,6 +564,7 @@ export interface RootRouteChildren {
   ApiPublicPaymentsVerifyRoute: typeof ApiPublicPaymentsVerifyRoute
   ApiPublicPortalLoginRoute: typeof ApiPublicPortalLoginRoute
   ApiPublicPortalSessionRoute: typeof ApiPublicPortalSessionRoute
+  ApiPublicPortalWelcomeRoute: typeof ApiPublicPortalWelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -850,6 +863,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPortalSessionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/portal/welcome': {
+      id: '/api/public/portal/welcome'
+      path: '/api/public/portal/welcome'
+      fullPath: '/api/public/portal/welcome'
+      preLoaderRoute: typeof ApiPublicPortalWelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -928,6 +948,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicPaymentsVerifyRoute: ApiPublicPaymentsVerifyRoute,
   ApiPublicPortalLoginRoute: ApiPublicPortalLoginRoute,
   ApiPublicPortalSessionRoute: ApiPublicPortalSessionRoute,
+  ApiPublicPortalWelcomeRoute: ApiPublicPortalWelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
