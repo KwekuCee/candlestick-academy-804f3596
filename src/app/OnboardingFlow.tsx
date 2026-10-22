@@ -97,6 +97,7 @@ const COUNTRIES = [
 
 export function OnboardingFlow() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const config = getStoredConfig();
   const partnerLink = config.partnerLink || OFFICIAL_PARTNER_LINK;
   const partnerCode = config.partnerCode || OFFICIAL_PARTNER_CODE;
@@ -618,7 +619,8 @@ export function OnboardingFlow() {
                 lineHeight: 1.12,
               }}
             >
-              Connect your <em className="not-italic text-[#ffb600]">Exness trading account.</em>
+              {pathname === "/register" ? "Register with Candlesticks Academy: " : "Verify your Academy referral: "}
+              <em className="not-italic text-[#ffb600]">connect your Exness account.</em>
             </h1>
             <p
               className="text-sm sm:text-base mt-2"
