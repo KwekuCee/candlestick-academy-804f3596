@@ -863,6 +863,12 @@ export async function syncStudentToSupabase(user: ExnessStudent, password?: stri
 
     const { error } = await supabase.from("students").upsert(payload, { onConflict: "email" });
     if (error) throw error;
+    if (password) {
+      const { data: signedIn } = await supabase.auth.getSession();
+      if (signedIn.session) {
+        await fetch('/api/public/portal/welcome', { method: 'POST', headers: { Authorization: `Bearer ${signedIn.session.access_token}` } }).catch(() => undefined);
+      }
+    }
     return { success: true, needsConfirmation: false };
   } catch (err) {
     console.debug("Supabase sync note:", err);
