@@ -26,6 +26,7 @@ import { Route as PortalAdminIndexRouteImport } from './routes/_portal/admin.ind
 import { Route as PortalAdminCoursesRouteImport } from './routes/_portal/admin.courses'
 import { Route as PortalAdminMessagesRouteImport } from './routes/_portal/admin.messages'
 import { Route as PortalAdminPaymentsRouteImport } from './routes/_portal/admin.payments'
+import { Route as PortalAdminReviewsRouteImport } from './routes/_portal/admin.reviews'
 import { Route as PortalAdminSessionsRouteImport } from './routes/_portal/admin.sessions'
 import { Route as PortalAdminStudentsRouteImport } from './routes/_portal/admin.students'
 import { Route as PortalAdminVerificationRouteImport } from './routes/_portal/admin.verification'
@@ -135,6 +136,11 @@ const PortalAdminMessagesRoute = PortalAdminMessagesRouteImport.update({
 const PortalAdminPaymentsRoute = PortalAdminPaymentsRouteImport.update({
   id: '/admin/payments',
   path: '/admin/payments',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAdminReviewsRoute = PortalAdminReviewsRouteImport.update({
+  id: '/admin/reviews',
+  path: '/admin/reviews',
   getParentRoute: () => PortalRoute,
 } as any)
 const PortalAdminSessionsRoute = PortalAdminSessionsRouteImport.update({
@@ -290,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses': typeof PortalAdminCoursesRoute
   '/admin/messages': typeof PortalAdminMessagesRoute
   '/admin/payments': typeof PortalAdminPaymentsRoute
+  '/admin/reviews': typeof PortalAdminReviewsRoute
   '/admin/sessions': typeof PortalAdminSessionsRoute
   '/admin/students': typeof PortalAdminStudentsRoute
   '/admin/verification': typeof PortalAdminVerificationRoute
@@ -334,6 +341,7 @@ export interface FileRoutesByTo {
   '/admin/courses': typeof PortalAdminCoursesRoute
   '/admin/messages': typeof PortalAdminMessagesRoute
   '/admin/payments': typeof PortalAdminPaymentsRoute
+  '/admin/reviews': typeof PortalAdminReviewsRoute
   '/admin/sessions': typeof PortalAdminSessionsRoute
   '/admin/students': typeof PortalAdminStudentsRoute
   '/admin/verification': typeof PortalAdminVerificationRoute
@@ -380,6 +388,7 @@ export interface FileRoutesById {
   '/_portal/admin/courses': typeof PortalAdminCoursesRoute
   '/_portal/admin/messages': typeof PortalAdminMessagesRoute
   '/_portal/admin/payments': typeof PortalAdminPaymentsRoute
+  '/_portal/admin/reviews': typeof PortalAdminReviewsRoute
   '/_portal/admin/sessions': typeof PortalAdminSessionsRoute
   '/_portal/admin/students': typeof PortalAdminStudentsRoute
   '/_portal/admin/verification': typeof PortalAdminVerificationRoute
@@ -426,6 +435,7 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/messages'
     | '/admin/payments'
+    | '/admin/reviews'
     | '/admin/sessions'
     | '/admin/students'
     | '/admin/verification'
@@ -470,6 +480,7 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/messages'
     | '/admin/payments'
+    | '/admin/reviews'
     | '/admin/sessions'
     | '/admin/students'
     | '/admin/verification'
@@ -515,6 +526,7 @@ export interface FileRouteTypes {
     | '/_portal/admin/courses'
     | '/_portal/admin/messages'
     | '/_portal/admin/payments'
+    | '/_portal/admin/reviews'
     | '/_portal/admin/sessions'
     | '/_portal/admin/students'
     | '/_portal/admin/verification'
@@ -686,6 +698,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/payments'
       fullPath: '/admin/payments'
       preLoaderRoute: typeof PortalAdminPaymentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/admin/reviews': {
+      id: '/_portal/admin/reviews'
+      path: '/admin/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof PortalAdminReviewsRouteImport
       parentRoute: typeof PortalRoute
     }
     '/_portal/admin/sessions': {
@@ -883,6 +902,7 @@ interface PortalRouteChildren {
   PortalAdminCoursesRoute: typeof PortalAdminCoursesRoute
   PortalAdminMessagesRoute: typeof PortalAdminMessagesRoute
   PortalAdminPaymentsRoute: typeof PortalAdminPaymentsRoute
+  PortalAdminReviewsRoute: typeof PortalAdminReviewsRoute
   PortalAdminSessionsRoute: typeof PortalAdminSessionsRoute
   PortalAdminStudentsRoute: typeof PortalAdminStudentsRoute
   PortalAdminVerificationRoute: typeof PortalAdminVerificationRoute
@@ -909,6 +929,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalAdminCoursesRoute: PortalAdminCoursesRoute,
   PortalAdminMessagesRoute: PortalAdminMessagesRoute,
   PortalAdminPaymentsRoute: PortalAdminPaymentsRoute,
+  PortalAdminReviewsRoute: PortalAdminReviewsRoute,
   PortalAdminSessionsRoute: PortalAdminSessionsRoute,
   PortalAdminStudentsRoute: PortalAdminStudentsRoute,
   PortalAdminVerificationRoute: PortalAdminVerificationRoute,
