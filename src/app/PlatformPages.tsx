@@ -1668,119 +1668,61 @@ export function DashboardPage() {
         />
       )}
 
-      {/* Institutional Executive Welcome Banner */}
-      <div className="bg-gradient-to-r from-[#131722] via-[#171c28] to-[#11151e] border border-white/10 rounded-2xl p-6 sm:p-7 mb-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5 shadow-2xl">
-        <div className="flex items-center gap-4">
-          <StudentAvatarBadge
-            avatarUrl={student.avatarUrl}
-            name={student.fullName}
-            sizeClass="w-14 h-14 text-base"
-          />
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#ffb600]">
-                {todayFormatted}
-              </span>
-              <span className="text-[10px] font-mono text-[#7f8a9d]">•</span>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#9aa4b5]">
-                {student.preferredSession || "London & NY Overlap"}
-              </span>
+      {/* Client overview hero */}
+      <section className="ov-hero">
+        <div className="ov-hero-main">
+          <div className="ov-hero-id">
+            <StudentAvatarBadge avatarUrl={student.avatarUrl} name={student.fullName} sizeClass="w-14 h-14 text-base" />
+            <div>
+              <span className="ov-date">{todayFormatted} · {student.preferredSession || "London & NY Overlap"}</span>
+              <h1>Welcome back, <em>{student.fullName.split(" ")[0] || "Trader"}</em>.</h1>
+              <p>
+                {isDepositCompleted ? "Full access unlocked" : student.partnerLinked ? "Partner linked · awaiting $50 deposit" : "Exness account not linked yet"}
+                {" · "}Exness {student.exnessId ? `••••${student.exnessId.slice(-4)}` : "unlinked"}
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1 tracking-tight">
-              Welcome back, {student.fullName.split(" ")[0] || "Trader"}.
-            </h1>
-            <p className="text-xs sm:text-sm text-[#9aa4b5] mt-0.5">
-              Live database telemetry synced with Supabase · Exness Account{" "}
-              <strong className="text-white font-mono">
-                {student.exnessId ? `••••${student.exnessId.slice(-4)}` : "Unlinked"}
-              </strong>
-            </p>
+          </div>
+          <div className="ov-ring" style={{ ["--p" as any]: `${metrics.overallPercent}` }} aria-label={`Course progress ${metrics.overallPercent}%`}>
+            <div><b>{metrics.overallPercent}%</b><small>Course progress</small></div>
           </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {isDepositCompleted ? (
-            <Badge tone="green">FULL ACCESS UNLOCKED ($50+ DEPOSIT)</Badge>
-          ) : student.partnerLinked ? (
-            <Badge tone="yellow">PARTNER LINKED · AWAITING $50 DEPOSIT</Badge>
-          ) : (
-            <Badge tone="red">EXNESS UNLINKED</Badge>
-          )}
-          <Link
-            to="/settings"
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-white transition"
-          >
-            Risk Profile ({student.riskPerTradePct || 1}% Risk)
-          </Link>
+        <div className="ov-stats">
+          <div><small>Lessons done</small><b>{metrics.completedLessonsCount}<span>/{metrics.totalLessons}</span></b></div>
+          <div><small>Learning streak</small><b>{metrics.streakDays}<span> {metrics.streakDays === 1 ? "day" : "days"}</span></b></div>
+          <div><small>Quiz average</small><b>{metrics.quizCount > 0 ? metrics.averageQuizScore : 0}<span>%</span></b></div>
+          <div><small>Risk per trade</small><b>{student.riskPerTradePct || 1}<span>%</span></b></div>
         </div>
-      </div>
+        <div className="ov-actions">
+          <Link to={nextLesson && isDepositCompleted ? `/lessons/${nextLesson.id}` : "/courses"}><Icon name="play" /> Continue learning</Link>
+          <Link to="/sessions"><Icon name="video" /> Live sessions</Link>
+          <Link to="/signals"><Icon name="signal" /> VIP signals</Link>
+          <Link to="/mentorship"><Icon name="users" /> 1-on-1 mentor</Link>
+        </div>
+      </section>
 
-      {/* Membership Tier & Moolre Subscription Status Bar */}
-      <div className="mb-6 rounded-2xl bg-[#131824] border border-[#ffb600]/30 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[#ffb600]/15 border border-[#ffb600]/40 text-[#ffb600] flex items-center justify-center shrink-0">
-            <CreditCard size={20} />
-          </div>
+      <div className="ov-plan">
+        <div className="ov-plan-info">
+          <span className="ov-plan-icon"><CreditCard size={18} /></span>
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#ffb600]">
-                ACADEMY MEMBERSHIP TIER · MOOLRE GATEWAY
-              </span>
-              <Badge
-                tone={
-                  subAccess.tier === "permanent_100"
-                    ? "green"
-                    : subAccess.tier === "expired_free"
-                    ? "red"
-                    : "yellow"
-                }
-              >
-                {subAccess.tierLabel.toUpperCase()}
-              </Badge>
-            </div>
-            <p className="text-xs text-[#9aa4b5] mt-1">
+            <small>Membership</small>
+            <b>{subAccess.tierLabel}</b>
+            <p>
               {subAccess.tier === "expired_free"
-                ? "Your 1-month free trial has ended. You currently have access to Signals & Beginner/Intermediate Courses. Upgrade to $20/mo or $100 Permanent VIP via Moolre to unlock Essential/Advanced Courses, Live Stream & Market Insights."
+                ? "Your free trial has ended. Upgrade to unlock Essential/Advanced courses, live streams and market insights."
                 : subAccess.tier === "permanent_100"
-                ? "You have Permanent VIP Access: All 4 Course Levels, Live Stream, Market Insights, Signal Copy Trading, 1-on-1 Live Mentorship & $500 Account Management."
-                : "1-Month Free Trial includes full access equivalent to the $20/month plan. Upgrade to $100 Permanent Access for Copy Trading, 1-on-1 Mentorship & Account Management."}
+                ? "Permanent VIP: every course level, live streams, copy trading, mentorship and account management."
+                : "Your free month includes everything in the $20/month plan."}
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          {subAccess.tier !== "permanent_100" && (
-            <>
-              <button
-                type="button"
-                onClick={() => setMoolreModalPlan("monthly_20")}
-                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white cursor-pointer"
-              >
-                $20 / Month Plan
-              </button>
-              <button
-                type="button"
-                onClick={() => setMoolreModalPlan("permanent_100")}
-                className="px-4 py-2 rounded-xl bg-[#ffb600] hover:bg-[#ffc833] text-black font-extrabold text-xs uppercase tracking-wider cursor-pointer"
-              >
-                $100 Permanent VIP
-              </button>
-            </>
-          )}
-          <button
-            type="button"
-            onClick={() =>
-              void updateStudentTierInStore(
-                student.email,
-                subAccess.tier === "expired_free" ? "free_trial" : "expired_free"
-              )
-            }
-            className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[11px] font-mono text-[#9aa4b5] hover:text-white cursor-pointer"
-            title="Preview how the dashboard looks when the 1-Month Free Trial expires"
-          >
-            {subAccess.tier === "expired_free" ? "Restore 1-Mo Free Trial" : "Preview Expired Trial"}
-          </button>
-        </div>
+        {subAccess.tier !== "permanent_100" && (
+          <div className="ov-plan-cta">
+            <button type="button" onClick={() => setMoolreModalPlan("monthly_20")} className="ov-btn ghost">$20 / month</button>
+            <button type="button" onClick={() => setMoolreModalPlan("permanent_100")} className="ov-btn gold">$100 Permanent VIP</button>
+          </div>
+        )}
       </div>
+
 
       {/* Case 1: Account NOT linked to Exness Partner Link */}
       {!student.partnerLinked && (
@@ -1851,35 +1793,6 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Real Database-Connected KPI Metrics Strip */}
-      <div className="metrics-grid">
-        <Metric
-          label="Course progress"
-          value={`${metrics.overallPercent}%`}
-          change={`${metrics.completedLessonsCount} of ${metrics.totalLessons} lessons completed`}
-          icon="book"
-        />
-        <Metric
-          label="Learning streak"
-          value={`${metrics.streakDays} ${metrics.streakDays === 1 ? "day" : "days"}`}
-          change={
-            metrics.streakDays > 0
-              ? `Active streak · ${metrics.hoursLearned} hrs studied`
-              : "Complete a lesson or quiz today to start your streak"
-          }
-          icon="trend"
-        />
-        <Metric
-          label="Quiz average"
-          value={metrics.quizCount > 0 ? `${metrics.averageQuizScore}%` : "0%"}
-          change={
-            metrics.quizCount > 0
-              ? `Across ${metrics.quizCount} completed ${metrics.quizCount === 1 ? "quiz" : "quizzes"}`
-              : "No quizzes taken yet · Auto-quizzes ready in Courses"
-          }
-          icon="chart"
-        />
-      </div>
 
       <div className="dash-grid">
         {/* Continue Learning Card (Connected to Real Course & Lesson Progress) */}
