@@ -205,6 +205,7 @@ import {
 } from "lucide-react";
 import { PWAInstallButton } from "./PWAInstallPrompt";
 import { BrandLogo } from "./BrandLogo";
+import mentorPortrait from "@/assets/mentor-portrait.webp.asset.json";
 
 type IconName =
   | "admin"
@@ -1379,7 +1380,7 @@ export function PortalLayout() {
             <Link to={admin ? "/admin" : "/settings"} title="Profile & Settings" className="shrink-0">
               {admin ? (
                 <img
-                  src="/ceo.png"
+                  src={mentorPortrait.url}
                   alt="Kwekucandles"
                   className="w-9 h-9 rounded-full object-cover border border-[#ffb600]/50"
                 />
