@@ -35,7 +35,13 @@ export async function portalLogin(request: Request) {
       student = created;
     }
     if (!student && role === 'student') return Response.json({ message: 'Please confirm your email before opening your student account.' }, { status: 403 });
-    return Response.json({ success: true, role, session: data.session, student }, { headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
+    let emailSent = true;
+    try {
+      const { sendAccountWelcome, sendAcademyEmail } = await import('./academy-emails');
+      await sendAccountWelcome(data.user, student?.full_name);
+      if (data.user.email) await sendAcademyEmail('login', data.user.email, crypto.randomUUID(), { name: student?.full_name, actionUrl: 'https://candlesticksacademy.online/login' });
+    } catch { emailSent = false; console.error('Account email notification unavailable'); }
+    return Response.json({ success: true, role, session: data.session, student, emailSent }, { headers: { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
   } catch {
     return Response.json({ message: 'Sign-in could not be completed. Please try again.' }, { status: 400 });
   }
