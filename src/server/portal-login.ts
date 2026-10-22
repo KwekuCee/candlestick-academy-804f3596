@@ -20,7 +20,7 @@ export async function portalLogin(request: Request) {
     const role = await trustedRole(authed, data.user.id);
     // Legacy profiles are linked only after Supabase verifies the email/password.
     if (data.user.email_confirmed_at && data.user.email) {
-      const { error: linkError } = await supabaseAdmin.from('students').update({ auth_user_id: data.user.id }).ilike('email', data.user.email).is('auth_user_id', null);
+      const { error: linkError } = await supabaseAdmin.from('students').update({ auth_user_id: data.user.id }).eq('email', data.user.email.trim().toLowerCase()).is('auth_user_id', null);
       if (linkError) throw new Error('Unable to link your student account.');
     }
     let { data: student } = await authed.from('students').select('*').eq('auth_user_id', data.user.id).maybeSingle();
