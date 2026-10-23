@@ -1546,7 +1546,7 @@ export async function toggleLessonCompletedInDb(
     | string,
   lessonIdArg?: string,
   courseSlugArg?: string
-): Promise<{ completed: boolean; courseProgressPct: number }> {
+): Promise<{ completed: boolean; courseProgressPct: number; message?: string }> {
   const currentUser = getStoredCurrentUser();
   let studentObj: ExnessStudent = currentUser;
   let courseId = courseSlugArg || "forex-foundations";
@@ -1608,18 +1608,14 @@ export async function toggleLessonCompletedInDb(
   if (isSupabaseConfigured && supabase) {
     try {
       if (isNowCompleted) {
-        await supabase.from("student_lesson_progress").upsert(
-          {
-            student_id: studentObj.id,
-            student_email: cleanEmail,
-            course_id: courseId,
-            lesson_id: lessonObj.id,
-            completed: true,
-            watch_minutes: lessonObj.durationMinutes,
-            completed_at: new Date().toISOString(),
-          },
-          { onConflict: "student_email,lesson_id" }
-        );
+        // The server confirms the lesson was open long enough before saving completion.
+        const res = await learningApi("/api/lessons/complete", { lessonId: lessonObj.id, courseId });
+        if (!res.ok) {
+          const reverted = allList.filter((p) => !(p.studentEmail.toLowerCase() === cleanEmail && p.lessonId === lessonObj!.id));
+          localStorage.setItem(LS_PROGRESS_KEY, JSON.stringify(reverted));
+          emitPortalUpdate();
+          return { completed: false, courseProgressPct: 0, message: res.message };
+        }
       } else {
         await supabase
           .from("student_lesson_progress")
@@ -1651,6 +1647,39 @@ export async function toggleLessonCompletedInDb(
     completed: isNowCompleted,
     courseProgressPct: courseStat ? courseStat.progressPct : 0,
   };
+}
+
+async function learningApi(path: string, body: unknown): Promise<{ ok: boolean; message?: string; data?: any }> {
+  try {
+    const session = supabase ? (await supabase.auth.getSession()).data.session : null;
+    const res = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, message: data?.message, data };
+  } catch {
+    return { ok: false, message: "Connection problem. Please try again." };
+  }
+}
+
+export async function startLessonWatch(lessonId: string) {
+  await learningApi("/api/lessons/watch", { lessonId });
+}
+
+export async function fetchCourseQuizFromServer(courseId: string): Promise<QuizQuestionItem[] | null> {
+  const res = await learningApi("/api/quiz/questions", { courseId });
+  return res.ok && Array.isArray(res.data?.questions) ? res.data.questions : null;
+}
+
+/** Sends answers to the server grader; the stored score is the server's, never the browser's. */
+export async function submitCourseQuiz(student: ExnessStudent, courseId: string, answers: number[]) {
+  const res = await learningApi("/api/quiz/submit", { courseId, answers });
+  if (!res.ok) return { ok: false as const, message: res.message || "Unable to grade quiz." };
+  const g = res.data as { correct: number; total: number; percent: number; passed: boolean; quizTitle: string };
+  await recordQuizAttemptInDb({ student, courseId, quizTitle: g.quizTitle, correctAnswers: g.correct, totalQuestions: g.total });
+  return { ok: true as const, ...g };
 }
 
 export async function recordQuizAttemptInDb(
@@ -1708,25 +1737,7 @@ export async function recordQuizAttemptInDb(
   allList.unshift(attempt);
   localStorage.setItem(LS_QUIZ_ATTEMPTS_KEY, JSON.stringify(allList));
 
-  if (isSupabaseConfigured && supabase) {
-    try {
-      await supabase.from("student_quiz_attempts").insert({
-        student_id: params.student.id,
-        student_email: cleanEmail,
-        course_id: params.courseId,
-        lesson_id: params.lessonId || null,
-        quiz_title: params.quizTitle,
-        score_percent: scorePercent,
-        correct_answers: params.correctAnswers,
-        total_questions: params.totalQuestions,
-        passed,
-        attempted_at: attempt.attemptedAt,
-      });
-    } catch (err) {
-      console.debug("Supabase quiz attempt insert note:", err);
-    }
-  }
-
+  // Database copies of quiz results are written only by the server grader (submitCourseQuiz).
   emitPortalUpdate();
   return attempt;
 }
