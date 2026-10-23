@@ -41,9 +41,13 @@ import { Route as ApiExnessConnectExistingRouteImport } from './routes/api/exnes
 import { Route as ApiExnessRefreshRouteImport } from './routes/api/exness/refresh'
 import { Route as ApiExnessSubmitTransferTicketRouteImport } from './routes/api/exness/submit-transfer-ticket'
 import { Route as ApiExnessSyncRouteImport } from './routes/api/exness/sync'
+import { Route as ApiLessonsCompleteRouteImport } from './routes/api/lessons/complete'
+import { Route as ApiLessonsWatchRouteImport } from './routes/api/lessons/watch'
 import { Route as ApiMarketCandlesRouteImport } from './routes/api/market/candles'
 import { Route as ApiMarketPricesRouteImport } from './routes/api/market/prices'
 import { Route as ApiQuizGenerateFromPdfRouteImport } from './routes/api/quiz/generate-from-pdf'
+import { Route as ApiQuizQuestionsRouteImport } from './routes/api/quiz/questions'
+import { Route as ApiQuizSubmitRouteImport } from './routes/api/quiz/submit'
 import { Route as PortalAdminSignalsNewRouteImport } from './routes/_portal/admin.signals.new'
 import { Route as PortalSessionsLiveSessionIdRouteImport } from './routes/_portal/sessions.live.$sessionId'
 import { Route as PortalSessionsReplaySessionIdRouteImport } from './routes/_portal/sessions.replay.$sessionId'
@@ -215,6 +219,16 @@ const ApiExnessSyncRoute = ApiExnessSyncRouteImport.update({
   path: '/api/exness/sync',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLessonsCompleteRoute = ApiLessonsCompleteRouteImport.update({
+  id: '/api/lessons/complete',
+  path: '/api/lessons/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiLessonsWatchRoute = ApiLessonsWatchRouteImport.update({
+  id: '/api/lessons/watch',
+  path: '/api/lessons/watch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMarketCandlesRoute = ApiMarketCandlesRouteImport.update({
   id: '/api/market/candles',
   path: '/api/market/candles',
@@ -228,6 +242,16 @@ const ApiMarketPricesRoute = ApiMarketPricesRouteImport.update({
 const ApiQuizGenerateFromPdfRoute = ApiQuizGenerateFromPdfRouteImport.update({
   id: '/api/quiz/generate-from-pdf',
   path: '/api/quiz/generate-from-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiQuizQuestionsRoute = ApiQuizQuestionsRouteImport.update({
+  id: '/api/quiz/questions',
+  path: '/api/quiz/questions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiQuizSubmitRoute = ApiQuizSubmitRouteImport.update({
+  id: '/api/quiz/submit',
+  path: '/api/quiz/submit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalAdminSignalsNewRoute = PortalAdminSignalsNewRouteImport.update({
@@ -308,9 +332,13 @@ export interface FileRoutesByFullPath {
   '/api/exness/refresh': typeof ApiExnessRefreshRoute
   '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
   '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/lessons/complete': typeof ApiLessonsCompleteRoute
+  '/api/lessons/watch': typeof ApiLessonsWatchRoute
   '/api/market/candles': typeof ApiMarketCandlesRoute
   '/api/market/prices': typeof ApiMarketPricesRoute
   '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/api/quiz/questions': typeof ApiQuizQuestionsRoute
+  '/api/quiz/submit': typeof ApiQuizSubmitRoute
   '/admin/': typeof PortalAdminIndexRoute
   '/courses/': typeof PortalCoursesIndexRoute
   '/sessions/': typeof PortalSessionsIndexRoute
@@ -353,9 +381,13 @@ export interface FileRoutesByTo {
   '/api/exness/refresh': typeof ApiExnessRefreshRoute
   '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
   '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/lessons/complete': typeof ApiLessonsCompleteRoute
+  '/api/lessons/watch': typeof ApiLessonsWatchRoute
   '/api/market/candles': typeof ApiMarketCandlesRoute
   '/api/market/prices': typeof ApiMarketPricesRoute
   '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/api/quiz/questions': typeof ApiQuizQuestionsRoute
+  '/api/quiz/submit': typeof ApiQuizSubmitRoute
   '/admin': typeof PortalAdminIndexRoute
   '/courses': typeof PortalCoursesIndexRoute
   '/sessions': typeof PortalSessionsIndexRoute
@@ -400,9 +432,13 @@ export interface FileRoutesById {
   '/api/exness/refresh': typeof ApiExnessRefreshRoute
   '/api/exness/submit-transfer-ticket': typeof ApiExnessSubmitTransferTicketRoute
   '/api/exness/sync': typeof ApiExnessSyncRoute
+  '/api/lessons/complete': typeof ApiLessonsCompleteRoute
+  '/api/lessons/watch': typeof ApiLessonsWatchRoute
   '/api/market/candles': typeof ApiMarketCandlesRoute
   '/api/market/prices': typeof ApiMarketPricesRoute
   '/api/quiz/generate-from-pdf': typeof ApiQuizGenerateFromPdfRoute
+  '/api/quiz/questions': typeof ApiQuizQuestionsRoute
+  '/api/quiz/submit': typeof ApiQuizSubmitRoute
   '/_portal/admin/': typeof PortalAdminIndexRoute
   '/_portal/courses/': typeof PortalCoursesIndexRoute
   '/_portal/sessions/': typeof PortalSessionsIndexRoute
@@ -447,9 +483,13 @@ export interface FileRouteTypes {
     | '/api/exness/refresh'
     | '/api/exness/submit-transfer-ticket'
     | '/api/exness/sync'
+    | '/api/lessons/complete'
+    | '/api/lessons/watch'
     | '/api/market/candles'
     | '/api/market/prices'
     | '/api/quiz/generate-from-pdf'
+    | '/api/quiz/questions'
+    | '/api/quiz/submit'
     | '/admin/'
     | '/courses/'
     | '/sessions/'
@@ -492,9 +532,13 @@ export interface FileRouteTypes {
     | '/api/exness/refresh'
     | '/api/exness/submit-transfer-ticket'
     | '/api/exness/sync'
+    | '/api/lessons/complete'
+    | '/api/lessons/watch'
     | '/api/market/candles'
     | '/api/market/prices'
     | '/api/quiz/generate-from-pdf'
+    | '/api/quiz/questions'
+    | '/api/quiz/submit'
     | '/admin'
     | '/courses'
     | '/sessions'
@@ -538,9 +582,13 @@ export interface FileRouteTypes {
     | '/api/exness/refresh'
     | '/api/exness/submit-transfer-ticket'
     | '/api/exness/sync'
+    | '/api/lessons/complete'
+    | '/api/lessons/watch'
     | '/api/market/candles'
     | '/api/market/prices'
     | '/api/quiz/generate-from-pdf'
+    | '/api/quiz/questions'
+    | '/api/quiz/submit'
     | '/_portal/admin/'
     | '/_portal/courses/'
     | '/_portal/sessions/'
@@ -568,9 +616,13 @@ export interface RootRouteChildren {
   ApiExnessRefreshRoute: typeof ApiExnessRefreshRoute
   ApiExnessSubmitTransferTicketRoute: typeof ApiExnessSubmitTransferTicketRoute
   ApiExnessSyncRoute: typeof ApiExnessSyncRoute
+  ApiLessonsCompleteRoute: typeof ApiLessonsCompleteRoute
+  ApiLessonsWatchRoute: typeof ApiLessonsWatchRoute
   ApiMarketCandlesRoute: typeof ApiMarketCandlesRoute
   ApiMarketPricesRoute: typeof ApiMarketPricesRoute
   ApiQuizGenerateFromPdfRoute: typeof ApiQuizGenerateFromPdfRoute
+  ApiQuizQuestionsRoute: typeof ApiQuizQuestionsRoute
+  ApiQuizSubmitRoute: typeof ApiQuizSubmitRoute
   ApiPublicPaymentsCheckoutRoute: typeof ApiPublicPaymentsCheckoutRoute
   ApiPublicPaymentsMoolreWebhookRoute: typeof ApiPublicPaymentsMoolreWebhookRoute
   ApiPublicPaymentsVerifyRoute: typeof ApiPublicPaymentsVerifyRoute
@@ -805,6 +857,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiExnessSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/lessons/complete': {
+      id: '/api/lessons/complete'
+      path: '/api/lessons/complete'
+      fullPath: '/api/lessons/complete'
+      preLoaderRoute: typeof ApiLessonsCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/lessons/watch': {
+      id: '/api/lessons/watch'
+      path: '/api/lessons/watch'
+      fullPath: '/api/lessons/watch'
+      preLoaderRoute: typeof ApiLessonsWatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/market/candles': {
       id: '/api/market/candles'
       path: '/api/market/candles'
@@ -824,6 +890,20 @@ declare module '@tanstack/react-router' {
       path: '/api/quiz/generate-from-pdf'
       fullPath: '/api/quiz/generate-from-pdf'
       preLoaderRoute: typeof ApiQuizGenerateFromPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/quiz/questions': {
+      id: '/api/quiz/questions'
+      path: '/api/quiz/questions'
+      fullPath: '/api/quiz/questions'
+      preLoaderRoute: typeof ApiQuizQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/quiz/submit': {
+      id: '/api/quiz/submit'
+      path: '/api/quiz/submit'
+      fullPath: '/api/quiz/submit'
+      preLoaderRoute: typeof ApiQuizSubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_portal/admin/signals/new': {
@@ -961,9 +1041,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiExnessRefreshRoute: ApiExnessRefreshRoute,
   ApiExnessSubmitTransferTicketRoute: ApiExnessSubmitTransferTicketRoute,
   ApiExnessSyncRoute: ApiExnessSyncRoute,
+  ApiLessonsCompleteRoute: ApiLessonsCompleteRoute,
+  ApiLessonsWatchRoute: ApiLessonsWatchRoute,
   ApiMarketCandlesRoute: ApiMarketCandlesRoute,
   ApiMarketPricesRoute: ApiMarketPricesRoute,
   ApiQuizGenerateFromPdfRoute: ApiQuizGenerateFromPdfRoute,
+  ApiQuizQuestionsRoute: ApiQuizQuestionsRoute,
+  ApiQuizSubmitRoute: ApiQuizSubmitRoute,
   ApiPublicPaymentsCheckoutRoute: ApiPublicPaymentsCheckoutRoute,
   ApiPublicPaymentsMoolreWebhookRoute: ApiPublicPaymentsMoolreWebhookRoute,
   ApiPublicPaymentsVerifyRoute: ApiPublicPaymentsVerifyRoute,

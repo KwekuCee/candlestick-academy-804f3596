@@ -81,6 +81,10 @@ import {
   fetchStudentTradesFromDb,
   formatCountdown,
   generateQuizForCourse,
+  fetchCourseQuizFromServer,
+  type QuizQuestionItem,
+  submitCourseQuiz,
+  startLessonWatch,
   getAccountManagementContractConfig,
   getCachedCertificateTemplate,
   getCachedClientNotifications,
@@ -3231,11 +3235,20 @@ export function LessonPage() {
   const completedIds = new Set(metrics.completedLessonIds);
   const isDone = activeLesson ? completedIds.has(activeLesson.id) : false;
   const courseStat = metrics.courseBreakdown.find((b) => b.slug === activeCourse?.slug);
+  const [watchMsg, setWatchMsg] = useState<string | null>(null);
+  const activeLessonId = activeLesson?.id;
+
+  useEffect(() => {
+    // Starts the server-side watch clock used to verify lesson completion.
+    if (activeLessonId) void startLessonWatch(activeLessonId);
+    setWatchMsg(null);
+  }, [activeLessonId]);
 
   async function handleToggleComplete() {
     if (!activeLesson || !activeCourse) return;
     setToggling(true);
-    await toggleLessonCompletedInDb(student.email, activeLesson.id, activeCourse.slug);
+    const res = await toggleLessonCompletedInDb(student.email, activeLesson.id, activeCourse.slug);
+    setWatchMsg(res.message ?? null);
     setToggling(false);
   }
 
@@ -3329,6 +3342,7 @@ export function LessonPage() {
                   </>
                 )}
               </Button>
+              {watchMsg && <span className="text-xs text-[#ffb600]" role="status">{watchMsg}</span>}
               {nextLesson ? (
                 <Button variant="secondary" onClick={() => nav(`/lessons/${nextLesson.id}`)}>
                   Next Lesson <Icon name="arrow" />
@@ -3495,7 +3509,15 @@ export function QuizPage() {
 
   const course =
     courses.find((c) => c.slug === quizId || c.id === quizId) || courses[0];
-  const generatedQuestions = generateQuizForCourse(course?.slug || "forex-foundations");
+  const [serverQuestions, setServerQuestions] = useState<QuizQuestionItem[] | null>(null);
+  const [serverResult, setServerResult] = useState<{ correct: number; total: number; percent: number } | null>(null);
+  const [quizError, setQuizError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!course?.id) return;
+    // Questions come from the server so the server can grade the same set.
+    void fetchCourseQuizFromServer(course.id).then(setServerQuestions);
+  }, [course?.id]);
+  const generatedQuestions = serverQuestions ?? generateQuizForCourse(course?.slug || "forex-foundations");
 
   const [n, setN] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -3503,24 +3525,20 @@ export function QuizPage() {
   const [savingResult, setSavingResult] = useState(false);
 
   const finished = n >= generatedQuestions.length;
-  const score = answers.filter((a, i) => a === generatedQuestions[i]?.correctIndex).length;
-  const scorePercent =
-    generatedQuestions.length > 0
-      ? Math.round((score / generatedQuestions.length) * 100)
-      : 0;
+  const localScore = answers.filter((a, i) => a === generatedQuestions[i]?.correctIndex).length;
+  const score = serverResult?.correct ?? localScore;
+  const scorePercent = serverResult
+    ? serverResult.percent
+    : generatedQuestions.length > 0
+    ? Math.round((localScore / generatedQuestions.length) * 100)
+    : 0;
 
   async function handleFinishQuiz(finalAnswers: number[]) {
-    const finalScore = finalAnswers.filter(
-      (a, i) => a === generatedQuestions[i]?.correctIndex
-    ).length;
     setSavingResult(true);
-    await recordQuizAttemptInDb(
-      student.email,
-      course?.slug || "forex-foundations",
-      `${course?.title || "Forex Foundations"} (${course?.level || "Beginner"} PDF Quiz)`,
-      finalScore,
-      generatedQuestions.length
-    );
+    setQuizError(null);
+    const res = await submitCourseQuiz(student, course?.id || "forex-foundations", finalAnswers);
+    if (res.ok) setServerResult({ correct: res.correct, total: res.total, percent: res.percent });
+    else setQuizError(res.message);
     setSavingResult(false);
   }
 
@@ -3528,6 +3546,8 @@ export function QuizPage() {
     setN(0);
     setPicked(null);
     setAnswers([]);
+    setServerResult(null);
+    setQuizError(null);
   };
 
   return (
@@ -3609,7 +3629,7 @@ export function QuizPage() {
         <Card className="result-card">
           <div className="score">
             <b>{scorePercent}%</b>
-            <small>SAVED TO DATABASE</small>
+            <small>{serverResult ? "VERIFIED & SAVED" : savingResult ? "CHECKING" : "NOT SAVED"}</small>
           </div>
           <Badge tone={scorePercent >= 70 ? "green" : "red"}>
             {scorePercent >= 70 ? "ASSESSMENT PASSED" : "RETRY NEEDED (70% TO PASS)"}
@@ -3623,7 +3643,9 @@ export function QuizPage() {
             You answered {score} of {generatedQuestions.length} questions correctly ({scorePercent}
             %) on the {course?.level} Level Assessment.{" "}
             {savingResult
-              ? "Syncing score to Supabase..."
+              ? "Checking your answers..."
+              : quizError
+              ? `Your score could not be saved: ${quizError}`
               : "Your Quiz Average on the Overview and Progress pages has been updated automatically."}
           </p>
           <div>
