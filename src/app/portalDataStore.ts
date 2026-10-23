@@ -680,7 +680,8 @@ export interface EconomicCalendarEvent {
 // 3. AUTO-QUIZ GENERATOR ENGINE (MULTI-QUESTION PER LEVEL / LESSON)
 // ============================================================================
 
-export { generateAutoQuizQuestions } from "@/lib/quiz-bank";
+import { generateAutoQuizQuestions } from "@/lib/quiz-bank";
+export { generateAutoQuizQuestions };
 
 // ============================================================================
 // 4. 4 SIGNATURE COURSE TRACKS (ZERO DEMO LESSONS — ADMIN UPLOADS ONLY)
