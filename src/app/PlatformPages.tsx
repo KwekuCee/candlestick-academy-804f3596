@@ -3495,7 +3495,15 @@ export function QuizPage() {
 
   const course =
     courses.find((c) => c.slug === quizId || c.id === quizId) || courses[0];
-  const generatedQuestions = generateQuizForCourse(course?.slug || "forex-foundations");
+  const [serverQuestions, setServerQuestions] = useState<QuizQuestionItem[] | null>(null);
+  const [serverResult, setServerResult] = useState<{ correct: number; total: number; percent: number } | null>(null);
+  const [quizError, setQuizError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!course?.id) return;
+    // Questions come from the server so the server can grade the same set.
+    void fetchCourseQuizFromServer(course.id).then(setServerQuestions);
+  }, [course?.id]);
+  const generatedQuestions = serverQuestions ?? generateQuizForCourse(course?.slug || "forex-foundations");
 
   const [n, setN] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -3510,17 +3518,11 @@ export function QuizPage() {
       : 0;
 
   async function handleFinishQuiz(finalAnswers: number[]) {
-    const finalScore = finalAnswers.filter(
-      (a, i) => a === generatedQuestions[i]?.correctIndex
-    ).length;
     setSavingResult(true);
-    await recordQuizAttemptInDb(
-      student.email,
-      course?.slug || "forex-foundations",
-      `${course?.title || "Forex Foundations"} (${course?.level || "Beginner"} PDF Quiz)`,
-      finalScore,
-      generatedQuestions.length
-    );
+    setQuizError(null);
+    const res = await submitCourseQuiz(student, course?.id || "forex-foundations", finalAnswers);
+    if (res.ok) setServerResult({ correct: res.correct, total: res.total, percent: res.percent });
+    else setQuizError(res.message);
     setSavingResult(false);
   }
 
