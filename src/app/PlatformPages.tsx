@@ -81,6 +81,9 @@ import {
   fetchStudentTradesFromDb,
   formatCountdown,
   generateQuizForCourse,
+  fetchCourseQuizFromServer,
+  submitCourseQuiz,
+  startLessonWatch,
   getAccountManagementContractConfig,
   getCachedCertificateTemplate,
   getCachedClientNotifications,
@@ -3511,11 +3514,13 @@ export function QuizPage() {
   const [savingResult, setSavingResult] = useState(false);
 
   const finished = n >= generatedQuestions.length;
-  const score = answers.filter((a, i) => a === generatedQuestions[i]?.correctIndex).length;
-  const scorePercent =
-    generatedQuestions.length > 0
-      ? Math.round((score / generatedQuestions.length) * 100)
-      : 0;
+  const localScore = answers.filter((a, i) => a === generatedQuestions[i]?.correctIndex).length;
+  const score = serverResult?.correct ?? localScore;
+  const scorePercent = serverResult
+    ? serverResult.percent
+    : generatedQuestions.length > 0
+    ? Math.round((localScore / generatedQuestions.length) * 100)
+    : 0;
 
   async function handleFinishQuiz(finalAnswers: number[]) {
     setSavingResult(true);
@@ -3530,6 +3535,8 @@ export function QuizPage() {
     setN(0);
     setPicked(null);
     setAnswers([]);
+    setServerResult(null);
+    setQuizError(null);
   };
 
   return (
@@ -3611,7 +3618,7 @@ export function QuizPage() {
         <Card className="result-card">
           <div className="score">
             <b>{scorePercent}%</b>
-            <small>SAVED TO DATABASE</small>
+            <small>{serverResult ? "VERIFIED & SAVED" : savingResult ? "CHECKING" : "NOT SAVED"}</small>
           </div>
           <Badge tone={scorePercent >= 70 ? "green" : "red"}>
             {scorePercent >= 70 ? "ASSESSMENT PASSED" : "RETRY NEEDED (70% TO PASS)"}
@@ -3625,7 +3632,9 @@ export function QuizPage() {
             You answered {score} of {generatedQuestions.length} questions correctly ({scorePercent}
             %) on the {course?.level} Level Assessment.{" "}
             {savingResult
-              ? "Syncing score to Supabase..."
+              ? "Checking your answers..."
+              : quizError
+              ? `Your score could not be saved: ${quizError}`
               : "Your Quiz Average on the Overview and Progress pages has been updated automatically."}
           </p>
           <div>
