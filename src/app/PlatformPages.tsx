@@ -82,6 +82,7 @@ import {
   formatCountdown,
   generateQuizForCourse,
   fetchCourseQuizFromServer,
+  type QuizQuestionItem,
   submitCourseQuiz,
   startLessonWatch,
   getAccountManagementContractConfig,
@@ -3234,11 +3235,20 @@ export function LessonPage() {
   const completedIds = new Set(metrics.completedLessonIds);
   const isDone = activeLesson ? completedIds.has(activeLesson.id) : false;
   const courseStat = metrics.courseBreakdown.find((b) => b.slug === activeCourse?.slug);
+  const [watchMsg, setWatchMsg] = useState<string | null>(null);
+  const activeLessonId = activeLesson?.id;
+
+  useEffect(() => {
+    // Starts the server-side watch clock used to verify lesson completion.
+    if (activeLessonId) void startLessonWatch(activeLessonId);
+    setWatchMsg(null);
+  }, [activeLessonId]);
 
   async function handleToggleComplete() {
     if (!activeLesson || !activeCourse) return;
     setToggling(true);
-    await toggleLessonCompletedInDb(student.email, activeLesson.id, activeCourse.slug);
+    const res = await toggleLessonCompletedInDb(student.email, activeLesson.id, activeCourse.slug);
+    setWatchMsg(res.message ?? null);
     setToggling(false);
   }
 
