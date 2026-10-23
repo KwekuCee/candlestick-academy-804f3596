@@ -3342,6 +3342,7 @@ export function LessonPage() {
                   </>
                 )}
               </Button>
+              {watchMsg && <span className="text-xs text-[#ffb600]" role="status">{watchMsg}</span>}
               {nextLesson ? (
                 <Button variant="secondary" onClick={() => nav(`/lessons/${nextLesson.id}`)}>
                   Next Lesson <Icon name="arrow" />
